@@ -33,6 +33,8 @@ HDFS客户端操作
 HDFS的数据流
 NameNode和SecondaryNameNode
 DataNode
+HDFS2.X新特性
+MapReduce概述
 ">
   
 
@@ -405,6 +407,8 @@ DataNode
 <li><a href="#HDFS的数据流">HDFS的数据流</a></li>
 <li><a href="#NameNode和SecondaryNameNode">NameNode和SecondaryNameNode</a></li>
 <li><a href="#DataNode">DataNode</a></li>
+<li><a href="#HDFS2.X新特性">HDFS2.X新特性</a></li>
+<li><a href="#MapReduce概述">MapReduce概述</a></li>
 </ul>
 <a id="more"></a>
 
@@ -1343,7 +1347,7 @@ DataNode
 <figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">&lt;!-- heartbeat.recheck.interval单位为毫秒 --&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">property</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">name</span>&gt;</span>dfs.namenode.heartbeat.recheck-interval<span class="tag">&lt;/<span class="name">name</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">value</span>&gt;</span>300000<span class="tag">&lt;/<span class="name">value</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">property</span>&gt;</span></span><br><span class="line"><span class="comment">&lt;!-- dfs.heartbeat.interval单位为秒 --&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">property</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">name</span>&gt;</span>dfs.heartbeat.interval<span class="tag">&lt;/<span class="name">name</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">value</span>&gt;</span>3<span class="tag">&lt;/<span class="name">value</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">property</span>&gt;</span></span><br></pre></td></tr></table></figure>
 
 <ul>
-<li><p>服役新数据节点</p>
+<li><p><del>服役新数据节点(hadoop4未服役)</del></p>
 <ul>
 <li><p>需求：随着公司业务的增长，数据量越来越大，原有的数据节点的容量已经不能满足存储数据的需求，需要在原有集群基础上动态添加新的数据节点</p>
 </li>
@@ -1352,27 +1356,35 @@ DataNode
 <li>利用hadoop3主机再克隆一台hadoop4主机</li>
 <li>修改hadoop4主机IP地址和主机名称</li>
 <li>在hadoop1主机上将/etc/hosts下添加hadoop4的ip地址映射条目，并分发到hadoop2-4</li>
-<li>在hadoop1主机上修改hadoop-3.1.3/etc/hadoop/workers通信节点，添加hadoop4，并分发到hadoop2-4</li>
 <li><strong>hadoop4主机删除原来HDFS文件系统留存的文件(data和log目录)——不然会发生3和4轮换出现的问题,因为3和4有着一样的data和log</strong></li>
 <li>reboot重启加载配置</li>
 </ul>
 </li>
 <li><p>服役新节点具体步骤</p>
 <ul>
-<li>直接启动DataNode，即可关联到集群</li>
+<li>hadoop1-3按之前步骤已启动</li>
+<li>在hadoop4主机上单独启动：</li>
 </ul>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">bin/hdfs --daemon start datanode</span><br><span class="line">bin/yarn --daemon start nodemanager</span><br></pre></td></tr></table></figure>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">hdfs --daemon start datanode</span><br><span class="line">yarn --daemon start nodemanager</span><br></pre></td></tr></table></figure>
 
 <ul>
+<li>刷新NameNode和ResourceManager：</li>
+</ul>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">hdfs dfsadmin -refreshNodes</span><br><span class="line">yarn rmadmin -refreshNodes</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>刷新<a href="http://hadoop1:9870" target="_blank" rel="noopener">http://hadoop1:9870</a>web页面，等待</li>
 <li>在hadoop4上上传文件</li>
 <li>如果数据不均衡，可以使用命令实现集群的在平衡：sbin/start-balancer.sh</li>
 </ul>
 </li>
+<li><p>结束后在workers文件中加入hadoop4，之后直接start-dfs.sh和start-yarn.sh即可启动</p>
+</li>
 </ul>
 </li>
-<li><p>退役旧数据节点(此方法貌似不管用)</p>
+<li><p><del>退役旧数据节点(hadoop4未退役)</del></p>
 <ul>
-<li><p>添加白名单：添加到白名单的主机节点，都允许访问NameNode，不在白名单的主机节点，都会被退出</p>
+<li><p><del>添加白名单(hadoop4未退役)</del><br>添加到白名单的主机节点，都允许访问NameNode，不在白名单的主机节点，都会被退出</p>
 <ul>
 <li>在NameNode的hadoop-3.1.3/etc/hadoop目录下创建dfs.hosts文件</li>
 </ul>
@@ -1385,11 +1397,152 @@ DataNode
 
 <ul>
 <li>配置文件分发：xsync hdfs-site.xml;xsync dfs.hosts</li>
-<li>刷新NameNode：hdfs dfsadmin -refreshNodes</li>
-<li>更新ResourceManager：yarn rmadmin -refreshNodes</li>
+<li>刷新NameNode和ResourceManager：</li>
+</ul>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">hdfs dfsadmin -refreshNodes</span><br><span class="line">yarn rmadmin -refreshNodes</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>在web页面刷新等待</li>
+</ul>
+</li>
+<li><p><del>黑名单退役(hadoop4未退役)</del><br>在黑名单上面的主机都会被强制退出。<strong>注意：不允许白名单和黑名单中同时出现同一个主机名称</strong></p>
+<ul>
+<li>在hadoop-3.1.3/etc/hadoop下创建dfs.hosts.exclude文件，并加入要退役节点</li>
+</ul>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">touch dfs.hosts.exclude</span><br><span class="line">vim dfs.hosts.exclude</span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"> dfs.hosts.exclude</span></span><br><span class="line">hadoop4</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>在NameNode的hdfs-site.xml配置文件中增加dfs.hosts.exclude属性</li>
+</ul>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">property</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">name</span>&gt;</span>dfs.hosts.exclude<span class="tag">&lt;/<span class="name">name</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">value</span>&gt;</span>/opt/module/hadoop-3.1.3/etc/hadoop/dfs.hosts.exclude<span class="tag">&lt;/<span class="name">value</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">property</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>刷新NameNode和ResourceManager：</li>
+</ul>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">hdfs dfsadmin -refreshNodes</span><br><span class="line">yarn rmadmin -refreshNodes</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>刷新web页面等待</li>
 </ul>
 </li>
 </ul>
+</li>
+<li><p>DataNode多目录配置</p>
+<ul>
+<li>DataNode也可以配置成多个目录，每个目录存储的数据不一样。即：数据不是副本</li>
+<li>需要在hdfs-site.xml上修改配置</li>
+</ul>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">property</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">name</span>&gt;</span>dfs.datanode.data.dir<span class="tag">&lt;/<span class="name">name</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">value</span>&gt;</span>file:///$&#123;hadoop.tmp.dir&#125;/dfs/data1,file:///$&#123;hadoop.tmp.dir&#125;/dfs/data2<span class="tag">&lt;/<span class="name">value</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">property</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>关闭当前运行的hadoop节点</li>
+<li>删除各节点的data和log目录</li>
+<li>格式化dataNode</li>
+<li>重启部署hadoop节点</li>
+</ul>
+</li>
+</ul>
+<h2 id="HDFS2-X新特性"><a href="#HDFS2-X新特性" class="headerlink" title="HDFS2.X新特性"></a>HDFS2.X新特性</h2><ul>
+<li><p>集群间数据拷贝</p>
+<ul>
+<li>scp实现两个远程主机之间的文件复制</li>
+</ul>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> 从当前主机向目的主机 推 push</span></span><br><span class="line">scp -r hello.txt root@hadoop2:/user/sobxiong/hello.txt</span><br><span class="line"><span class="meta">#</span><span class="bash"> 从目的主机向当前主机 拉 pull</span></span><br><span class="line">scp -r root@hadoop2:/user/sobxiong/hello.txt hello.txt</span><br><span class="line"><span class="meta">#</span><span class="bash"> 通过本主机中转实现两个远程主机的文件复制</span></span><br><span class="line">scp -r root@hadoop2:/user/sobxiong/hello.txt root@hadoop3:/user/sobxiong</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>采用distcp命令实现<strong>两个Hadoop集群之间</strong>的递归数据复制</li>
+</ul>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">hadoop distcp hdfs://haoop1:9000/user/sobxiong/hello.txt hdfs://hadoop2:9000/user/sobxiong/hello.txt</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>小文件存档</p>
+<ul>
+<li><p>HDFS存储小文件弊端<br>每个文件均按块存储，每个块的元数据存储在NameNode的内存中，因此HDFS存储小文件会非常低效。因为<strong>大量的小文件会耗尽NameNode中的大部分内存。但注意，存储小文件所需要的磁盘容量和数据块的大小无关</strong>。例如，一个1MB的文件设置为128MB的块存储，实际使用的是1MB的磁盘空间，而不是128MB</p>
+</li>
+<li><p>解决存储小文件办法之一<br>HDFS存档文件或HAR文件，是一个更高效的文件存档工具，它将文件存入HDFS块，在减少NameNode内存使用的同时，允许对文件进行透明的访问。具体说来，HDFS存档文件对内还是一个一个独立文件，对NameNode而言却是一个整体，减少了NameNode的内存<br><img src="%E5%B0%8F%E6%96%87%E4%BB%B6%E5%BD%92%E6%A1%A3.png" alt="小文件归档"></p>
+</li>
+<li><p>实际操作</p>
+<ul>
+<li>启动YARN进程：start-yarn.sh(hadoop2)</li>
+<li>归档文件(归档后的路径不得实现存在)<br>把/sobxiong目录里面的所有文件归档成一个叫input.har的归档文件，并把归档后文件存储到/sobxiongOutput路径下：hadoop archive -archiveName input.har -p /sobxiong /sobxiongOutput</li>
+<li>查看归档：</li>
+</ul>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> 普通查看文件命令</span></span><br><span class="line">hadoop fs -ls R /sobxiongOutput/input.har</span><br><span class="line"><span class="meta">#</span><span class="bash"> -rw-r--r--   3 sobxiong supergroup          0 2020-06-24 16:06 /sobxiongOutput/input.har/_SUCCESS</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> -rw-r--r--   3 sobxiong supergroup        305 2020-06-24 16:06 /sobxiongOutput/input.har/_index</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> -rw-r--r--   3 sobxiong supergroup         23 2020-06-24 16:06 /sobxiongOutput/input.har/_masterindex</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> -rw-r--r--   3 sobxiong supergroup     317029 2020-06-24 16:06 /sobxiongOutput/input.har/part-0</span></span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"> 采用har格式查看文件(可以像以往一样操作内部文件,也需要har格式)</span></span><br><span class="line">hadoop fs -ls R har:///sobxiongOutput/input.har</span><br><span class="line"><span class="meta">#</span><span class="bash"> -rw-r--r--   3 sobxiong supergroup      84942 2020-06-21 11:38 har:///sobxiongOutput/input.har/1tset.png</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> -rw-r--r--   3 sobxiong supergroup      84942 2020-06-21 11:33 har:///sobxiongOutput/input.har/test.png</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> -rw-r--r--   3 sobxiong supergroup     147145 2020-06-23 13:52 har:///sobxiongOutput/input.har/test6.txt</span></span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>解归档文件：hadoop fs -cp har:///sobxiongOutput/input.har/* /</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p>回收站<br>开启回收站功能，可以将删除的文件在不超时的情况下，恢复原数据，起到防止误删除、备份等作用</p>
+<ul>
+<li>开启回收站功能参数说明：<ul>
+<li>默认值fs.trash.interval = 0，0表示禁用回收站；<strong>其他值表示设置文件的存活时间(分钟为单位)</strong></li>
+<li>默认值fs.trash.checkpoint.interval = 0，检查回收站的间隔时间。该值设置和fs.trash.interval的参数值相同(要求fs.trash.checkpoint.interval &lt;= fs.trash.interval)</li>
+</ul>
+</li>
+<li>回收站工作机制<br><img src="%E5%9B%9E%E6%94%B6%E7%AB%99%E5%B7%A5%E4%BD%9C%E6%9C%BA%E5%88%B6.png" alt="回收站工作机制"></li>
+<li>启动回收站：修改core-site.xml，配置垃圾回收时间为1分钟</li>
+</ul>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">property</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">name</span>&gt;</span>fs.trash.interval<span class="tag">&lt;/<span class="name">name</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">value</span>&gt;</span>1<span class="tag">&lt;/<span class="name">value</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">property</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>查看回收站：回收站在集群中的路径：/user/sobxiong/.Trash/</li>
+<li>修改访问回收站用户名称：进入垃圾回收站用户名称，默认是dr.who，修改为sobxiong(同样是core-site.xml)</li>
+</ul>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">property</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">name</span>&gt;</span>hadoop.http.staticuser.user<span class="tag">&lt;/<span class="name">name</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">value</span>&gt;</span>atguigu<span class="tag">&lt;/<span class="name">value</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">property</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>恢复回收站数据：hadoop fs -mv /user/sobxiong/.Trash/Current/user/sobxiong/input /</li>
+<li>清空回收站：hadoop fs -expunge</li>
+</ul>
+</li>
+<li><p>快照管理</p>
+<ul>
+<li><p>命令介绍<br><img src="%E5%BF%AB%E7%85%A7%E7%AE%A1%E7%90%86.png" alt="快照管理"></p>
+</li>
+<li><p>实际操作</p>
+<ul>
+<li>开启/禁用指定目录的快照功能：hdfs dfsadmin -allowSnapshot(-disallowSnapshot) /user/sobxiong/input</li>
+<li>对目录创建快照</li>
+</ul>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">hdfs dfs -createSnapshot /user/sobxiong/input</span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"> 快照和源文件使用相同数据</span></span><br><span class="line">hdfs dfs -ls R /user/sobxiong/input/.snapshot/</span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"> 指定名称创建快照</span></span><br><span class="line">hdfs dfs -createSnapshot /user/sobxiong/input test</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>重命名快照：hdfs dfs -renameSnapshot /user/sobxiong/input test test01</li>
+<li>列出当前用户所有可快照目录：hdfs lsSnapshottableDir</li>
+<li><strong>比较两个快照目录的不同之处(可以是源文件和快照,使用’.’,此时”.snapshot/name”用于指定具体快照)</strong>：hdfs snapshotDiff /user/sobxiong/input . .snapshot/test01</li>
+<li>恢复快照：hdfs dfs -cp /user/sobxiong/input/.snapshot/s20200624-134303.027 /</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<h2 id="MapReduce概述"><a href="#MapReduce概述" class="headerlink" title="MapReduce概述"></a>MapReduce概述</h2><ul>
+<li><p>MapReduce定义</p>
+<ul>
+<li>MapReduce是一个<strong>分布式运算程序的编程框架</strong>，是用户开发“基于Hadoop的数据分析应用”的核心框架</li>
+<li>MapReduce核心功能是<strong>将用户编写的业务逻辑代码和自带默认组件整合成一个完整的分布式运算程序</strong>，并发运行在一个Hadoop集群上</li>
+</ul>
+</li>
+<li><p>MapReduce优缺点</p>
+<ul>
+<li>优点：<ul>
+<li>MapReduce易于编程<br>它<strong>简单地实现一些接口，就可以完成一个分布式程序</strong>，这个分布式程序可以分布到大量廉价的PC机器上运行。也就是说你写一个分布式程序，跟写一个简单的串行程序是一模一样的。就是因为这个特点使得MapReduce编程变得非常流行</li>
+<li>良好的扩展性(hadoop)<br>当你的计算资源不能得到满足的时候，你可以通过简单的增加机器来扩展它的计算能力</li>
+<li>高容错性<br>MapReduce设计的初衷就是使程序能够部署在廉价的PC机器上，这就要求它具有很高的容错性。<strong>比如其中一台机器挂了，它可以把上面的计算任务转移到另外一个节点上运行，不至于这个任务运行失败</strong>，而且这个过程不需要人工参与，而完全是由Hadoop内部完成的</li>
+<li>适合PB级以上海量数据的离线处理：可以实现上千台服务器集群并发工作，提供数据处理能力</li>
+</ul>
+</li>
+<li>缺点：<ul>
+<li>不擅长实时计算：MapReduce无法像MySQL一样，在毫秒或者秒级内返回结果</li>
+<li>擅长流式计算<br>流式计算的输入数据是动态的，<strong>而MapReduce的输入数据集是静态的，不能动态变化</strong>。这是因为MapReduce自身的设计特点决定了数据源必须是静态的</li>
+<li>不擅长DAG(有向图)计算<br>多个应用程序存在依赖关系，后一个应用程序的输入为前一个的输出。在这种情况下，MapReduce并不是不能做，而是使用后，<strong>每个MapReduce作业的输出结果都会写入到磁盘，会造成大量的磁盘IO，导致性能非常的低下</strong></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p>核心思想<br><img src="MapRecude%E6%A0%B8%E5%BF%83%E7%BC%96%E7%A8%8B%E6%80%9D%E6%83%B3.png" alt="MapRecude核心编程思想"></p>
 </li>
 </ul>
 
@@ -1479,10 +1632,10 @@ DataNode
     <div class='new-meta-box'>
       
         
-          <div class="new-meta-item date" itemprop="dateUpdated" datetime="2020-06-23T14:08:20+08:00">
+          <div class="new-meta-item date" itemprop="dateUpdated" datetime="2020-06-24T18:55:24+08:00">
   <a class='notlink'>
     <i class="fas fa-edit fa-fw" aria-hidden="true"></i>
-    <p>更新于：2020年6月23日</p>
+    <p>更新于：2020年6月24日</p>
   </a>
 </div>
 
@@ -1521,6 +1674,8 @@ HDFS客户端操作
 HDFS的数据流
 NameNode和SecondaryNameNode
 DataNode
+HDFS2.X新特性
+MapReduce概述
 "
           
           >
@@ -1545,6 +1700,8 @@ HDFS客户端操作
 HDFS的数据流
 NameNode和SecondaryNameNode
 DataNode
+HDFS2.X新特性
+MapReduce概述
 "
           
           >
@@ -1569,6 +1726,8 @@ HDFS客户端操作
 HDFS的数据流
 NameNode和SecondaryNameNode
 DataNode
+HDFS2.X新特性
+MapReduce概述
 "
           
           >
@@ -1677,7 +1836,7 @@ Web
 
 
     <div class='content'>
-        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#内容"><span class="toc-text">内容</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#概论"><span class="toc-text">概论</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Hadoop介绍"><span class="toc-text">Hadoop介绍</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#环境搭建"><span class="toc-text">环境搭建</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Hadoop运行模式"><span class="toc-text">Hadoop运行模式</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Hadoop编译源码"><span class="toc-text">Hadoop编译源码</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#HDFS概述"><span class="toc-text">HDFS概述</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#HDFS的Shell操作"><span class="toc-text">HDFS的Shell操作</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#HDFS客户端操作"><span class="toc-text">HDFS客户端操作</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#HDFS的数据流"><span class="toc-text">HDFS的数据流</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#NameNode和SecondaryNameNode"><span class="toc-text">NameNode和SecondaryNameNode</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#DataNode"><span class="toc-text">DataNode</span></a></li></ol>
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#内容"><span class="toc-text">内容</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#概论"><span class="toc-text">概论</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Hadoop介绍"><span class="toc-text">Hadoop介绍</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#环境搭建"><span class="toc-text">环境搭建</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Hadoop运行模式"><span class="toc-text">Hadoop运行模式</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Hadoop编译源码"><span class="toc-text">Hadoop编译源码</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#HDFS概述"><span class="toc-text">HDFS概述</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#HDFS的Shell操作"><span class="toc-text">HDFS的Shell操作</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#HDFS客户端操作"><span class="toc-text">HDFS客户端操作</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#HDFS的数据流"><span class="toc-text">HDFS的数据流</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#NameNode和SecondaryNameNode"><span class="toc-text">NameNode和SecondaryNameNode</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#DataNode"><span class="toc-text">DataNode</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#HDFS2-X新特性"><span class="toc-text">HDFS2.X新特性</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#MapReduce概述"><span class="toc-text">MapReduce概述</span></a></li></ol>
     </div>
   </section>
 
