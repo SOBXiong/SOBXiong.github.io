@@ -5,8 +5,6 @@
   <!-- SEO相关 -->
   
     
-      <meta name="robots" content="noindex,follow">
-    
   
   <!-- 渲染优化 -->
   <meta name="renderer" content="webkit">
@@ -18,8 +16,18 @@
 
   <!-- 页面元数据 -->
   
-    <title>标签：LeetCode - SOBXiong的博客</title>
+    <title>Zookeeper入门 - SOBXiong的博客</title>
   
+    <meta name="keywords" content="大数据,Zookeeper">
+  
+  
+    <meta name="description" content="内容
+Zookeeper入门
+Zookeeper安装
+Zookeeper内部原理
+Zookeeper实战
+面试真题
+">
   
 
   <!-- feed -->
@@ -301,25 +309,12 @@
     <div class='body-wrapper'>
       
 
-
 <div class='l_main'>
   
-    
-      
-  <section class="post-list ">
-    
-      
-        
-          
-        
-      
-    
-    
-      
-        
-          <div class='post-wrapper'>
-            <article class="post white-box shadow reveal ">
+
   
+    <article id="post" class="post white-box reveal shadow article-type-post" itemscope itemprop="blogPost">
+      
 
 
   <section class='meta'>
@@ -329,11 +324,11 @@
       <div class="meta" id="header-meta">
         
           
-  <h2 class="title">
-    <a href="/2020/06/23/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/LeetCode/10-%E6%AD%A3%E5%88%99%E8%A1%A8%E8%BE%BE%E5%BC%8F%E5%8C%B9%E9%85%8D/">
-      10-正则表达式匹配
+  <h1 class="title">
+    <a href="/2020/06/26/%E5%A4%A7%E6%95%B0%E6%8D%AE/Zookeeper/">
+      Zookeeper入门
     </a>
-  </h2>
+  </h1>
 
 
         
@@ -369,14 +364,9 @@
               <div class="new-meta-item date">
   <a class='notlink'>
     <i class="fas fa-calendar-alt fa-fw" aria-hidden="true"></i>
-    <p>发布于：2020年6月23日</p>
+    <p>发布于：2020年6月26日</p>
   </a>
 </div>
-
-            
-          
-            
-              
 
             
           
@@ -394,80 +384,114 @@
   </section>
 
 
-  <section class="article typo">
-    <div class="article-entry" itemprop="articleBody">
-      
-        
-      
-    </div>
-    
-      
-    
-  </section>
-</article>
+      <section class="article typo">
+        <div class="article-entry" itemprop="articleBody">
+          
+          <h2 id="内容"><a href="#内容" class="headerlink" title="内容"></a>内容</h2><ul>
+<li><a href="#Zookeeper入门">Zookeeper入门</a></li>
+<li><a href="#Zookeeper安装">Zookeeper安装</a></li>
+<li><a href="#Zookeeper内部原理">Zookeeper内部原理</a></li>
+<li><a href="#Zookeeper实战">Zookeeper实战</a></li>
+<li><a href="#面试真题">面试真题</a></li>
+</ul>
+<a id="more"></a>
 
-          </div>
-        
-      
-    
-  </section>
+<h2 id="Zookeeper入门"><a href="#Zookeeper入门" class="headerlink" title="Zookeeper入门"></a>Zookeeper入门</h2><ul>
+<li><p>概述<br>Zookeeper是一个开源的分布式的，为分布式应用提供协调服务的Apache项目<br><img src="Zookeeper%E5%B7%A5%E4%BD%9C%E6%9C%BA%E5%88%B6.png" alt="Zookeeper工作机制"></p>
+</li>
+<li><p>特点<br><img src="Zookeeper%E7%89%B9%E7%82%B9.png" alt="Zookeeper特点"></p>
+</li>
+<li><p>数据结构<br><img src="Zookeeper%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84.png" alt="Zookeeper数据结构"></p>
+</li>
+<li><p>应用场景<br>提供的服务包括：统一命名服务、统一配置管理、统一集群管理、服务器节点动态上下线、软负载均衡等</p>
+<ul>
+<li>统一命名服务<br><img src="Zookeeper%E7%BB%9F%E4%B8%80%E5%91%BD%E5%90%8D%E6%9C%8D%E5%8A%A1.png" alt="Zookeeper统一命名服务"></li>
+<li>统一配置管理<br><img src="Zookeeper%E7%BB%9F%E4%B8%80%E9%85%8D%E7%BD%AE%E7%AE%A1%E7%90%86.png" alt="Zookeeper统一配置管理"></li>
+<li>统一集群管理<br><img src="Zookeeper%E7%BB%9F%E4%B8%80%E9%9B%86%E7%BE%A4%E7%AE%A1%E7%90%86.png" alt="Zookeeper统一集群管理"></li>
+<li>服务器节点动态上下线<br><img src="Zookeeper%E6%9C%8D%E5%8A%A1%E5%99%A8%E5%8A%A8%E6%80%81%E4%B8%8A%E4%B8%8B%E7%BA%BF.png" alt="Zookeeper服务器动态上下线"></li>
+<li>软负载均衡<br><img src="Zookeeper%E8%BD%AF%E8%B4%9F%E8%BD%BD%E5%9D%87%E8%A1%A1.png" alt="Zookeeper软负载均衡"></li>
+</ul>
+</li>
+<li><p>下载地址：官网地址——<a href="https://zookeeper.apache.org" target="_blank" rel="noopener">https://zookeeper.apache.org</a></p>
+</li>
+</ul>
+<h2 id="Zookeeper安装"><a href="#Zookeeper安装" class="headerlink" title="Zookeeper安装"></a>Zookeeper安装</h2><ul>
+<li><p>本地模式安装部署</p>
+<ul>
+<li>安装前准备<ul>
+<li>安装jdk</li>
+<li>拷贝Zookeeper安装包到Linux系统下</li>
+<li>解压到指定目录：tar -zxvf apache-zookeeper-3.6.1-bin.tar.gz -C /opt/module/</li>
+</ul>
+</li>
+<li>配置修改<ul>
+<li>修改配置文件(conf目录下)：mv zoo_sample.cfg zoo.cfg</li>
+<li>打开zoo.cfg文件，修改dataDir路径：dataDir=/opt/module/zookeeper-3.6.1/zkData</li>
+<li>新建zkData目录(不同于Hadoop目录不能存在)：mkdir zkData</li>
+</ul>
+</li>
+<li>操作Zookeeper<ul>
+<li>启动Zookeeper Server(服务端)：bin/zkServer.sh start</li>
+<li>查看进程是否启动：jps(正常会有一个QuorumPeerMain)</li>
+<li>查看状态：bin/zkServer.sh status</li>
+<li>启动Zookeeper Client(客户端)：bin/zkCli.sh</li>
+<li>查看文件列表：ls /(一开始只有[zookeeper])</li>
+<li>退出Zookeeper Client：quit</li>
+<li>停止Zookeeper Server：bin/zkServer.sh stop</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p>配置参数解读<br>Zookeeper中的配置文件zoo.cfg中参数含义解读如下：</p>
+<ul>
+<li><em>tickTime = 2000：通信心跳数，Zookeeper服务器与客户端心跳时间，单位毫秒</em><br>Zookeeper使用的基本时间，服务器之间或客户端与服务器之间维持心跳的时间间隔，也就是每个tickTime时间就会发送一个心跳，时间单位为毫秒。<br>它用于心跳机制，并且设置最小的session超时时间为两倍心跳时间。(session的最小超时时间是2*tickTime)</li>
+<li><em>initLimit = 10：LF初始通信时限</em><br>集群中的Follower跟随者服务器与Leader领导者服务器之间<strong>初始连接时</strong>能容忍的最多心跳数(tickTime的数量)，用它来限定集群中的Zookeeper服务器连接到Leader的时限</li>
+<li><em>syncLimit = 5：LF同步通信时限</em><br>集群中Leader与Follower之间的最大响应时间单位，假如响应超过syncLimit * tickTime，Leader认为Follwer死掉，从服务器列表中删除Follwer</li>
+<li><em>dataDir：数据文件目录 + 数据持久化路径</em><br>主要用于保存Zookeeper中的数据</li>
+<li><em>clientPort = 2181：客户端连接端口</em><br>监听客户端连接的端口</li>
+</ul>
+</li>
+</ul>
+<h2 id="Zookeeper内部原理"><a href="#Zookeeper内部原理" class="headerlink" title="Zookeeper内部原理"></a>Zookeeper内部原理</h2>
+          
+            <div class='article_footer'>
+              
+                
   
     
-    <!-- 根据主题中的设置决定是否在archive中针对摘要部分的MathJax公式加载mathjax.js文件 -->
     
-    
+
+
 
   
 
-
-    
-  
-</div>
-<aside class='l_side'>
-  
   
     
     
 
-<section class="widget blogger shadow desktop mobile">
+
+
+  
+
+  
+    
+    
+
+<section class="widget copyright  desktop mobile">
   <div class='content'>
     
-      
-        <a class='avatar flat-box' href='/about/'>
-          <img no-lazy src='https://cdn.jsdelivr.net/gh/SOBXiong/imageBed/hdImg_f757fa7e0fd65077ce52d251fc7a01d815860762755.jpg'/>
-        </a>
-      
-    
-    
-      <div class='text'>
-        
-        
-        
-          <p><span id="jinrishici-sentence">SOBXiong的博客</span></p>
-          <script src="https://sdk.jinrishici.com/v2/browser/jinrishici.js" charset="utf-8"></script>
-        
-      </div>
-    
-    
-      <div class="social-wrapper">
+      <blockquote>
         
           
-            <a href="mailto:1942991710@qq.com"
-              class="social fas fa-envelope flat-btn"
-              target="_blank"
-              rel="external nofollow noopener noreferrer">
-            </a>
+            <p>博客内容遵循 署名-非商业性使用-相同方式共享 4.0 国际 (CC BY-NC-SA 4.0) 协议</p>
+
           
         
           
-            <a href="https://github.com/SOBXiong"
-              class="social fab fa-github flat-btn"
-              target="_blank"
-              rel="external nofollow noopener noreferrer">
-            </a>
+            <p>本文永久链接是：<a href=https://sobxiong.github.io/2020/06/26/%E5%A4%A7%E6%95%B0%E6%8D%AE/Zookeeper/>https://sobxiong.github.io/2020/06/26/%E5%A4%A7%E6%95%B0%E6%8D%AE/Zookeeper/</a></p>
           
         
-      </div>
+      </blockquote>
     
   </div>
 </section>
@@ -477,53 +501,226 @@
   
     
     
+
+<section class="widget qrcode  desktop mobile">
   
 
-  <section class="widget category shadow desktop">
+  <div class='content article-entry'>
+    
+      
+        <div class='fancybox'><img src='https://cdn.jsdelivr.net/gh/xaoxuu/cdn-assets/qrcode/wiki_volantis.png'
+        
+          height='64px'
+        ></div>
+      
+    
+      
+        <div class='fancybox'><img src='https://cdn.jsdelivr.net/gh/xaoxuu/cdn-assets/qrcode/wiki_volantis.png'
+        
+          height='64px'
+        ></div>
+      
+    
+  </div>
+</section>
+
+  
+
+
+              
+            </div>
+          
+        </div>
+        
+          
+
+
+  <section class='meta' id="footer-meta">
+    <div class='new-meta-box'>
+      
+        
+          <div class="new-meta-item date" itemprop="dateUpdated" datetime="2020-06-26T22:22:07+08:00">
+  <a class='notlink'>
+    <i class="fas fa-edit fa-fw" aria-hidden="true"></i>
+    <p>更新于：2020年6月26日</p>
+  </a>
+</div>
+
+        
+      
+        
+          
+  
+  <div class="new-meta-item meta-tags"><a class="tag" href="/tags/%E5%A4%A7%E6%95%B0%E6%8D%AE/" rel="nofollow"><i class="fas fa-hashtag fa-fw" aria-hidden="true"></i><p>大数据</p></a></div> <div class="new-meta-item meta-tags"><a class="tag" href="/tags/Zookeeper/" rel="nofollow"><i class="fas fa-hashtag fa-fw" aria-hidden="true"></i><p>Zookeeper</p></a></div>
+
+
+        
+      
+        
+          
+
+        
+      
+        
+          
+  <div class="new-meta-item share -mob-share-list">
+  <div class="-mob-share-list share-body">
+    
+      
+        <a class="-mob-share-qq" title="" rel="external nofollow noopener noreferrer"
+          
+          href="http://connect.qq.com/widget/shareqq/index.html?url=https://sobxiong.github.io/2020/06/26/%E5%A4%A7%E6%95%B0%E6%8D%AE/Zookeeper/&title=Zookeeper入门 - SOBXiong的博客&summary=内容
+Zookeeper入门
+Zookeeper安装
+Zookeeper内部原理
+Zookeeper实战
+面试真题
+"
+          
+          >
+          
+            <img src="https://cdn.jsdelivr.net/gh/xaoxuu/cdn-assets/logo/128/qq.png">
+          
+        </a>
+      
+    
+      
+        <a class="-mob-share-qzone" title="" rel="external nofollow noopener noreferrer"
+          
+          href="https://sns.qzone.qq.com/cgi-bin/qzshare/cgi_qzshare_onekey?url=https://sobxiong.github.io/2020/06/26/%E5%A4%A7%E6%95%B0%E6%8D%AE/Zookeeper/&title=Zookeeper入门 - SOBXiong的博客&summary=内容
+Zookeeper入门
+Zookeeper安装
+Zookeeper内部原理
+Zookeeper实战
+面试真题
+"
+          
+          >
+          
+            <img src="https://cdn.jsdelivr.net/gh/xaoxuu/cdn-assets/logo/128/qzone.png">
+          
+        </a>
+      
+    
+      
+        <a class="-mob-share-weibo" title="" rel="external nofollow noopener noreferrer"
+          
+          href="http://service.weibo.com/share/share.php?url=https://sobxiong.github.io/2020/06/26/%E5%A4%A7%E6%95%B0%E6%8D%AE/Zookeeper/&title=Zookeeper入门 - SOBXiong的博客&summary=内容
+Zookeeper入门
+Zookeeper安装
+Zookeeper内部原理
+Zookeeper实战
+面试真题
+"
+          
+          >
+          
+            <img src="https://cdn.jsdelivr.net/gh/xaoxuu/cdn-assets/logo/128/weibo.png">
+          
+        </a>
+      
+    
+  </div>
+</div>
+
+
+
+        
+      
+    </div>
+  </section>
+
+
+        
+        
+          <div class="prev-next">
+            
+            
+              <a class='next' href='/2020/06/21/Spring/SpringCloud/'>
+                <p class='title'>SpringCloud<i class="fas fa-chevron-right" aria-hidden="true"></i></p>
+                <p class='content'>内容
+前期准备
+Eureka介绍
+
+
+
+前期准备
+SpringCloud：分布式微服务架构的一站式解决方案，是多种微服务架构落地技术的集合体，俗称微服务全家桶；SpringCloud已成为微服务...</p>
+              </a>
+            
+          </div>
+        
+      </section>
+    </article>
+  
+
+  
+    <!-- 显示推荐文章和评论 -->
+
+
+
+  <article class="post white-box reveal comments shadow">
+    <section class="article typo">
+      <p ct><i class='fas fa-comments'></i> 评论</p>
+      
+      
+      
+      
+      
+      
+        <section id="comments">
+          <div id="valine_container" class="valine_thread">
+            <i class="fas fa-cog fa-spin fa-fw fa-2x"></i>
+          </div>
+        </section>
+      
+      
+    </section>
+  </article>
+
+
+  
+
+
+
+
+<!-- 根据页面mathjax变量决定是否加载MathJax数学公式js -->
+
+
+
+  <script>
+    window.subData = {
+      title: 'Zookeeper入门',
+      tools: true
+    }
+  </script>
+
+
+</div>
+<aside class='l_side'>
+  
+  
+
+  
+    
+    
+
+
+
+  <section class="widget toc-wrapper shadow desktop mobile" id="toc-div" >
     
   <header>
     
-      <a href='/blog/categories/'><i class="fas fa-folder-open fa-fw" aria-hidden="true"></i><span class='name'>文章分类</span></a>
+      <i class="fas fa-list fa-fw" aria-hidden="true"></i><span class='name'>本文目录</span>
     
   </header>
 
 
     <div class='content'>
-      <ul class="entry navigation">
-        
-          <li><a class="flat-box"
-            title="/categories/%E7%BC%96%E7%A8%8B/" href="/categories/%E7%BC%96%E7%A8%8B/"
-            id="categoriesE7BC96E7A88B"
-            ><div class='name'>编程</div><div class='badge'>(4)</div></a></li>
-        
-      </ul>
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#内容"><span class="toc-text">内容</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Zookeeper入门"><span class="toc-text">Zookeeper入门</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Zookeeper安装"><span class="toc-text">Zookeeper安装</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Zookeeper内部原理"><span class="toc-text">Zookeeper内部原理</span></a></li></ol>
     </div>
   </section>
 
-
-  
-
-  
-    
-    
-  
-
-  <section class="widget tagcloud shadow desktop mobile">
-    
-  <header>
-    
-      <a href='/blog/tags/'><i class="fas fa-tags fa-fw" aria-hidden="true"></i><span class='name'>热门标签</span></a>
-    
-  </header>
-
-
-    <div class='content'>
-      <a href="/tags/Hadoop/" style="font-size: 14px; color: #999">Hadoop</a> <a href="/tags/LeetCode/" style="font-size: 14px; color: #999">LeetCode</a> <a href="/tags/Spring/" style="font-size: 14px; color: #999">Spring</a> <a href="/tags/SpringCloud/" style="font-size: 14px; color: #999">SpringCloud</a> <a href="/tags/%E5%A4%A7%E6%95%B0%E6%8D%AE/" style="font-size: 14px; color: #999">大数据</a> <a href="/tags/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/" style="font-size: 14px; color: #999">数据结构</a>
-    </div>
-  </section>
-
-
-  
 
   
 
@@ -690,6 +887,60 @@
 
 
 
+
+  
+    
+<script src="https://cdn.jsdelivr.net/npm/valine@1.4/dist/Valine.min.js"></script>
+
+  
+  <script>
+  var GUEST_INFO = ['nick','mail','link'];
+  var meta = 'nick,mail,link'.split(',').filter(function(item){
+    return GUEST_INFO.indexOf(item) > -1
+  });
+  var REQUIRED_FIELDS = ['nick','mail','link'];
+  var requiredFields = 'nick,mail'.split(',').filter(function(item){
+    return REQUIRED_FIELDS.indexOf(item) > -1
+  });
+  var valine = new Valine();
+  function emoji(path, idx, ext) {
+      return path + "/" + path + "-" + idx + "." + ext;
+  }
+  var emojiMaps = {};
+  for (var i = 1; i <= 54; i++) {
+    emojiMaps['tieba-' + i] = emoji('tieba', i, 'png');
+  }
+  for (var i = 1; i <= 101; i++) {
+    emojiMaps['qq-' + i] = emoji('qq', i, 'gif');
+  }
+  for (var i = 1; i <= 116; i++) {
+    emojiMaps['aru-' + i] = emoji('aru', i, 'gif');
+  }
+  for (var i = 1; i <= 125; i++) {
+    emojiMaps['twemoji-' + i] = emoji('twemoji', i, 'png');
+  }
+  for (var i = 1; i <= 4; i++) {
+    emojiMaps['weibo-' + i] = emoji('weibo', i, 'png');
+  }
+  valine.init({
+    el: '#valine_container',
+    meta: meta,
+    
+    appId: "dogUA2FSKGTo029M1SEwGROT-MdYXbMMI",
+    appKey: "u0NdtQ8nvHoMdJPSYqm1LRxE",
+    placeholder: "快来评论吧~",
+    pageSize:'10',
+    avatar:'robohash',
+    lang:'zh-cn',
+    visitor: 'true',
+    highlight: 'true',
+    mathJax: 'false',
+    enableQQ: 'true',
+    requiredFields: requiredFields,
+    emojiCDN: 'https://cdn.jsdelivr.net/gh/xaoxuu/cdn-assets/emoji/valine/',
+    emojiMaps: emojiMaps
+  })
+  </script>
 
 
 

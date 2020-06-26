@@ -483,7 +483,7 @@ Eureka介绍
 <ul>
 <li>写yml</li>
 </ul>
-<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">server:</span></span><br><span class="line">  <span class="attr">port:</span> <span class="number">7001</span></span><br><span class="line"><span class="attr">eureka:</span></span><br><span class="line">  <span class="attr">instance:</span></span><br><span class="line">    <span class="comment"># eureka服务端实例名称</span></span><br><span class="line">    <span class="attr">hostname:</span> <span class="string">localhost</span></span><br><span class="line">  <span class="attr">client:</span></span><br><span class="line">    <span class="comment"># false表示不向注册中心注册自己</span></span><br><span class="line">    <span class="attr">register-with-eureka:</span> <span class="literal">false</span></span><br><span class="line">    <span class="comment"># false表示自己就是注册中心，职责是维护服务实例，并不需要去检索服务</span></span><br><span class="line">    <span class="attr">fetch-registry:</span> <span class="literal">false</span></span><br><span class="line">    <span class="attr">service-url:</span></span><br><span class="line">      <span class="comment"># 设置与 eureka server交互的地址查询服务和注册服务都需要依赖这个地址</span></span><br><span class="line">      <span class="attr">defaultZone:</span>  <span class="string">http://$&#123;eureka.instance.hostname&#125;:$&#123;server.port&#125;/eureka/</span></span><br></pre></td></tr></table></figure>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">server:</span></span><br><span class="line">  <span class="attr">port:</span> <span class="number">7001</span></span><br><span class="line"><span class="attr">eureka:</span></span><br><span class="line">  <span class="attr">instance:</span></span><br><span class="line">    <span class="comment"># eureka服务端实例名称</span></span><br><span class="line">    <span class="attr">hostname:</span> <span class="string">localhost</span></span><br><span class="line">  <span class="attr">client:</span></span><br><span class="line">    <span class="comment"># false表示不向注册中心注册自己</span></span><br><span class="line">    <span class="attr">register-with-eureka:</span> <span class="literal">false</span></span><br><span class="line">    <span class="comment"># false表示自己就是注册中心，职责是维护服务实例，并不需要去检索服务</span></span><br><span class="line">    <span class="attr">fetch-registry:</span> <span class="literal">false</span></span><br><span class="line">    <span class="attr">service-url:</span></span><br><span class="line">      <span class="comment"># 设置与 eureka server交互的地址查询服务和注册服务都需要依赖这个地址</span></span><br><span class="line">      <span class="attr">defaultZone:</span>  <span class="string">http://$&#123;eureka.instance.hostname&#125;:$&#123;server.port&#125;/eureka</span></span><br></pre></td></tr></table></figure>
 
 <ul>
 <li>主启动</li>
@@ -672,7 +672,7 @@ Eureka介绍
     <div class='new-meta-box'>
       
         
-          <div class="new-meta-item date" itemprop="dateUpdated" datetime="2020-06-25T21:47:53+08:00">
+          <div class="new-meta-item date" itemprop="dateUpdated" datetime="2020-06-25T21:49:50+08:00">
   <a class='notlink'>
     <i class="fas fa-edit fa-fw" aria-hidden="true"></i>
     <p>更新于：2020年6月25日</p>
@@ -759,9 +759,19 @@ Eureka介绍
         
           <div class="prev-next">
             
-              <a class='prev' href='/2020/06/23/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/LeetCode/10-%E6%AD%A3%E5%88%99%E8%A1%A8%E8%BE%BE%E5%BC%8F%E5%8C%B9%E9%85%8D/'>
-                <p class='title'><i class="fas fa-chevron-left" aria-hidden="true"></i>10-正则表达式匹配</p>
-                <p class='content'></p>
+              <a class='prev' href='/2020/06/26/%E5%A4%A7%E6%95%B0%E6%8D%AE/Zookeeper/'>
+                <p class='title'><i class="fas fa-chevron-left" aria-hidden="true"></i>Zookeeper入门</p>
+                <p class='content'>内容
+Zookeeper入门
+Zookeeper安装
+Zookeeper内部原理
+Zookeeper实战
+面试真题
+
+
+
+Zookeeper入门
+概述Zookeeper是一个开源的分布式的，为分...</p>
               </a>
             
             

@@ -35,6 +35,7 @@ NameNode和SecondaryNameNode
 DataNode
 HDFS2.X新特性
 MapReduce概述
+Hadoop序列化
 ">
   
 
@@ -333,7 +334,7 @@ MapReduce概述
         
           
   <h1 class="title">
-    <a href="/2020/06/03/%E5%A4%A7%E6%95%B0%E6%8D%AE/hadoop/">
+    <a href="/2020/06/03/%E5%A4%A7%E6%95%B0%E6%8D%AE/Hadoop/">
       Hadoop入门
     </a>
   </h1>
@@ -409,6 +410,7 @@ MapReduce概述
 <li><a href="#DataNode">DataNode</a></li>
 <li><a href="#HDFS2.X新特性">HDFS2.X新特性</a></li>
 <li><a href="#MapReduce概述">MapReduce概述</a></li>
+<li><a href="#Hadoop序列化">Hadoop序列化</a></li>
 </ul>
 <a id="more"></a>
 
@@ -1544,6 +1546,178 @@ MapReduce概述
 </li>
 <li><p>核心思想<br><img src="MapRecude%E6%A0%B8%E5%BF%83%E7%BC%96%E7%A8%8B%E6%80%9D%E6%83%B3.png" alt="MapRecude核心编程思想"></p>
 </li>
+<li><p>MapReduce进程<br>一个完整的MapReduce程序在分布式运行时有三类实例进程：</p>
+<ul>
+<li>MrAppMaster：负责整个程序的过程调度及状态协调</li>
+<li>MapTask：负责Map阶段的整个数据处理流程</li>
+<li>ReuceTask：负责Reduce阶段的整个数据处理流程</li>
+</ul>
+</li>
+<li><p>常用数据序列化类型</p>
+<table>
+<thead>
+<tr>
+<th>Java类型</th>
+<th>Hadoop Writable类型</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>boolean</td>
+<td>BooleanWritable</td>
+</tr>
+<tr>
+<td>byte</td>
+<td>ByteWritable</td>
+</tr>
+<tr>
+<td>int</td>
+<td>IntWritable</td>
+</tr>
+<tr>
+<td>float</td>
+<td>FloatWritable</td>
+</tr>
+<tr>
+<td>long</td>
+<td>LongWritable</td>
+</tr>
+<tr>
+<td>double</td>
+<td>DoubleWritable</td>
+</tr>
+<tr>
+<td>String</td>
+<td>Text</td>
+</tr>
+<tr>
+<td>map</td>
+<td>MapWritable</td>
+</tr>
+<tr>
+<td>array</td>
+<td>ArrayWritable</td>
+</tr>
+</tbody></table>
+</li>
+<li><p>MapReduce编程规范<br>用户编写的程序分成三个部分：Mapper、Reducer和Driver</p>
+<ul>
+<li>Mapper<ul>
+<li>用户自定义的Mapper要继承自己的父类</li>
+<li>Mapper的输入数据是KV对的形式(KV的类型可自定义)</li>
+<li>Mapper中的业务逻辑写在map()方法中</li>
+<li>Mapper的输出数据是KV对的形式(KV的类型可自定义)</li>
+<li><strong>map()方法(MapTask进程)对每一个&lt;K,V&gt;调用一次</strong></li>
+</ul>
+</li>
+<li>Reducer<ul>
+<li>用户自定义的Reducer要继承自己的父类</li>
+<li>Reducer的输入数据类型对应Mapper的输出数据类型，也是KV</li>
+<li>Reducer的业务逻辑写在reduce()方法中</li>
+<li><strong>ReduceTask进程对每一组相同k的&lt;k,v&gt;组调用一次reduce()方法</strong></li>
+</ul>
+</li>
+<li>Driver：相当于YARN集群的客户端，用于提交我们整个程序到YARN集群，提交的是封装了MapReduce程序相关运行参数的job对象</li>
+</ul>
+</li>
+<li><p>WordCount案例实操</p>
+<ul>
+<li><p>需求：在给定的文本文件中统计输出每一个单词出现的总次数</p>
+</li>
+<li><p>需求分析<br><img src="WordCount%E9%9C%80%E6%B1%82%E5%88%86%E6%9E%90.png" alt="WordCount需求分析"></p>
+</li>
+<li><p>环境准备</p>
+<ul>
+<li>创建maven空项目</li>
+<li>改pom</li>
+</ul>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>junit<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>junit<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">version</span>&gt;</span>4.11<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">scope</span>&gt;</span>test<span class="tag">&lt;/<span class="name">scope</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.apache.logging.log4j<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>log4j-core<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">version</span>&gt;</span>2.13.3<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.apache.hadoop<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>hadoop-client<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">version</span>&gt;</span>3.1.3<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.apache.hadoop<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>hadoop-common<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">version</span>&gt;</span>3.1.3<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.apache.hadoop<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>hadoop-hdfs<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">version</span>&gt;</span>3.1.3<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>在resources资源文件夹下新建log4j.properties文件</li>
+</ul>
+<figure class="highlight properties"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">log4j.rootLogger</span>=<span class="string">INFO, stdout</span></span><br><span class="line"><span class="meta">log4j.appender.stdout</span>=<span class="string">org.apache.log4j.ConsoleAppender</span></span><br><span class="line"><span class="meta">log4j.appender.stdout.layout</span>=<span class="string">org.apache.log4j.PatternLayout</span></span><br><span class="line"><span class="meta">log4j.appender.stdout.layout.ConversionPattern</span>=<span class="string">%d %p [%c] - %m%n</span></span><br><span class="line"><span class="meta">log4j.appender.logfile</span>=<span class="string">org.apache.log4j.FileAppender</span></span><br><span class="line"><span class="meta">log4j.appender.logfile.File</span>=<span class="string">target/spring.log</span></span><br><span class="line"><span class="meta">log4j.appender.logfile.layout</span>=<span class="string">org.apache.log4j.PatternLayout</span></span><br><span class="line"><span class="meta">log4j.appender.logfile.layout.ConversionPattern</span>=<span class="string">%d %p [%c] - %m%n</span></span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><p>编写MapReduce程序</p>
+<ul>
+<li>编写mapper类</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment">* map阶段</span></span><br><span class="line"><span class="comment">* KEYIN：输入数据的key类型(默认写LongWritable:偏移量)</span></span><br><span class="line"><span class="comment">* VALUEIN：输入数据的value类型</span></span><br><span class="line"><span class="comment">* KEYOUT：输出数据的key类型</span></span><br><span class="line"><span class="comment">* VALUEOUT：输出数据的value类型</span></span><br><span class="line"><span class="comment">* &lt;sobxiong,1&gt;输出数据</span></span><br><span class="line"><span class="comment">* 输出作为reduce阶段的输入</span></span><br><span class="line"><span class="comment">*/</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">WordCountMapper</span> <span class="keyword">extends</span> <span class="title">Mapper</span>&lt;<span class="title">LongWritable</span>, <span class="title">Text</span>, <span class="title">Text</span>, <span class="title">IntWritable</span>&gt; </span>&#123;</span><br><span class="line">    <span class="keyword">private</span> Text k = <span class="keyword">new</span> Text();</span><br><span class="line">    <span class="keyword">private</span> IntWritable v = <span class="keyword">new</span> IntWritable(<span class="number">1</span>);</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">protected</span> <span class="keyword">void</span> <span class="title">map</span><span class="params">(LongWritable key, Text value, Context context)</span> <span class="keyword">throws</span> IOException, InterruptedException </span>&#123;</span><br><span class="line">        <span class="comment">// sobxiong sobxiong</span></span><br><span class="line">        <span class="comment">// 1、获取一行</span></span><br><span class="line">        String lineStr = value.toString();</span><br><span class="line">        <span class="comment">// 2、切割单词</span></span><br><span class="line">        String[] words = lineStr.split(<span class="string">" "</span>);</span><br><span class="line">        <span class="comment">// 3、循环写出</span></span><br><span class="line">        <span class="keyword">for</span> (String word : words) &#123;</span><br><span class="line">            <span class="comment">// &lt;sobxiong,1&gt;</span></span><br><span class="line">            k.set(word);</span><br><span class="line">            context.write(k, v);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>编写Reducer类</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment">* reduce阶段</span></span><br><span class="line"><span class="comment">* KEYIN,VALUEIN：map阶段输出的kv</span></span><br><span class="line"><span class="comment">* KEYOUT,VALUEOUT：reduce输出的kv</span></span><br><span class="line"><span class="comment">*/</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">WordCountReducer</span> <span class="keyword">extends</span> <span class="title">Reducer</span>&lt;<span class="title">Text</span>, <span class="title">IntWritable</span>, <span class="title">Text</span>, <span class="title">IntWritable</span>&gt; </span>&#123;</span><br><span class="line">    <span class="keyword">private</span> IntWritable v = <span class="keyword">new</span> IntWritable();</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">protected</span> <span class="keyword">void</span> <span class="title">reduce</span><span class="params">(Text key, Iterable&lt;IntWritable&gt; values, Context context)</span> <span class="keyword">throws</span> IOException, InterruptedException </span>&#123;</span><br><span class="line">        <span class="keyword">int</span> sum = <span class="number">0</span>;</span><br><span class="line">        <span class="comment">// 1、累加求和</span></span><br><span class="line">        <span class="keyword">for</span> (IntWritable value : values) &#123;</span><br><span class="line">            sum += value.get();</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="comment">// 2、写出 &lt;sobxiong,2&gt;</span></span><br><span class="line">        v.set(sum);</span><br><span class="line">        context.write(key, v);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>编写Driver驱动类</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">WordCountDriver</span> </span>&#123;</span><br><span class="line">  <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> <span class="keyword">throws</span> IOException, ClassNotFoundException, InterruptedException </span>&#123;</span><br><span class="line">      <span class="comment">// 1、获取Job对象</span></span><br><span class="line">      Configuration conf = <span class="keyword">new</span> Configuration();</span><br><span class="line">      Job job = Job.getInstance(conf);</span><br><span class="line">      <span class="comment">// 2、设置jar存储位置</span></span><br><span class="line">      job.setJarByClass(WordCountDriver<span class="class">.<span class="keyword">class</span>)</span>;</span><br><span class="line">      <span class="comment">// 3、关联Map和Reduce类</span></span><br><span class="line">      job.setMapperClass(WordCountMapper<span class="class">.<span class="keyword">class</span>)</span>;</span><br><span class="line">      job.setReducerClass(WordCountReducer<span class="class">.<span class="keyword">class</span>)</span>;</span><br><span class="line">      <span class="comment">// 4、设置map阶段输出数据的kv类型</span></span><br><span class="line">      job.setMapOutputKeyClass(Text<span class="class">.<span class="keyword">class</span>)</span>;</span><br><span class="line">      job.setMapOutputValueClass(IntWritable<span class="class">.<span class="keyword">class</span>)</span>;</span><br><span class="line">      <span class="comment">// 5、设置最终数据输出的kv类型</span></span><br><span class="line">      job.setOutputKeyClass(Text<span class="class">.<span class="keyword">class</span>)</span>;</span><br><span class="line">      job.setOutputValueClass(IntWritable<span class="class">.<span class="keyword">class</span>)</span>;</span><br><span class="line">      <span class="comment">// 6、设置程序运行的输入和输出路径</span></span><br><span class="line">      FileInputFormat.setInputPaths(job, <span class="keyword">new</span> Path(args[<span class="number">0</span>]));</span><br><span class="line">      FileOutputFormat.setOutputPath(job, <span class="keyword">new</span> Path(args[<span class="number">1</span>]));</span><br><span class="line">      <span class="comment">// 7、提交job</span></span><br><span class="line">      <span class="comment">// job.submit();</span></span><br><span class="line">      <span class="comment">// true：打印一些信息</span></span><br><span class="line">      <span class="keyword">boolean</span> result = job.waitForCompletion(<span class="keyword">true</span>);</span><br><span class="line">      <span class="comment">// 额外</span></span><br><span class="line">      System.exit(result ? <span class="number">0</span> : <span class="number">1</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>本地测试：启动旁边的下箭头Edit Configuration，新增Application，选择Main Class并在Program arguments中加入两个参数中间用空格隔开，前者是input文件所在文件夹，后者是输出文件夹，要求不能存在(不然会出错)。例如：/Users/sobxiong/Downloads/input /Users/sobxiong/Downloads/ouputTest</p>
+</li>
+<li><p>在集群上测试</p>
+<ul>
+<li>用maven打jar包，添加打包插件依赖</li>
+</ul>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">build</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">plugins</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">plugin</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>maven-compiler-plugin<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">version</span>&gt;</span>3.8.1<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">configuration</span>&gt;</span></span><br><span class="line">                <span class="tag">&lt;<span class="name">source</span>&gt;</span>1.8<span class="tag">&lt;/<span class="name">source</span>&gt;</span></span><br><span class="line">                <span class="tag">&lt;<span class="name">target</span>&gt;</span>1.8<span class="tag">&lt;/<span class="name">target</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;/<span class="name">configuration</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;/<span class="name">plugin</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">plugin</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>maven-assembly-plugin<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">configuration</span>&gt;</span></span><br><span class="line">                <span class="tag">&lt;<span class="name">descriptorRefs</span>&gt;</span></span><br><span class="line">                    <span class="tag">&lt;<span class="name">descriptorRef</span>&gt;</span>jar-with-dependencies<span class="tag">&lt;/<span class="name">descriptorRef</span>&gt;</span></span><br><span class="line">                <span class="tag">&lt;/<span class="name">descriptorRefs</span>&gt;</span></span><br><span class="line">                <span class="tag">&lt;<span class="name">archive</span>&gt;</span></span><br><span class="line">                    <span class="tag">&lt;<span class="name">manifest</span>&gt;</span></span><br><span class="line">                        <span class="tag">&lt;<span class="name">mainClass</span>&gt;</span>com.xiong.hadoop.WordCountDriver<span class="tag">&lt;/<span class="name">mainClass</span>&gt;</span></span><br><span class="line">                    <span class="tag">&lt;/<span class="name">manifest</span>&gt;</span></span><br><span class="line">                <span class="tag">&lt;/<span class="name">archive</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;/<span class="name">configuration</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">executions</span>&gt;</span></span><br><span class="line">                <span class="tag">&lt;<span class="name">execution</span>&gt;</span></span><br><span class="line">                    <span class="tag">&lt;<span class="name">id</span>&gt;</span>make-assembly<span class="tag">&lt;/<span class="name">id</span>&gt;</span></span><br><span class="line">                    <span class="tag">&lt;<span class="name">phase</span>&gt;</span>package<span class="tag">&lt;/<span class="name">phase</span>&gt;</span></span><br><span class="line">                    <span class="tag">&lt;<span class="name">goals</span>&gt;</span></span><br><span class="line">                        <span class="tag">&lt;<span class="name">goal</span>&gt;</span>single<span class="tag">&lt;/<span class="name">goal</span>&gt;</span></span><br><span class="line">                    <span class="tag">&lt;/<span class="name">goals</span>&gt;</span></span><br><span class="line">                <span class="tag">&lt;/<span class="name">execution</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;/<span class="name">executions</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;/<span class="name">plugin</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">plugins</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">build</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>将程序打成jar包，maven install即可</li>
+<li>将获取的两个jar包(一个不带依赖,另一带)，将不带依赖的jar上传到hadoop1主机上</li>
+<li>启动Hadoop集群</li>
+<li>执行WordCount程序：hadoop jar WordCount.jar com.xiong.hadoop.WordCountDriver /sobxiong /outputTest(第四个参数为启动的主类名,第五个为输入文件所在文件夹,第六个为输出文件夹——不能事先存在)</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<h2 id="Hadoop序列化"><a href="#Hadoop序列化" class="headerlink" title="Hadoop序列化"></a>Hadoop序列化</h2><ul>
+<li><p>序列化概述</p>
+<ul>
+<li>什么是序列化：<em>序列化</em>就是把<strong>内存中的对象，转换成字节序列</strong>(或其他数据传输协议)以便于存储到磁盘(持久化)和网络传输；<em>反序列化</em>就是<strong>将收到字节序列(或其他数据传输协议)或者是磁盘的持久化数据，转换成内存中的对象</strong></li>
+<li>为什么要序列化：一般来说，“活的”对象只生存在内存里，关机断电就没有了。而且“活的”对象只能由本地的进程使用，不能被发送到网络上的另外一台计算机。然而<strong>序列化可以存储“活的”对象，可以将“活的”对象发送到远程计算机</strong></li>
+<li>为什么不用Java的序列化：Java的序列化是一个重量级序列化框架(Serializable)，一个对象被序列化后，会附带很多额外的信息(各种校验信息，Header，继承体系等)，不便于在网络中高效传输。所以，Hadoop自己开发了一套序列化机制(Writable)</li>
+<li>Hadoop序列化特点：<ul>
+<li>紧凑：高效使用存储空间</li>
+<li>快速：读写数据的额外开销小</li>
+<li>可扩展：随着通信协议的升级而可升级</li>
+<li>互操作：支持多语言的交互</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p>自定义bean对象实现序列化接口(Writable)<br>在企业开发中往往常用的基本序列化类型不能满足所有需求，比如在Hadoop框架内部传递一个bean对象，那么该对象就需要实现序列化接口。<br>具体实现bean对象序列化步骤如下7步：</p>
+<ul>
+<li>实现Writable接口</li>
+<li>反序列化时，需要反射调用空参构造函数，所以必须有空参构造</li>
+<li>重写序列化方法</li>
+<li>重写反序列化方法(<strong>注意反序列化的顺序和序列化的顺序完全一致</strong>)</li>
+<li>要想把结果显示在文件中，需要重写toString()，可用”\t”分开，方便后续用</li>
+<li>如果需要将自定义的bean放在key中传输，则还需要实现Comparable接口，因为MapReduce框架中的Shuffle过程要求对key必须能排序</li>
+</ul>
+</li>
+<li><p>序列化案例实操</p>
+<ul>
+<li><p>需求：统计每一个手机号耗费的总上行流量、下行流量、总流量</p>
+</li>
+<li><p>案例分析<br><img src="%E5%BA%8F%E5%88%97%E5%8C%96%E6%A1%88%E4%BE%8B%E5%88%86%E6%9E%90.png" alt="序列化案例分析"></p>
+</li>
+<li><p>编写MapReduce程序</p>
+<ul>
+<li>编写流量统计的Bean对象</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">FlowBean</span> <span class="keyword">implements</span> <span class="title">Writable</span> </span>&#123;</span><br><span class="line">  <span class="comment">// 上行流量</span></span><br><span class="line">  <span class="keyword">private</span> <span class="keyword">long</span> upFlow;</span><br><span class="line">  <span class="comment">// 下行流量</span></span><br><span class="line">  <span class="keyword">private</span> <span class="keyword">long</span> downFlow;</span><br><span class="line">  <span class="comment">// 总流量</span></span><br><span class="line">  <span class="keyword">private</span> <span class="keyword">long</span> sumFlow;</span><br><span class="line">  <span class="comment">// 空参构造,为了后续反射</span></span><br><span class="line">  <span class="function"><span class="keyword">public</span> <span class="title">FlowBean</span><span class="params">()</span> </span>&#123;</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="comment">// 序列化方法</span></span><br><span class="line">  <span class="meta">@Override</span></span><br><span class="line">  <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">write</span><span class="params">(DataOutput dataOutput)</span> <span class="keyword">throws</span> IOException </span>&#123;</span><br><span class="line">      dataOutput.writeLong(upFlow);</span><br><span class="line">      dataOutput.writeLong(downFlow);</span><br><span class="line">      dataOutput.writeLong(sumFlow);</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="comment">// 反序列化方法</span></span><br><span class="line">  <span class="meta">@Override</span></span><br><span class="line">  <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">readFields</span><span class="params">(DataInput dataInput)</span> <span class="keyword">throws</span> IOException </span>&#123;</span><br><span class="line">      <span class="comment">// 必须要求和序列化方法顺序一致</span></span><br><span class="line">      upFlow = dataInput.readLong();</span><br><span class="line">      downFlow = dataInput.readLong();</span><br><span class="line">      sumFlow = dataInput.readLong();</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="meta">@Override</span></span><br><span class="line">  <span class="function"><span class="keyword">public</span> String <span class="title">toString</span><span class="params">()</span> </span>&#123;</span><br><span class="line">      <span class="keyword">return</span> upFlow + <span class="string">"\t"</span> + downFlow + <span class="string">"\t"</span> + sumFlow;</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">set</span><span class="params">(<span class="keyword">long</span> upFlow, <span class="keyword">long</span> downFlow)</span> </span>&#123;</span><br><span class="line">      <span class="keyword">this</span>.upFlow = upFlow;</span><br><span class="line">      <span class="keyword">this</span>.downFlow = downFlow;</span><br><span class="line">      <span class="keyword">this</span>.sumFlow = upFlow + downFlow;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>编写mapper类</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">FlowMapper</span> <span class="keyword">extends</span> <span class="title">Mapper</span>&lt;<span class="title">LongWritable</span>, <span class="title">Text</span>, <span class="title">Text</span>, <span class="title">FlowBean</span>&gt; </span>&#123;</span><br><span class="line">  <span class="keyword">private</span> Text k = <span class="keyword">new</span> Text();</span><br><span class="line">  <span class="keyword">private</span> FlowBean flowBean = <span class="keyword">new</span> FlowBean();</span><br><span class="line">  <span class="meta">@Override</span></span><br><span class="line">  <span class="function"><span class="keyword">protected</span> <span class="keyword">void</span> <span class="title">map</span><span class="params">(LongWritable key, Text value, Context context)</span> <span class="keyword">throws</span> IOException, InterruptedException </span>&#123;</span><br><span class="line">      <span class="comment">// 1、获取一行</span></span><br><span class="line">      String lineStr = value.toString();</span><br><span class="line">      <span class="comment">// 2、切割\t</span></span><br><span class="line">      String[] fields = lineStr.split(<span class="string">"\t"</span>);</span><br><span class="line">      <span class="comment">// 3、封装对象</span></span><br><span class="line">      k.set(fields[<span class="number">1</span>]);</span><br><span class="line">      <span class="keyword">long</span> upFlow = Long.parseLong(fields[fields.length - <span class="number">3</span>]);</span><br><span class="line">      <span class="keyword">long</span> downFlow = Long.parseLong(fields[fields.length - <span class="number">2</span>]);</span><br><span class="line">      flowBean.set(upFlow, downFlow);</span><br><span class="line">      <span class="comment">// 4、写出</span></span><br><span class="line">      context.write(k, flowBean);</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+</li>
 </ul>
 
           
@@ -1581,7 +1755,7 @@ MapReduce概述
           
         
           
-            <p>本文永久链接是：<a href=https://sobxiong.github.io/2020/06/03/%E5%A4%A7%E6%95%B0%E6%8D%AE/hadoop/>https://sobxiong.github.io/2020/06/03/%E5%A4%A7%E6%95%B0%E6%8D%AE/hadoop/</a></p>
+            <p>本文永久链接是：<a href=https://sobxiong.github.io/2020/06/03/%E5%A4%A7%E6%95%B0%E6%8D%AE/Hadoop/>https://sobxiong.github.io/2020/06/03/%E5%A4%A7%E6%95%B0%E6%8D%AE/Hadoop/</a></p>
           
         
       </blockquote>
@@ -1632,10 +1806,10 @@ MapReduce概述
     <div class='new-meta-box'>
       
         
-          <div class="new-meta-item date" itemprop="dateUpdated" datetime="2020-06-24T18:55:24+08:00">
+          <div class="new-meta-item date" itemprop="dateUpdated" datetime="2020-06-26T17:27:31+08:00">
   <a class='notlink'>
     <i class="fas fa-edit fa-fw" aria-hidden="true"></i>
-    <p>更新于：2020年6月24日</p>
+    <p>更新于：2020年6月26日</p>
   </a>
 </div>
 
@@ -1662,7 +1836,7 @@ MapReduce概述
       
         <a class="-mob-share-qq" title="" rel="external nofollow noopener noreferrer"
           
-          href="http://connect.qq.com/widget/shareqq/index.html?url=https://sobxiong.github.io/2020/06/03/%E5%A4%A7%E6%95%B0%E6%8D%AE/hadoop/&title=Hadoop入门 - SOBXiong的博客&summary=内容
+          href="http://connect.qq.com/widget/shareqq/index.html?url=https://sobxiong.github.io/2020/06/03/%E5%A4%A7%E6%95%B0%E6%8D%AE/Hadoop/&title=Hadoop入门 - SOBXiong的博客&summary=内容
 概论
 Hadoop介绍
 环境搭建
@@ -1676,6 +1850,7 @@ NameNode和SecondaryNameNode
 DataNode
 HDFS2.X新特性
 MapReduce概述
+Hadoop序列化
 "
           
           >
@@ -1688,7 +1863,7 @@ MapReduce概述
       
         <a class="-mob-share-qzone" title="" rel="external nofollow noopener noreferrer"
           
-          href="https://sns.qzone.qq.com/cgi-bin/qzshare/cgi_qzshare_onekey?url=https://sobxiong.github.io/2020/06/03/%E5%A4%A7%E6%95%B0%E6%8D%AE/hadoop/&title=Hadoop入门 - SOBXiong的博客&summary=内容
+          href="https://sns.qzone.qq.com/cgi-bin/qzshare/cgi_qzshare_onekey?url=https://sobxiong.github.io/2020/06/03/%E5%A4%A7%E6%95%B0%E6%8D%AE/Hadoop/&title=Hadoop入门 - SOBXiong的博客&summary=内容
 概论
 Hadoop介绍
 环境搭建
@@ -1702,6 +1877,7 @@ NameNode和SecondaryNameNode
 DataNode
 HDFS2.X新特性
 MapReduce概述
+Hadoop序列化
 "
           
           >
@@ -1714,7 +1890,7 @@ MapReduce概述
       
         <a class="-mob-share-weibo" title="" rel="external nofollow noopener noreferrer"
           
-          href="http://service.weibo.com/share/share.php?url=https://sobxiong.github.io/2020/06/03/%E5%A4%A7%E6%95%B0%E6%8D%AE/hadoop/&title=Hadoop入门 - SOBXiong的博客&summary=内容
+          href="http://service.weibo.com/share/share.php?url=https://sobxiong.github.io/2020/06/03/%E5%A4%A7%E6%95%B0%E6%8D%AE/Hadoop/&title=Hadoop入门 - SOBXiong的博客&summary=内容
 概论
 Hadoop介绍
 环境搭建
@@ -1728,6 +1904,7 @@ NameNode和SecondaryNameNode
 DataNode
 HDFS2.X新特性
 MapReduce概述
+Hadoop序列化
 "
           
           >
@@ -1836,7 +2013,7 @@ Web
 
 
     <div class='content'>
-        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#内容"><span class="toc-text">内容</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#概论"><span class="toc-text">概论</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Hadoop介绍"><span class="toc-text">Hadoop介绍</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#环境搭建"><span class="toc-text">环境搭建</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Hadoop运行模式"><span class="toc-text">Hadoop运行模式</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Hadoop编译源码"><span class="toc-text">Hadoop编译源码</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#HDFS概述"><span class="toc-text">HDFS概述</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#HDFS的Shell操作"><span class="toc-text">HDFS的Shell操作</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#HDFS客户端操作"><span class="toc-text">HDFS客户端操作</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#HDFS的数据流"><span class="toc-text">HDFS的数据流</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#NameNode和SecondaryNameNode"><span class="toc-text">NameNode和SecondaryNameNode</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#DataNode"><span class="toc-text">DataNode</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#HDFS2-X新特性"><span class="toc-text">HDFS2.X新特性</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#MapReduce概述"><span class="toc-text">MapReduce概述</span></a></li></ol>
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#内容"><span class="toc-text">内容</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#概论"><span class="toc-text">概论</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Hadoop介绍"><span class="toc-text">Hadoop介绍</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#环境搭建"><span class="toc-text">环境搭建</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Hadoop运行模式"><span class="toc-text">Hadoop运行模式</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Hadoop编译源码"><span class="toc-text">Hadoop编译源码</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#HDFS概述"><span class="toc-text">HDFS概述</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#HDFS的Shell操作"><span class="toc-text">HDFS的Shell操作</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#HDFS客户端操作"><span class="toc-text">HDFS客户端操作</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#HDFS的数据流"><span class="toc-text">HDFS的数据流</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#NameNode和SecondaryNameNode"><span class="toc-text">NameNode和SecondaryNameNode</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#DataNode"><span class="toc-text">DataNode</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#HDFS2-X新特性"><span class="toc-text">HDFS2.X新特性</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#MapReduce概述"><span class="toc-text">MapReduce概述</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Hadoop序列化"><span class="toc-text">Hadoop序列化</span></a></li></ol>
     </div>
   </section>
 
