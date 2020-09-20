@@ -1,0 +1,1904 @@
+<!DOCTYPE html>
+<html>
+<head hexo-theme='https://volantis.js.org/#2.6.6'>
+  <meta charset="utf-8">
+  <!-- SEO相关 -->
+  
+    
+  
+  <!-- 渲染优化 -->
+  <meta name="renderer" content="webkit">
+  <meta name="force-rendering" content="webkit">
+  <meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1">
+  <meta name="HandheldFriendly" content="True" >
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+  <!-- 页面元数据 -->
+  
+    <title>Scala - SOBXiong的博客</title>
+  
+    <meta name="keywords" content="大数据,Scala">
+  
+  
+    <meta name="description" content="内容
+Scala概述
+变量
+运算符
+程序流程控制
+函数式编程基础
+面向对象编程-基础
+面向对象编程-中级
+">
+  
+
+  <!-- feed -->
+  
+
+  <!-- import meta -->
+  
+
+  <!-- link -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@5.13/css/all.min.css">
+  
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.css">
+
+  
+  
+    
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/node-waves@0.7.6/dist/waves.min.css">
+
+  
+
+  
+  <link rel="shortcut icon" type='image/x-icon' href="https://cdn.jsdelivr.net/gh/SOBXiong/imageBed/favicon.png">
+  
+
+  
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/aplayer@1.10/dist/APlayer.min.css">
+  
+
+  
+
+  <!-- import link -->
+  
+
+  
+  
+    
+<link rel="stylesheet" href="/css/style.css">
+
+  
+
+  <script>
+    function setLoadingBarProgress(num) {
+      document.getElementById('loading-bar').style.width=num+"%";
+    }
+  </script>
+
+  
+  
+</head>
+
+<body>
+  
+  <div id="loading-bar-wrapper">
+  <div id="loading-bar"></div>
+</div>
+<header class="l_header shadow blur">
+  <div class='container'>
+  <div class='wrapper'>
+    <div class='nav-sub'>
+      <p class="title"></p>
+      <ul class='switcher nav-list-h'>
+        <li><a class="s-comment fas fa-comments fa-fw" target="_self" href='javascript:void(0)'></a></li>
+        
+          <li><a class="s-toc fas fa-list fa-fw" target="_self" href='javascript:void(0)'></a></li>
+        
+      </ul>
+    </div>
+		<div class="nav-main">
+      
+        
+        <a class="title flat-box" target="_self" href='/'>
+          
+          
+            <i class='https://cdn.jsdelivr.net/gh/SOBXiong/imageBed/favicon.png'></i>
+          
+          
+            SOBXiong
+          
+          
+        </a>
+      
+
+			<div class='menu navigation'>
+				<ul class='nav-list-h'>
+          
+          
+          
+            
+            
+              <li>
+                <a class="flat-box" href=/
+                  
+                  
+                  
+                    id="home"
+                  >
+                  <i class='fas fa-rss fa-fw'></i>博客
+                </a>
+                
+              </li>
+            
+          
+          
+            
+            
+              <li>
+                <a class="flat-box" href=/categories/
+                  
+                  
+                  
+                    id="categories"
+                  >
+                  <i class='fas fa-folder-open fa-fw'></i>分类
+                </a>
+                
+              </li>
+            
+          
+          
+            
+            
+              <li>
+                <a class="flat-box" href=/tags/
+                  
+                  
+                  
+                    id="tags"
+                  >
+                  <i class='fas fa-tags fa-fw'></i>标签
+                </a>
+                
+              </li>
+            
+          
+          
+            
+            
+              <li>
+                <a class="flat-box" href=/archives/
+                  
+                  
+                  
+                    id="archives"
+                  >
+                  <i class='fas fa-archive fa-fw'></i>归档
+                </a>
+                
+              </li>
+            
+          
+          
+            
+            
+              <li>
+                <a class="flat-box" href=/about/
+                  
+                  
+                  
+                    id="about"
+                  >
+                  <i class='fas fa-info-circle fa-fw'></i>关于
+                </a>
+                
+              </li>
+            
+          
+          
+				</ul>
+			</div>
+
+      <div class="m_search">
+        <form name="searchform" class="form u-search-form">
+          <i class="icon fas fa-search fa-fw"></i>
+          <input type="text" class="input u-search-input" placeholder="Search..." />
+        </form>
+      </div>
+
+			<ul class='switcher nav-list-h'>
+				
+					<li><a class="s-search fas fa-search fa-fw" target="_self" href='javascript:void(0)'></a></li>
+				
+				<li>
+          <a class="s-menu fas fa-bars fa-fw" target="_self" href='javascript:void(0)'></a>
+          <ul class="menu-phone list-v navigation white-box">
+            
+              
+            
+              <li>
+                <a class="flat-box" href=/
+                  
+                  
+                  
+                    id="home"
+                  >
+                  <i class='fas fa-rss fa-fw'></i>博客
+                </a>
+                
+              </li>
+            
+          
+            
+              
+            
+              <li>
+                <a class="flat-box" href=/categories/
+                  
+                  
+                  
+                    id="categories"
+                  >
+                  <i class='fas fa-folder-open fa-fw'></i>分类
+                </a>
+                
+              </li>
+            
+          
+            
+              
+            
+              <li>
+                <a class="flat-box" href=/tags/
+                  
+                  
+                  
+                    id="tags"
+                  >
+                  <i class='fas fa-tags fa-fw'></i>标签
+                </a>
+                
+              </li>
+            
+          
+            
+              
+            
+              <li>
+                <a class="flat-box" href=/archives/
+                  
+                  
+                  
+                    id="archives"
+                  >
+                  <i class='fas fa-archive fa-fw'></i>归档
+                </a>
+                
+              </li>
+            
+          
+            
+              
+            
+              <li>
+                <a class="flat-box" href=/about/
+                  
+                  
+                  
+                    id="about"
+                  >
+                  <i class='fas fa-info-circle fa-fw'></i>关于
+                </a>
+                
+              </li>
+            
+          
+            
+          </ul>
+        </li>
+			</ul>
+		</div>
+	</div>
+  </div>
+</header>
+
+<script>setLoadingBarProgress(40);</script>
+
+
+
+  <div class="l_body nocover">
+    <div class='body-wrapper'>
+      
+
+<div class='l_main'>
+  
+
+  
+    <article id="post" class="post white-box reveal shadow article-type-post" itemscope itemprop="blogPost">
+      
+
+
+  <section class='meta'>
+    
+      
+      
+      <div class="meta" id="header-meta">
+        
+          
+  <h1 class="title">
+    <a href="/2020/07/24/language/Scala/Scala/">
+      Scala
+    </a>
+  </h1>
+
+
+        
+        <div class='new-meta-box'>
+          
+            
+          
+            
+              
+<div class='new-meta-item author'>
+  <a href="http://xiongjc.top" target="_blank" rel="nofollow noopener">
+    <img src="https://cdn.jsdelivr.net/gh/SOBXiong/imageBed/hdImg_f757fa7e0fd65077ce52d251fc7a01d815860762755.jpg">
+    <p>SOBXiong</p>
+  </a>
+</div>
+
+            
+          
+            
+              
+
+            
+          
+            
+              <div class="new-meta-item date">
+  <a class='notlink'>
+    <i class="fas fa-calendar-alt fa-fw" aria-hidden="true"></i>
+    <p>发布于：2020年7月24日</p>
+  </a>
+</div>
+
+            
+          
+            
+              
+
+            
+          
+        </div>
+        
+          <hr>
+        
+      </div>
+    
+  </section>
+
+
+      <section class="article typo">
+        <div class="article-entry" itemprop="articleBody">
+          
+          <h2 id="内容"><a href="#内容" class="headerlink" title="内容"></a>内容</h2><ul>
+<li><a href="#Scala概述">Scala概述</a></li>
+<li><a href="#变量">变量</a></li>
+<li><a href="#运算符">运算符</a></li>
+<li><a href="#程序流程控制">程序流程控制</a></li>
+<li><a href="#函数式编程基础">函数式编程基础</a></li>
+<li><a href="#面向对象编程-基础">面向对象编程-基础</a></li>
+<li><a href="#面向对象编程-中级">面向对象编程-中级</a></li>
+</ul>
+<a id="more"></a>
+
+<h2 id="Scala概述"><a href="#Scala概述" class="headerlink" title="Scala概述"></a>Scala概述</h2><ul>
+<li><p>学习Scala的原因</p>
+<ul>
+<li>Spark是新一代内存级大数据计算框架，是大数据的重要内容</li>
+<li>Spark就是使用Scala编写的。因此为了更好的学习Spark, 需要掌握Scala这门语言</li>
+<li>Scala是Scalable Language的简写，是一门多范式(范式/编程方式[面向对象/函数式编程])的编程语言</li>
+<li>联邦理工学院洛桑(EPFL)的Martin Odersky于2001年开始设计Scala(2003年推出)</li>
+<li>Spark的兴起，带动Scala语言的发展</li>
+</ul>
+</li>
+<li><p>Scala由来<br>创始人马丁·奥德斯基(Martin Odersky)是编译器及编程的狂热爱好者，长时间的编程之后，希望发明一种语言，能够让写程序这样的基础工作变得高效，简单。所以当接触到JAVA语言后，对JAVA这门便携式，运行在网络，且存在垃圾回收的语言产生了极大的兴趣，所以决定将函数式编程语言的特点融合到JAVA中，由此发明了两种语言(Pizza &amp; Scala)<br>Pizza和Scala极大地推动了Java编程语言的发展(jdk5.0的泛型，for循环增强, 自动类型转换等，都是从Pizza引入的新特性;jdk8.0的类型推断，Lambda表达式就是从scala引入的特性)<br>现在主流JVM的javac编译(jdk5.0、8.0)就是马丁·奥德斯基编写出来的</p>
+</li>
+<li><p>Scala和Java以及JVM的关系分析图<br><img src="Scala%E5%92%8CJava%E4%BB%A5%E5%8F%8AJVM%E7%9A%84%E5%85%B3%E7%B3%BB%E5%88%86%E6%9E%90%E5%9B%BE.png" alt="Scala和Java以及JVM的关系分析图"></p>
+</li>
+<li><p>Scala语言的特点<br>Scala是一门以java虚拟机(JVM)为运行环境并将面向对象和函数式编程的最佳特性结合在一起的<strong>静态类型</strong>编程语言</p>
+<ul>
+<li>Scala是一门多范式(multi-paradigm)的编程语言，Scala支持面向对象和函数式编程</li>
+<li>Scala源代码(.scala)会被编译成Java字节码(.class)，然后运行于JVM之上，并可以调用现有的Java类库，实现两种语言的无缝对接</li>
+<li>Scala简洁高效</li>
+<li>Scala设计时参考了Java的设计思想，源于Java</li>
+</ul>
+</li>
+<li><p>Mac上搭建Scala开发环境(Window/Linux类似)</p>
+<ul>
+<li>Scala需要Java运行时库，首先先安装JDK环境</li>
+<li>在<a href="http://www.scala-lang.org/" target="_blank" rel="noopener">http://www.scala-lang.org/</a>下载mac版本tar.gz包</li>
+<li>解压tar.gz包(不配置环境变量)</li>
+<li>在命令行下cd进入解压包的bin目录下</li>
+<li>输入scala进入Scala Cli，会打印版本信息</li>
+</ul>
+</li>
+<li><p>搭建IDEA的Scala开发环境</p>
+<ul>
+<li>在Plugin面板中安装(如果下载太慢,去官网下载对应版本的插件到本地,在安装)</li>
+<li>新建空的maven项目</li>
+<li>当前默认不支持scala的框架，需要引入scala框架，右键项目点击add framework support</li>
+<li>选中scala，在use library中设定解压的目录</li>
+<li>右键main目录创建一个diretory，名为scala，右键scala目录，mark directory，选择source root</li>
+</ul>
+</li>
+<li><p>Scala执行流程</p>
+<ul>
+<li>.scala源文件通过scalac编译成.class字节码，再通过scala运行</li>
+<li>.scala源文件直接通过scala运行(运行慢)</li>
+</ul>
+</li>
+<li><p>Scala程序特点</p>
+<ul>
+<li>以.scala为扩展名</li>
+<li>执行入口为main()函数</li>
+<li>严格区分大小写</li>
+<li>方法由一条条语句构成，每个语句后不需要添加分号</li>
+<li>如果在一行有多条语句，除了最后一行语句不要分号，其他语句都需要分号</li>
+</ul>
+</li>
+<li><p>Scala输出的三种方式</p>
+<ul>
+<li>字符串通过’+’方式(类似Java)</li>
+<li>printf方式进行格式化(%,类似C)</li>
+<li>字符串通过$引用(类似Kotlin)</li>
+</ul>
+</li>
+<li><p>Scala在IDEA下进行源码关联</p>
+<ul>
+<li>在官网下载source源码包</li>
+<li>解压到本地</li>
+<li>在IDEA中打开一个源码文件，在右上角上点击Attach Sources</li>
+<li>选中解压后的本地目录</li>
+</ul>
+</li>
+<li><p>Scala注释</p>
+<ul>
+<li>单行/多行注释(同Java)</li>
+<li>文档注释：scaladoc -d 源码.scala</li>
+</ul>
+</li>
+</ul>
+<h2 id="变量"><a href="#变量" class="headerlink" title="变量"></a>变量</h2><ul>
+<li><p>Scala变量声明</p>
+<ul>
+<li>基础语法：var | val 变量名 [:变量类型] = 变量值</li>
+<li>声明变量时，类型可以省略(编译器自动推导,即类型推导)</li>
+<li>类型确定后，就不能修改，说明Scala是强数据类型语言</li>
+<li>在声明/定义一个变量时，可以使用var或者val来修饰，var修饰的变量可改变，val修饰的变量不可改(同Kotlin)</li>
+<li>val修饰的变量在编译后，等同于加上final(同Kotlin)</li>
+<li>var修饰的对象引用可以改变，val修饰的则不可改变，但对象的状态(值,属性)却是可以改变的(比如自定义对象、数组、集合等等)</li>
+<li>变量声明时，需要初始值</li>
+</ul>
+</li>
+<li><p>数据类型</p>
+<ul>
+<li><p>Scala与Java有着相同的数据类型，在Scala中数据类型都是对象(包装了基础数据类型)，也就是说scala没有java中的原生类型(同Kotlin)</p>
+</li>
+<li><p>Scala数据类型分为两大类AnyVal(值类型)和AnyRef(引用类型)——注意：不管是AnyVal还是AnyRef都是对象<br><img src="Scala%E6%95%B0%E6%8D%AE%E7%B1%BB%E5%9E%8B%E4%BD%93%E7%B3%BB%E5%9B%BE.png" alt="Scala数据类型体系图"></p>
+<ul>
+<li>在Scala中有一个根类型Any，他是所有类的父类</li>
+<li>scala中一切皆为对象，分为两类AnyVal和AnyRef，它们都是Any子类</li>
+<li>Null类型是scala的特殊类型，只有一个值null，是bottom class，也是所有AnyRef类型的子类</li>
+<li>Nothing类型也是bottom class，是所有类的子类，开发中通常可以将Nothing类型的值返回给任意变量或函数(抛异常使用很多)</li>
+</ul>
+</li>
+<li><p>数据类型列表</p>
+<table>
+<thead>
+<tr>
+<th>数据类型</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Byte[1]</td>
+<td>8位有符号补码整数。数值区间为-128～127</td>
+</tr>
+<tr>
+<td>Short[2]</td>
+<td>16位有符号补码整数。数值区间为-32768～32767</td>
+</tr>
+<tr>
+<td>Int[3]</td>
+<td>32位有符号补码整数。数值区间为-2^31～2^31-1</td>
+</tr>
+<tr>
+<td>Long[4]</td>
+<td>64位有符号补码整数。数值区间为-2^63～2^63-1</td>
+</tr>
+<tr>
+<td>Float[4]</td>
+<td>32位，IEEE754标准的单精度浮点数</td>
+</tr>
+<tr>
+<td>Double[8]</td>
+<td>64位，IEEE754标准的双精度浮点数</td>
+</tr>
+<tr>
+<td>Char[2]</td>
+<td>16位无符号Unicode字符, 区间值为U+0000～U+FFFF</td>
+</tr>
+<tr>
+<td>String</td>
+<td>字符序列</td>
+</tr>
+<tr>
+<td>Boolean[1]</td>
+<td>true或false</td>
+</tr>
+<tr>
+<td>Unit</td>
+<td>表示无值，和其他语言中void等同。用作不返回任何结果的方法的结果类型。Unit只有一个实例值，写成()</td>
+</tr>
+<tr>
+<td>Null</td>
+<td>null</td>
+</tr>
+<tr>
+<td>Nothing</td>
+<td>Nothing类型在Scala的类层级的最低端；它是任何其他类型的子类型</td>
+</tr>
+<tr>
+<td>Any</td>
+<td>Any是所有其他类的超类</td>
+</tr>
+<tr>
+<td>AnyRef</td>
+<td>AnyRef类是Scala里所有引用类(reference class)的基类</td>
+</tr>
+</tbody></table>
+<ul>
+<li>整数类型使用细节<ul>
+<li>Scala各整数类型有固定的表数范围和字段长度，不受具体OS的影响，以保证Scala程序的可移植性</li>
+<li>Scala的整型常量/字面量默认为Int型，声明Long型常量/字面量需后加’l’或’L’</li>
+<li>表示特大整数：BigInt类</li>
+</ul>
+</li>
+<li>浮点类型使用细节<ul>
+<li>与整数类型类似，Scala浮点类型也有固定的表数范围和字段长度，不受具体OS的影响</li>
+<li>Scala的浮点型常量默认为Double型，声明Float型常量，须后加’f’或’F’</li>
+<li>两种表示方式<ul>
+<li>十进制数形式：如5.12、512.0f、.512(必须有小数点)</li>
+<li>科学计数法形式：如5.12e2</li>
+</ul>
+</li>
+<li>通常情况下应使用Double类型，比Float类型更精准(小数点后大致7位)</li>
+<li>表示更为精确的小数：BigDecimal</li>
+</ul>
+</li>
+<li>字符类型使用细节<ul>
+<li>字符常量是用单引号’’括起来的单个字符</li>
+<li>Scala也允许使用转义字符’&#39;来将其后的字符转变为特殊字符型常量(同Java)</li>
+<li>Char相当于一个整数，可以进行运算</li>
+<li>字符类型存取本质<ul>
+<li>存储：字符 -&gt; 码值 -&gt; 二进制 -&gt; 存储</li>
+<li>读取：二进制 -&gt; 码值 -&gt; 字符 -&gt; 读取</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>Unit、Null和Nothing类型使用细节<ul>
+<li>Null类只有一个实例对象null，类似于Java中的null引用。null可以赋值给任意引用类型(AnyRef)，但是不能赋值给值类型</li>
+<li>Unit类型用来标识过程，也就是没有明确返回值的函数，类似于Java里的void。Unit只有一个实例()</li>
+<li>Nothing可以作为没有正常返回值的方法的返回类型，非常直观的告诉你这个方法不会正常返回，而且由于Nothing是其他任意类型的子类，它还能跟要求返回值的方法兼容</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p>值类型转换</p>
+<ul>
+<li><p>隐式转换：当Scala程序在进行赋值或者运算时，精度小的类型自动转换为精度大的数据类型<br><img src="%E6%95%B0%E6%8D%AE%E7%B1%BB%E5%9E%8B%E7%B2%BE%E5%BA%A6%E5%A4%A7%E5%B0%8F%E6%8E%92%E5%BA%8F%E5%9B%BE.png" alt="数据类型精度大小排序图"><br>细节说明：</p>
+<ul>
+<li>有多种类型的数据混合运算时，系统首先自动将所有数据转换成容量最大的那种数据类型，然后再进行计算</li>
+<li>当我们把精度(容量)大的数据类型赋值给精度(容量)小的数据类型时会报错</li>
+<li>byte、short和char之间不会相互自动转换，三者计算时首先都转换为int类型</li>
+<li>自动提升原则：表达式结果的类型自动提升为操作数中(容量、精度)最大的类型</li>
+</ul>
+</li>
+<li><p>强制类型转换：自动类型转换的逆过程，将容量大的数据类型转换为容量小的数据类型。使用时要加上强制转函数，<strong>但可能造成精度降低或溢出</strong></p>
+<figure class="highlight scala"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// java</span></span><br><span class="line">int num = (int)<span class="number">2.5</span></span><br><span class="line"><span class="comment">// scala</span></span><br><span class="line"><span class="keyword">var</span> num : <span class="type">Int</span> = <span class="number">2.7</span>.toInt</span><br></pre></td></tr></table></figure>
+
+<p>细节说明：</p>
+<ul>
+<li>强转符号只针对于最近的操作数有效，往往会使用小括号提升优先级</li>
+<li>Char类型可以保存Int的常量值，但不能保存Int的变量值，需要强转</li>
+</ul>
+</li>
+<li><p>值类型和String类型的转换</p>
+<ul>
+<li>基本类型转String类型：将基本类型的值 + “”(同Java)</li>
+<li>String类型转基本数据类型：调用String.toXxx方法</li>
+<li>小数字符串转Int会抛出异常，不会进行截取</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p>标识符命名规则</p>
+<ul>
+<li>基本和Java一致</li>
+<li>首字符为字母，后续字符任意字母和数字，美元符号，可后接下划线_</li>
+<li>数字不可以开头</li>
+<li>首字符为操作符(比如+ - * /)，后续字符也需跟至少一个操作符(反编译后scala将其转译)</li>
+<li>操作符(比如+-*/)不能在标识符中间和最后</li>
+<li>用反引号``包括的任意字符串，即使是关键字也可以</li>
+<li>预定义标识符可以用，如Int，但不推荐</li>
+</ul>
+</li>
+<li><p>Scala的39个关键字</p>
+<ul>
+<li>package, import, class, object, trait, extends, with, type, forSome</li>
+<li>private, protected, abstract, sealed, final, implicit, lazy, override</li>
+<li>try, catch, finally, throw</li>
+<li>if, else, match, case, do, while, for, return, yield</li>
+<li>def, val, var</li>
+<li>this, super</li>
+<li>new</li>
+<li>true, false, null</li>
+</ul>
+</li>
+</ul>
+<h2 id="运算符"><a href="#运算符" class="headerlink" title="运算符"></a>运算符</h2><ul>
+<li><p>运算符分类</p>
+<ul>
+<li>算术运算符<ul>
+<li>%的运算原则：a % b = a - a / b * b(同Java)</li>
+<li>在scala中没有++和–，使用+=1和-=1代替</li>
+<li>/的整数除和小数除是有区别的；整数除只保留整数部分而舍弃小数部分</li>
+</ul>
+</li>
+<li>关系运算符(==、!=、&gt;、&lt;、&lt;=、&gt;=)<ul>
+<li>关系运算的结果都是Boolean类型(true/false)</li>
+<li>如果两个浮点数进行比较，应当保证数据类型一致</li>
+</ul>
+</li>
+<li>逻辑运算符(&amp;&amp;、||、!)</li>
+<li>赋值运算符(=、+=、-=、*=、/=、%=、&lt;&lt;=、&gt;&gt;=、&amp;=、^=、|=)<ul>
+<li>运算顺序从右往左</li>
+<li>赋值运算符的左边只能是变量，右边可以是变量、表达式、常量值/字面量</li>
+</ul>
+</li>
+<li>位运算符(&amp;、|、^、~、&lt;&lt;、&gt;&gt;、&gt;&gt;&gt;)</li>
+<li>Scala不支持三目运算符(x ? x : x)，使用if-else代替(类似kotlin)</li>
+<li>运算符优先级(同Java)<ul>
+<li>()[]</li>
+<li>单目运算</li>
+<li>算术运算</li>
+<li>移位运算</li>
+<li>比较运算</li>
+<li>位运算</li>
+<li>关系运算</li>
+<li>赋值运算</li>
+<li>,<br><img src="%E8%BF%90%E7%AE%97%E7%AC%A6%E4%BC%98%E5%85%88%E7%BA%A7.png" alt="运算符优先级"></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p>键盘输入语句</p>
+<ul>
+<li>输入String：StdIn.readLine()</li>
+<li>输入Int：StdIn.readInt</li>
+<li>…</li>
+</ul>
+</li>
+</ul>
+<h2 id="程序流程控制"><a href="#程序流程控制" class="headerlink" title="程序流程控制"></a>程序流程控制</h2><ul>
+<li><p>三大流程控制</p>
+<ul>
+<li>顺序控制</li>
+<li>分支控制<ul>
+<li>Scala中任意表达式都是有返回值的，也就意味着if else表达式其实是有返回结果的，具体返回结果的值取决于满足条件的代码体的最后一行内容</li>
+<li>Scala中没有switch，使用<strong>模式匹配(match-case)来处理</strong></li>
+</ul>
+</li>
+<li>循环控制<ul>
+<li>for循环<ul>
+<li>基本语法：<ul>
+<li>for(i &lt;- start to end)：其中i表示循环的变量，i将会从start～end循环，前后闭合</li>
+<li>for(item &lt;- list)：集合遍历</li>
+<li>for(i &lt;- start until end)：与to不同的是前闭后开</li>
+<li>for(i &lt;- start to end if i % 2 != 0)：循环守卫，即循环保护式(也称条件判断式,守卫)。保护式为true则进入循环体内部，为false则跳过，类似于continue</li>
+<li>for(i &lt;- start to end ; j = f(i))：引入变量，’;’不可少；其次i和j均为val不可变类型变量</li>
+<li>for(i &lt;- start1 to end1 ; j &lt;- start2 to end2)：嵌套循环，’;’不可少；上面代码不常用，基本用单层for的嵌套</li>
+<li>val res = for(i &lt;- start to end) yield i：循环返回值，将遍历过程中的每个结果i返回到一个新的Vector集合中；yield后可以是一个代码块，在最后一行返回</li>
+<li>for(i &lt;- Range(start,end,step))：控制for循环的步长</li>
+</ul>
+</li>
+<li>补充<ul>
+<li>{}和()对于for表达式都可以</li>
+<li>有一个不成文的约定：当for推导式仅包含单一表达式时使用圆括号，当其包含多个表达式时使用大括号</li>
+<li>当使用{}来换行写表达式时，分号就不用写了</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>while/do-while循环(同Java)<ul>
+<li>与if语句不同，while语句本身没有返回值，即结果是Unit类型</li>
+<li>while没有返回值，所以用while语句来计算并返回结果时，不可避免地使用声明在while外部的变量，那么就等同于循环的内部对外部的变量造成了影响，所以不推荐使用，而是推荐使用for循环</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p>while循环的中断</p>
+<ul>
+<li><p>说明：Scala内置控制结构特地去掉了break和continue，是为了更好的适应函数化编程，推荐使用函数式的风格解决break和contine的功能，而不是一个关键字</p>
+</li>
+<li><p>if-else和循环守卫也可以实现continue效果</p>
+</li>
+<li><p>举例说明(break的使用)：</p>
+<figure class="highlight scala"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 导入break相关函数</span></span><br><span class="line"><span class="keyword">import</span> util.control.<span class="type">Breaks</span>._</span><br><span class="line"><span class="comment">/*</span></span><br><span class="line"><span class="comment">breakable()函数</span></span><br><span class="line"><span class="comment">  1、是一个高阶函数：可以接受函数的函数</span></span><br><span class="line"><span class="comment">  2、源码实现：</span></span><br><span class="line"><span class="comment">    def breakable(op: =&gt; Unit) &#123;</span></span><br><span class="line"><span class="comment">      try &#123;</span></span><br><span class="line"><span class="comment">        op</span></span><br><span class="line"><span class="comment">      &#125; catch &#123;</span></span><br><span class="line"><span class="comment">        case ex: BreakControl =&gt;</span></span><br><span class="line"><span class="comment">          if (ex ne breakException) throw ex</span></span><br><span class="line"><span class="comment">      &#125;</span></span><br><span class="line"><span class="comment">    &#125;</span></span><br><span class="line"><span class="comment">    op：=&gt; Unit表示接受的参数是一个没有参数和返回值的函数，可简单理解为一段代码块</span></span><br><span class="line"><span class="comment">  3、breakable对break()抛出的异常做了处理，代码就继续执行</span></span><br><span class="line"><span class="comment">  4、传入代码块时，一般将()改为&#123;&#125;(类似Kotlin)</span></span><br><span class="line"><span class="comment">*/</span></span><br><span class="line">breakable&#123;</span><br><span class="line">  <span class="keyword">while</span>(n &lt;= <span class="number">20</span>)&#123;</span><br><span class="line">    n+=<span class="number">1</span></span><br><span class="line">    <span class="keyword">if</span>(n == <span class="number">18</span>)&#123;</span><br><span class="line">      <span class="comment">// 在scala中使用函数break()中断循环</span></span><br><span class="line">      <span class="comment">// def break(): Nothing = &#123; throw breakException &#125;</span></span><br><span class="line">      <span class="keyword">break</span>()</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+</li>
+</ul>
+</li>
+</ul>
+<h2 id="函数式编程基础"><a href="#函数式编程基础" class="headerlink" title="函数式编程基础"></a>函数式编程基础</h2><ul>
+<li><p>函数式编程介绍</p>
+<ul>
+<li>概念说明<ul>
+<li>函数式编程<ul>
+<li>是一种”编程范式”</li>
+<li>属于”结构化编程”的一种，主要思想是把运算过程尽量写成一系列嵌套的函数调用</li>
+<li>函数式编程中，将函数也当做数据类型，因此可以接受函数当作输入(参数)和输出(返回值)</li>
+</ul>
+</li>
+<li>在scala中，<strong>方法</strong>和<strong>函数</strong>几乎可以等同(比如他们的定义、使用、运行机制都一样的)，只是函数的使用方式更加的灵活多样</li>
+<li>函数式编程是从编程方式(范式)的角度来谈的，可以这样理解：函数式编程把函数当做一等公民，充分利用函数、支持的函数的多种使用方式。<br>比如：在Scala当中，函数是一等公民，像变量一样，既可以作为函数的参数使用，也可以将函数赋值给一个变量。函数的创建不用依赖于类或者对象；而在Java当中，函数的创建则要依赖于类、抽象类或者接口</li>
+<li>Scala中函数式编程和面向对象编程(是以对象为基础的编程方式)融合在一起</li>
+</ul>
+</li>
+<li>函数式编程、面向对象编程关系分析<br><img src="%E5%87%BD%E6%95%B0%E5%BC%8F%E7%BC%96%E7%A8%8B%E3%80%81%E9%9D%A2%E5%90%91%E5%AF%B9%E8%B1%A1%E7%BC%96%E7%A8%8B%E5%85%B3%E7%B3%BB%E5%88%86%E6%9E%90%E5%9B%BE.png" alt="函数式编程、面向对象编程关系分析图"></li>
+</ul>
+</li>
+<li><p>函数的定义(为完成某一功能的程序指令(语句)的集合)</p>
+<ul>
+<li><p>基本语法</p>
+<figure class="highlight scala"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">函数名</span> </span>([参数名: 参数类型], ...) [[: 返回值类型] =] &#123;</span><br><span class="line">  语句...</span><br><span class="line">  <span class="keyword">return</span> 返回值</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>语法介绍</p>
+<ul>
+<li>函数声明关键字为def(definition)</li>
+<li>[参数名: 参数类型], …：表示函数的输入(参数列表)，可以没有。如果有，多个参数使用逗号间隔</li>
+<li>函数返回值<ul>
+<li>(: 返回值类型 =) 明确返回值的类型</li>
+<li>(=) 表示返回值类型不确定，使用类型推导完成</li>
+<li>(空)，表示没有返回值，return不生效</li>
+<li>如果没有return，默认以执行到最后一行的结果作为返回值</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p>函数注意事项</p>
+<ul>
+<li>递归调用的规则<ul>
+<li>程序执行一个函数时，就创建一个新的受保护的独立空间(新函数栈)</li>
+<li>函数的局部变量是独立的，不会相互影响</li>
+<li>递归调用必须有递归出口，否则就是无限递归</li>
+</ul>
+</li>
+<li>函数的形参列表可以是多个，如果函数没有形参，调用时可以不带()</li>
+<li>形参列表和返回值列表的数据类型可以是值类型和引用类型</li>
+<li>Scala中的函数可以根据函数体最后一行代码自行推断函数返回值类型。那么在这种情况下，return关键字可以省略</li>
+<li>因为Scala可以自行推断，所以在省略return关键字的场合，返回值类型也可以省略</li>
+<li>如果函数明确使用return关键字，那么函数返回就不能使用自行推断了，这时要明确写成(: 返回类型 =  )，当然如果你什么都不写，即使有return，返回值也为()</li>
+<li>如果函数明确声明无返回值(声明Unit)，那么函数体中即使使用return关键字也不会有返回值</li>
+<li>如果明确函数无返回值或不确定返回值类型，那么返回值类型可以省略(或声明为Any)</li>
+<li>Scala语法中任何的语法结构都可以嵌套其他语法结构(灵活)，即：函数中可以再声明/定义函数，类中可以再声明类，方法中可以再声明/定义方法</li>
+<li>Scala函数的形参，在声明参数时，直接赋初始值(默认值)，这时调用函数时，如果没有指定实参，则会使用默认值。如果指定了实参，则实参会覆盖默认值</li>
+<li>如果函数存在多个参数，每一个参数都可以设定默认值，那么这个时候，传递的参数到底是覆盖默认值，还是赋值给没有默认值的参数，就不确定了(默认按照声明顺序[从左到右])。在这种情况下，可以采用带名参数(类似Kotlin)</li>
+<li>Scala函数的形参默认是val的，因此不能在函数中进行修改</li>
+<li>递归函数未执行之前是无法推断出来结果类型，在使用时必须有明确的返回值类型</li>
+<li>Scala函数支持可变参数，可变参数必须放在最后，如args :Int*</li>
+</ul>
+</li>
+<li><p>过程</p>
+<ul>
+<li>基本介绍：将函数的返回类型为Unit的函数称之为过程(procedure)，如果明确函数没有返回值，那么等号可以省略</li>
+<li>注意区分：如果函数声明时没有返回值类型，但是有等号，可以进行类型推断(最后一行代码)；这时这个函数实际是有返回值的，该函数并不是过程</li>
+</ul>
+</li>
+<li><p>惰性函数</p>
+<ul>
+<li><p>一种应用场景<br>惰性计算(<strong>尽可能延迟表达式求值</strong>)是许多函数式编程语言的特性。惰性集合在需要时提供其元素，无需预先计算它们，这带来了一些好处：首先，可以将耗时的计算推迟到绝对需要的时候；其次，可以创造无限个集合，只要它们继续收到请求，就会继续提供元素。函数的惰性使用能够得到更高效的代码。Java并没有为惰性提供原生支持，Scala提供了</p>
+</li>
+<li><p>Java实现懒加载(单例模式——懒汉式)</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">LazyDemo</span> </span>&#123;</span><br><span class="line">  <span class="keyword">private</span> LazyDemo instance = <span class="keyword">null</span>;</span><br><span class="line"></span><br><span class="line">  <span class="function"><span class="keyword">private</span> <span class="title">LazyDemo</span><span class="params">()</span></span>&#123;&#125;</span><br><span class="line"></span><br><span class="line">  <span class="function"><span class="keyword">public</span> LazyDemo <span class="title">getInstance</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="comment">// 如果没有初始化过,那么进行初始化</span></span><br><span class="line">    <span class="keyword">if</span> (instance == <span class="keyword">null</span>) &#123;</span><br><span class="line">      instance = <span class="keyword">new</span> LazyDemo();</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> instance;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>介绍<br>当函数返回值被声明为lazy时，函数的执行将被推迟，直到我们首次对此取值，该函数才会执行。这种函数我们称之为惰性函数，在Java的某些框架代码中称之为懒加载(延迟加载)</p>
+</li>
+<li><p>案例</p>
+<figure class="highlight scala"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">main</span></span>(args: <span class="type">Array</span>[<span class="type">String</span>]): <span class="type">Unit</span> = &#123;</span><br><span class="line">  <span class="keyword">lazy</span> <span class="keyword">val</span> res = sum(<span class="number">10</span>, <span class="number">20</span>)</span><br><span class="line">  println(<span class="string">"-----------------"</span>)</span><br><span class="line">  println(<span class="string">"res = "</span> + res)</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">sum</span></span>(n1 : <span class="type">Int</span>, n2 : <span class="type">Int</span>): <span class="type">Int</span> = &#123;</span><br><span class="line">  println(<span class="string">"sum() ~~~"</span>)</span><br><span class="line">  n1 + n2</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">/*</span></span><br><span class="line"><span class="comment">结果：</span></span><br><span class="line"><span class="comment">-----------------</span></span><br><span class="line"><span class="comment">sum() ~~~</span></span><br><span class="line"><span class="comment">res = 30</span></span><br><span class="line"><span class="comment">*/</span></span><br></pre></td></tr></table></figure>
+</li>
+<li><p>注意事项和细节</p>
+<ul>
+<li>lazy不能修饰var类型的变量</li>
+<li>不但在调用函数时，加了lazy会导致函数的执行被推迟；<strong>在声明一个变量时，如果声明了lazy，那么变量值得分配也会推迟。比如lazy val i = 10</strong></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p>异常</p>
+<ul>
+<li><p>介绍</p>
+<ul>
+<li>Scala提供try和catch块来处理异常：try块用于包含可能出错的代码；catch块用于处理try块中发生的异常。可以根据需要在程序中有任意数量的try…catch块</li>
+<li>语法处理上和Java类似，但是又不尽相同(许多异常包装了Java中的Exception——类似Kotlin)</li>
+</ul>
+</li>
+<li><p>Java异常回顾</p>
+<ul>
+<li><p>示例：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">try</span> &#123;</span><br><span class="line">  <span class="keyword">int</span> i = <span class="number">0</span>;</span><br><span class="line">  <span class="keyword">int</span> b = <span class="number">10</span>;</span><br><span class="line">  <span class="comment">// ArithmeticException,除0异常</span></span><br><span class="line">  <span class="keyword">int</span> c = b / i;</span><br><span class="line">&#125; <span class="keyword">catch</span>(Exception e)  &#123;</span><br><span class="line">  e.printStackTrace();</span><br><span class="line">&#125; <span class="keyword">finally</span> &#123;</span><br><span class="line">  <span class="comment">// 最终要执行的代码</span></span><br><span class="line">  System.out.println(<span class="string">"java finally"</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>Java异常处理的注意点：</p>
+<ul>
+<li>java语言按照try—catch-catch-…—finally的方式来处理异常</li>
+<li>不管有没有异常捕获，都会执行finally，因此通常可以在finally代码块中释放资源</li>
+<li>可以有多个catch，分别捕获对应的异常，这时需要把范围小的异常类写在前面，把范围大的异常类写在后面，否则编译错误。会提示”Exception ‘java.lang.xxxxxx’ has already been caught”</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p>Scala异常处理</p>
+<ul>
+<li><p>示例：</p>
+<figure class="highlight scala"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">try</span> &#123;</span><br><span class="line">  <span class="keyword">val</span> r = <span class="number">10</span> / <span class="number">0</span></span><br><span class="line">&#125; <span class="keyword">catch</span> &#123;</span><br><span class="line">  <span class="keyword">case</span> ex: <span class="type">ArithmeticException</span>=&gt; println(<span class="string">"ArithmeticException!"</span>)</span><br><span class="line">  <span class="keyword">case</span> ex: <span class="type">Exception</span> =&gt; println(<span class="string">"Normal Exception!"</span>)</span><br><span class="line">&#125; <span class="keyword">finally</span> &#123;</span><br><span class="line">  <span class="comment">// 最终要执行的代码</span></span><br><span class="line">  println(<span class="string">"scala finally"</span>)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>Scala异常处理的注意点：</p>
+<ul>
+<li><p>在scala异常处理中只有一个catch；在catch中有多个case，每个case可以匹配一种异常；”=&gt;”是一个关键符号，表示后面是对该异常的处理代码块</p>
+</li>
+<li><p>我们将可疑代码封装在try块中。在try块之后使用了一个catch处理程序来捕获异常。如果发生任何异常，catch处理程序将处理它，程序将不会异常终止</p>
+</li>
+<li><p>Scala的异常的工作机制和Java一样，但是Scala没有”checked(编译期)”异常，即Scala没有编译异常这个概念，异常都是在运行的时候捕获处理</p>
+</li>
+<li><p>可使用throw关键字抛出一个异常对象。所有异常都是Throwable的子类型。throw表达式是有类型的，就是Nothing(因为Nothing是所有类型的子类型，所以throw表达式可以用在任何需要类型的地方)</p>
+<figure class="highlight scala"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">main</span></span>(args: <span class="type">Array</span>[<span class="type">String</span>]): <span class="type">Unit</span> = &#123;</span><br><span class="line">  <span class="keyword">val</span> res = test()</span><br><span class="line">  println(res)</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">test</span></span>(): <span class="type">Nothing</span> = &#123;</span><br><span class="line">  <span class="keyword">throw</span> <span class="keyword">new</span> <span class="type">Exception</span>(<span class="string">"My Exception!"</span>)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>在Scala里，借用了模式匹配的思想来做异常的匹配。因此可以在catch的代码里，使用一系列case子句来匹配异常。”=&gt;”可以接着多条语句(换行)，类似java的switch-case语句</p>
+</li>
+<li><p>异常捕捉的机制与其他语言中一样，如果有异常发生，catch子句是按次序捕捉的。因此在catch子句中，越具体的异常越要靠前，越普遍的异常越靠后。如果把越普遍的异常写在前，把具体的异常写在后，scala不会报错，但这样是非常不好的编程风格</p>
+</li>
+<li><p>finally子句用于执行不管是正常处理还是有异常发生时都需要执行的步骤，一般用于对象的清理工作，这点和Java一样</p>
+</li>
+<li><p>Scala提供了throws关键字来声明异常。可以使用方法定义声明异常。它向调用者函数提供了此方法可能引发此异常的信息。它有助于调用函数处理并将该代码包含在try-catch块中，以避免程序异常终止。在scala中，可以使用throws注释来声明异常</p>
+<figure class="highlight scala"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">main</span></span>(args: <span class="type">Array</span>[<span class="type">String</span>]): <span class="type">Unit</span> = &#123;</span><br><span class="line">  f11()</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 等同于NumberFormatException.class</span></span><br><span class="line"><span class="meta">@throws</span>(classOf[<span class="type">NumberFormatException</span>])</span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">f11</span></span>()  = &#123;</span><br><span class="line">  <span class="string">"abc"</span>.toInt</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<h2 id="面向对象编程-基础"><a href="#面向对象编程-基础" class="headerlink" title="面向对象编程-基础"></a>面向对象编程-基础</h2><ul>
+<li><p>Scala是面向对象的</p>
+<ul>
+<li>Java是面向对象的编程语言。但由于历史原因，Java中还存在着非面向对象的内容：基本类型、null、静态方法等</li>
+<li>Scala来源于Java，所以天生就是面向对象的语言，而且Scala是纯粹的面向对象的语言(即在Scala中，一切皆为对象)</li>
+</ul>
+</li>
+<li><p>Scala定义类</p>
+<ul>
+<li><p>基本语法(基本与Java一致)：</p>
+<figure class="highlight scala"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">[修饰符] <span class="class"><span class="keyword">class</span> <span class="title">类名</span> </span>&#123;</span><br><span class="line">  类体</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>注意事项</p>
+<ul>
+<li>在scala语法中类并不声明为public，所有这些类都具有公有可见性(即默认就是public)</li>
+<li>一个Scala源文件可以包含多个类(同Java)，而且默认都是public</li>
+</ul>
+</li>
+<li><p>属性/成员变量注意事项</p>
+<ul>
+<li><p>属性的定义语法同变量：[访问修饰符] var/val 属性名称 [：类型] = 属性值</p>
+</li>
+<li><p>属性的定义类型可以为任意类型，包含值类型或引用类型</p>
+</li>
+<li><p>Scala中声明一个属性必须显式初始化，Scala可根据初始化数据的类型自动推断，此时属性类型可以省略(这与Java不同)</p>
+</li>
+<li><p>如果赋值为null，则一定要加类型。因为不加类型，那么该属性的类型就是Null类型</p>
+</li>
+<li><p>如果在定义属性时暂时不赋值，也可以使用符号”_”，让系统分配默认值</p>
+<table>
+<thead>
+<tr>
+<th>类型</th>
+<th>_对应的值</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Byte/Short/Int/Long</td>
+<td>0</td>
+</tr>
+<tr>
+<td>Float/Double</td>
+<td>0.0</td>
+</tr>
+<tr>
+<td>Boolean</td>
+<td>false</td>
+</tr>
+<tr>
+<td>String和其他引用类型</td>
+<td>null</td>
+</tr>
+</tbody></table>
+</li>
+<li><p>同一类型不同对象的属性相互独立，互不影响</p>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p>创建对象</p>
+<ul>
+<li>基本语法：val | var 对象名 [: 类型] = new 类型()</li>
+<li>说明<ul>
+<li>如果我们不希望改变对象的引用(即内存地址)，应该声明为val，否则声明为var。scala设计者推荐使用val：因为一般来说，在程序中，我们只是改变对象的属性的值，而不是改变对象的引用</li>
+<li>scala在声明对象变量时，可以根据创建对象的类型自动推断，所以类型声明可以省略(java不可省略,类似Kotlin)。<strong>但当类型和后面new的对象类型有继承关系即多态时，就必须写</strong></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p>访问属性</p>
+<ul>
+<li><p>基本语法：对象名.属性名</p>
+</li>
+<li><p>原理：</p>
+<ul>
+<li><p>示例：</p>
+<figure class="highlight scala"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">main</span></span>(args: <span class="type">Array</span>[<span class="type">String</span>]): <span class="type">Unit</span> = &#123;</span><br><span class="line">  <span class="keyword">val</span> test = <span class="keyword">new</span> <span class="type">Person</span></span><br><span class="line">  test.age = <span class="number">5</span></span><br><span class="line">  test.name = <span class="string">"xiong"</span></span><br><span class="line">  println(<span class="string">s"age = <span class="subst">$&#123;test.age&#125;</span> , name = <span class="subst">$&#123;test.name&#125;</span> , tag = <span class="subst">$&#123;test.tag&#125;</span>"</span>)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Person</span> </span>&#123;</span><br><span class="line">  <span class="keyword">var</span> name: <span class="type">String</span> = _</span><br><span class="line">  <span class="keyword">var</span> age: <span class="type">Int</span> = _</span><br><span class="line">  <span class="keyword">val</span> tag = <span class="string">"SOBXiong"</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>反编译的.class文件</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// test$.class</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">final</span> <span class="class"><span class="keyword">class</span> <span class="title">test</span>$ </span>&#123;</span><br><span class="line">  <span class="keyword">public</span> <span class="keyword">static</span> test$ MODULE$;</span><br><span class="line"></span><br><span class="line">  <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">    test.Person test = <span class="keyword">new</span> test.Person();</span><br><span class="line">    <span class="comment">// 对象名.属性名修改属性是通过底层编译器翻译包装了java方法实现的</span></span><br><span class="line">    test.age_$eq(<span class="number">5</span>);</span><br><span class="line">    test.name_$eq(<span class="string">"xiong"</span>);</span><br><span class="line">    <span class="comment">// 对象名.属性名获取属性也是通过底层编译器翻译包装了java方法实现的</span></span><br><span class="line">    Predef$.MODULE$.println((<span class="keyword">new</span> StringBuilder(<span class="number">25</span>)).append(<span class="string">"age = "</span>).append(test.age()).append(<span class="string">" , name = "</span>).append(test.name()).append(<span class="string">" , tag = "</span>).append(test.tag()).toString());</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">private</span> test$() &#123; MODULE$ = <span class="keyword">this</span>;&#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Person</span> </span>&#123;</span><br><span class="line">  <span class="comment">// var变量翻译后自动生成getter/setter方法</span></span><br><span class="line">  <span class="keyword">private</span> String name;</span><br><span class="line">  <span class="keyword">private</span> <span class="keyword">int</span> age;</span><br><span class="line"></span><br><span class="line">  <span class="function"><span class="keyword">public</span> String <span class="title">name</span><span class="params">()</span> </span>&#123; <span class="keyword">return</span> <span class="keyword">this</span>.name; &#125;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">public</span> <span class="keyword">void</span> name_$eq(String x$<span class="number">1</span>) &#123; <span class="keyword">this</span>.name = x$<span class="number">1</span>; &#125;</span><br><span class="line"></span><br><span class="line">  <span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">age</span><span class="params">()</span> </span>&#123; <span class="keyword">return</span> <span class="keyword">this</span>.age; &#125;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">public</span> <span class="keyword">void</span> age_$eq(<span class="keyword">int</span> x$<span class="number">1</span>) &#123; <span class="keyword">this</span>.age = x$<span class="number">1</span>; &#125;</span><br><span class="line"></span><br><span class="line">  <span class="comment">// val变量翻译为final变量(不可变),且只提供getter方法,不提供setter修改的方法</span></span><br><span class="line">  <span class="keyword">private</span> <span class="keyword">final</span> String tag = <span class="string">"SOBXiong"</span>;</span><br><span class="line"></span><br><span class="line">  <span class="function"><span class="keyword">public</span> String <span class="title">tag</span><span class="params">()</span> </span>&#123; <span class="keyword">return</span> <span class="keyword">this</span>.tag; &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p>方法</p>
+<ul>
+<li><p>基本说明：Scala中的方法其实就是函数</p>
+</li>
+<li><p>基本语法：</p>
+<figure class="highlight scala"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">方法名</span></span>(参数列表) [：返回值类型] = &#123;</span><br><span class="line">  方法体</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>方法调用机制原理</p>
+<ul>
+<li>当scala程序开始执行时，先在栈区开辟一个main栈。main栈最后被销毁(scala程序终止)</li>
+<li>当scala程序执行到一个方法时，总会开一个新的栈</li>
+<li>每个栈是独立的空间，变量(基本数据类型)是独立的，相互不影响(引用类型除外)</li>
+<li>当方法执行完毕后，该方法开辟的栈就会被JVM机回收</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p>构造器</p>
+<ul>
+<li><p>基本介绍：构造器(constructor)又叫构造方法，是类的一种特殊的方法，<strong>主要作用是完成对新对象的初始化</strong></p>
+</li>
+<li><p>Java构造器回顾</p>
+<ul>
+<li><p>基本语法</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">[修饰符] 类名(参数列表) &#123;</span><br><span class="line">  构造方法体</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>特点</p>
+<ul>
+<li>在Java中一个类可以定义多个不同的构造方法(构造方法重载)</li>
+<li>如果没有定义构造方法，系统会自动生成一个默认无参构造方法(也叫默认构造器)，比如Person(){}</li>
+<li>一旦定义了自己的构造方法，默认的构造方法就被覆盖了，就不能再使用默认的无参构造方法，除非显式地定义一下</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p>Scala构造器</p>
+<ul>
+<li><p>介绍：和Java一样，Scala创建新对象也需要调用构造方法，并且可以有任意多个构造方法(即scala中构造器也支持重载)。Scala类的构造器包括：<strong>主构造器</strong>和<strong>辅助构造器</strong></p>
+</li>
+<li><p>基本语法</p>
+<figure class="highlight scala"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">类名</span>(<span class="params">形参列表</span>) </span>&#123;<span class="comment">// 主构造器</span></span><br><span class="line">  <span class="comment">// 类体</span></span><br><span class="line">  <span class="function"><span class="keyword">def</span> <span class="title">this</span></span>(形参列表) &#123;...&#125;<span class="comment">// 辅助构造器1</span></span><br><span class="line">  <span class="function"><span class="keyword">def</span> <span class="title">this</span></span>(形参列表) &#123;...&#125;<span class="comment">// 辅助构造器2、3...</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>构造器参数</p>
+<ul>
+<li>Scala类的主构造器的形参若未用任何修饰符修饰，那么这个参数是局部变量</li>
+<li>如果参数使用val关键字声明，那么Scala会将参数作为类的私有的只读属性使用</li>
+<li>如果参数使用var关键字声明，那么那么Scala会将参数作为类的成员属性使用，并会提供属性对应的xxx()[类似getter]以及xxx_$eq()[类似setter]方法(这时的成员属性是私有的，但是可读写)</li>
+</ul>
+</li>
+<li><p>Bean属性</p>
+<ul>
+<li>介绍<br>JavaBeans规范定义了Java的属性是像getXxx()和setXxx()的方法。许多Java框架都依赖这个命名习惯。为了与Java的互操作性，产生了@BeanProperty注解。在Scala字段前加@BeanProperty时会自动生成规范的setXxx()以及getXxx()方法。这时可以使用对象.setXxx()和对象.getXxx()来修改和获取属性值</li>
+<li>注意<br>给某个属性加入@BeanPropetry注解后，会生成getXXX和setXXX的方法，并且对原来底层自动生成类似xxx(),xxx_$eq()方法，没有冲突，二者可以共存</li>
+</ul>
+</li>
+<li><p>注意事项和细节</p>
+<ul>
+<li>Scala构造器作用是完成对新对象的初始化，<strong>构造器没有返回值</strong></li>
+<li>主构造器的声明直接放置于类名之后</li>
+<li>主构造器会执行类定义中的所有语句，这可以体会到Scala把函数式编程和面向对象编程融合在一起(构造器也是方法/函数)</li>
+<li><strong>如果主构造器无参数，小括号可省略，构建对象时调用的构造方法的小括号也可以省略</strong></li>
+<li>辅助构造器名称为this(和Java、Kotlin不一样)，<strong>多个辅助构造器通过不同参数列表进行区分(底层就是构造器重载)</strong></li>
+<li>如果想让主构造器变成私有的，可以在()之前加上private，这样只能通过辅助构造器来构造对象</li>
+<li>辅助构造器的声明不能和主构造器的声明一致，否则会发生错误(构造器名重复)</li>
+</ul>
+</li>
+<li><p>示例：</p>
+<figure class="highlight scala"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">main</span></span>(args: <span class="type">Array</span>[<span class="type">String</span>]): <span class="type">Unit</span> = &#123;</span><br><span class="line">  <span class="keyword">val</span> p1 = <span class="keyword">new</span> <span class="type">Person</span>(<span class="string">"sobxiong"</span>)</span><br><span class="line">  p1.showInfo()</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Person</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">  println(<span class="string">"类定义语句~~~"</span>)</span><br><span class="line"></span><br><span class="line">  <span class="meta">@BeanProperty</span> <span class="keyword">var</span> name: <span class="type">String</span> = _</span><br><span class="line">  <span class="meta">@BeanProperty</span> <span class="keyword">var</span> age: <span class="type">Int</span> = _</span><br><span class="line"></span><br><span class="line">  <span class="function"><span class="keyword">def</span> <span class="title">this</span></span>(name: <span class="type">String</span>) &#123;</span><br><span class="line">    <span class="comment">/*</span></span><br><span class="line"><span class="comment">    辅助构造器无论是直接或间接,最终都一定要调用主构造器,执行主构造器的逻辑</span></span><br><span class="line"><span class="comment">    而且需要放在辅助构造器的第一行(这点和Java一样,Java中一个构造器要调用同类的其它构造器也需要放在第一行)</span></span><br><span class="line"><span class="comment">    */</span></span><br><span class="line">    <span class="comment">// 直接调用主构造器</span></span><br><span class="line">    <span class="keyword">this</span>()</span><br><span class="line">    <span class="keyword">this</span>.name = name</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="function"><span class="keyword">def</span> <span class="title">this</span></span>(name: <span class="type">String</span>, age: <span class="type">Int</span>) &#123;</span><br><span class="line">    <span class="comment">// 直接调用主构造器</span></span><br><span class="line">    <span class="keyword">this</span>()</span><br><span class="line">    <span class="keyword">this</span>.name = name</span><br><span class="line">    <span class="keyword">this</span>.age = age</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="function"><span class="keyword">def</span> <span class="title">this</span></span>(age: <span class="type">Int</span>) &#123;</span><br><span class="line">    <span class="comment">// 间接调用主构造器</span></span><br><span class="line">    <span class="keyword">this</span>(<span class="string">"匿名"</span>)</span><br><span class="line">    <span class="keyword">this</span>.age = age</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="function"><span class="keyword">def</span> <span class="title">showInfo</span></span>(): <span class="type">Unit</span> = &#123;</span><br><span class="line">    println(<span class="string">"person信息如下:"</span>)</span><br><span class="line">    println(<span class="string">"name = "</span> + <span class="keyword">this</span>.name)</span><br><span class="line">    println(<span class="string">"age = "</span> + <span class="keyword">this</span>.age)</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">/*</span></span><br><span class="line"><span class="comment">结果如下：</span></span><br><span class="line"><span class="comment">类定义语句~~~</span></span><br><span class="line"><span class="comment">person信息如下:</span></span><br><span class="line"><span class="comment">name = sobxiong</span></span><br><span class="line"><span class="comment">age = 0</span></span><br><span class="line"><span class="comment">*/</span></span><br></pre></td></tr></table></figure>
+</li>
+<li><p>反编译的.class文件</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Person</span> </span>&#123;</span><br><span class="line">  <span class="keyword">private</span> String name;</span><br><span class="line">  <span class="keyword">private</span> <span class="keyword">int</span> age;</span><br><span class="line"></span><br><span class="line">  <span class="function"><span class="keyword">public</span> String <span class="title">name</span><span class="params">()</span> </span>&#123; <span class="keyword">return</span> <span class="keyword">this</span>.name; &#125;</span><br><span class="line">  <span class="keyword">public</span> <span class="keyword">void</span> name_$eq(String x$<span class="number">1</span>) &#123; <span class="keyword">this</span>.name = x$<span class="number">1</span>; &#125;</span><br><span class="line">  <span class="function"><span class="keyword">public</span> String <span class="title">getName</span><span class="params">()</span> </span>&#123; <span class="keyword">return</span> name(); &#125;</span><br><span class="line">  <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setName</span><span class="params">(String x$<span class="number">1</span>)</span> </span>&#123; name_$eq(x$<span class="number">1</span>); &#125;</span><br><span class="line"></span><br><span class="line">  <span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">age</span><span class="params">()</span> </span>&#123; <span class="keyword">return</span> <span class="keyword">this</span>.age; &#125;</span><br><span class="line">  <span class="keyword">public</span> <span class="keyword">void</span> age_$eq(<span class="keyword">int</span> x$<span class="number">1</span>) &#123; <span class="keyword">this</span>.age = x$<span class="number">1</span>; &#125;</span><br><span class="line">  <span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">getAge</span><span class="params">()</span> </span>&#123; <span class="keyword">return</span> age(); &#125;</span><br><span class="line">  <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setAge</span><span class="params">(<span class="keyword">int</span> x$<span class="number">1</span>)</span> </span>&#123; age_$eq(x$<span class="number">1</span>); &#125;</span><br><span class="line"></span><br><span class="line">  <span class="function"><span class="keyword">public</span> <span class="title">Person</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    Predef$.MODULE$.println(<span class="string">"类定义语句~~~"</span>);</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="function"><span class="keyword">public</span> <span class="title">Person</span><span class="params">(<span class="keyword">int</span> age)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">this</span>(<span class="string">""</span>);</span><br><span class="line">    age_$eq(age);</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="function"><span class="keyword">public</span> <span class="title">Person</span><span class="params">(String name)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">this</span>();</span><br><span class="line">    name_$eq(name);</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="function"><span class="keyword">public</span> <span class="title">Person</span><span class="params">(String name, <span class="keyword">int</span> age)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">this</span>();</span><br><span class="line">    name_$eq(name);</span><br><span class="line">    age_$eq(age);</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">showInfo</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    Predef$.MODULE$.println(<span class="string">"person信息如下:"</span>);</span><br><span class="line">    Predef$.MODULE$.println((<span class="keyword">new</span> StringBuilder(<span class="number">7</span>)).append(<span class="string">"name = "</span>).append(name()).toString());</span><br><span class="line">    Predef$.MODULE$.println((<span class="keyword">new</span> StringBuilder(<span class="number">6</span>)).append(<span class="string">"age = "</span>).append(age()).toString());</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<h2 id="面向对象编程-中级"><a href="#面向对象编程-中级" class="headerlink" title="面向对象编程-中级"></a>面向对象编程-中级</h2><ul>
+<li><p>包</p>
+<ul>
+<li><p>回顾Java包</p>
+<ul>
+<li>Java包的三大作用<ul>
+<li>区分相同名字的类</li>
+<li>当类很多时，可以很好的管理类</li>
+<li>控制访问范围</li>
+</ul>
+</li>
+<li>Java包的声明：package xxx;</li>
+<li>Java包的本质：创建不同的文件夹保存类文件</li>
+<li>Java包的要求：<ul>
+<li>包名和源码所在的系统文件目录结构要一致</li>
+<li>编译后的字节码文件路径也和包名保持一致</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p>Scala包</p>
+<ul>
+<li><p>基本语法：package xxx</p>
+</li>
+<li><p>Scala的作用：</p>
+<ul>
+<li>区分相同名字的类</li>
+<li>当类很多时，可以很好的管理类</li>
+<li>控制访问范围</li>
+<li>可以对类的功能进行扩展</li>
+</ul>
+</li>
+<li><p><em>Scala包名和源码所在的系统文件目录可以不一致，但编译后的.class字节码文件路径和包名会保持一致</em>(该工作由编译器完成)</p>
+</li>
+<li><p>包的命名规则：只能包含数字、字母、下划线、小圆点(.)，但不能用数字开头，也不要使用关键字</p>
+</li>
+<li><p>包的命名规范：com.公司名.项目名.业务模块名</p>
+</li>
+<li><p>Scala自动引用的常用包：java.lang.*、scala、Predef</p>
+</li>
+<li><p>Scala包注意事项和使用细节：</p>
+<ul>
+<li><p>scala多种等价的包形式</p>
+<figure class="highlight scala"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 传统的包形式</span></span><br><span class="line"><span class="keyword">package</span> com.atguigu.scala</span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Person</span></span>&#123;</span><br><span class="line">  <span class="keyword">val</span> name = <span class="string">"Nick"</span></span><br><span class="line">  <span class="function"><span class="keyword">def</span> <span class="title">play</span></span>(message: <span class="type">String</span>): <span class="type">Unit</span> = &#123;</span><br><span class="line">    println(<span class="keyword">this</span>.name + <span class="string">" "</span> + message)</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 等价的第二种包形式</span></span><br><span class="line"><span class="keyword">package</span> com.atguigu</span><br><span class="line"><span class="keyword">package</span> scala</span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Person</span></span>&#123;</span><br><span class="line">  <span class="keyword">val</span> name = <span class="string">"Nick"</span></span><br><span class="line">  <span class="function"><span class="keyword">def</span> <span class="title">play</span></span>(message: <span class="type">String</span>): <span class="type">Unit</span> = &#123;</span><br><span class="line">    println(<span class="keyword">this</span>.name + <span class="string">" "</span> + message)</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 嵌套包形式</span></span><br><span class="line"><span class="keyword">package</span> com.atguigu&#123;</span><br><span class="line">  <span class="keyword">package</span> scala&#123;</span><br><span class="line">    <span class="class"><span class="keyword">class</span> <span class="title">Person</span></span>&#123;</span><br><span class="line">      <span class="keyword">val</span> name = <span class="string">"Nick"</span></span><br><span class="line">      <span class="function"><span class="keyword">def</span> <span class="title">play</span></span>(message: <span class="type">String</span>): <span class="type">Unit</span> = &#123;</span><br><span class="line">        println(<span class="keyword">this</span>.name + <span class="string">" "</span> + message)</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>嵌套包的好处：可以灵活地在同一个文件中将类(class, object)、特质(trait)创建在不同的包中</p>
+</li>
+<li><p>作用域原则：可以直接向上访问。即：<strong>Scala可在子包中直接访问父包中的内容，大括号体现作用域</strong>。(<em>提示: Java中子包使用父包的类,需要import</em>)。在子包和父包类重名时，默认采用就近原则，如果希望指定使用某个类，需要指定包名</p>
+</li>
+<li><p>父包要访问子包的内容时，需要import对应的类</p>
+</li>
+<li><p>可以在同一个.scala文件中，声明多个并列的package(建议嵌套的pakage不要超过3层)</p>
+</li>
+<li><p>包名可以相对也可以绝对。在一般情况下，我们使用相对路径来引入包，只有当包名冲突时，使用绝对路径来处理</p>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p>包对象</p>
+<ul>
+<li><p>基本介绍：包可以包含类(class, object)和特质(trait)，但不能包含函数/方法或变量的定义。这是Java虚拟机的局限。为了弥补这一点不足，scala提供了包对象的概念来解决这个问题</p>
+</li>
+<li><p>示例：</p>
+<ul>
+<li><p>示例代码：</p>
+<figure class="highlight scala"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> com.xiong &#123;</span><br><span class="line">  <span class="comment">// 每个包都可以有一个包对象</span></span><br><span class="line">  <span class="comment">// 需要在父包中定义它,且名称与子包一样。</span></span><br><span class="line">  <span class="keyword">package</span> <span class="class"><span class="keyword">object</span> <span class="title">scala</span> </span>&#123;</span><br><span class="line">    <span class="keyword">var</span> name = <span class="string">"jack"</span></span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">sayOk</span></span>(): <span class="type">Unit</span> = &#123;</span><br><span class="line">      println(<span class="string">"package object sayOk!"</span>)</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">package</span> scala &#123;</span><br><span class="line">    <span class="class"><span class="keyword">class</span> <span class="title">Test</span> </span>&#123;</span><br><span class="line">      <span class="function"><span class="keyword">def</span> <span class="title">test</span></span>(): <span class="type">Unit</span> = &#123;</span><br><span class="line">        <span class="comment">// 包对象scala中声明的name变量</span></span><br><span class="line">        println(name)</span><br><span class="line">        <span class="comment">// 调用包对象scala中声明的sayOk方法</span></span><br><span class="line">        sayOk()</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="class"><span class="keyword">object</span> <span class="title">TestObj</span> </span>&#123;</span><br><span class="line">      <span class="function"><span class="keyword">def</span> <span class="title">main</span></span>(args: <span class="type">Array</span>[<span class="type">String</span>]): <span class="type">Unit</span> = &#123;</span><br><span class="line">        <span class="keyword">val</span> t = <span class="keyword">new</span> <span class="type">Test</span>()</span><br><span class="line">        t.test()</span><br><span class="line">        <span class="comment">// 因为TestObj和scala这个包对象在同一包,因此也可以使用name属性</span></span><br><span class="line">        println(<span class="string">"name ="</span> + name)</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>机制分析：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 当创建包对象后,在该包下生成final修饰的package和package$类</span></span><br><span class="line"><span class="comment">// package$.class</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">final</span> <span class="class"><span class="keyword">class</span> <span class="title">package</span>$ </span>&#123;</span><br><span class="line">  <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">package</span>$ MODULE$;</span><br><span class="line">  <span class="keyword">private</span> String name;</span><br><span class="line"></span><br><span class="line">  <span class="function"><span class="keyword">public</span> String <span class="title">name</span><span class="params">()</span> </span>&#123; <span class="keyword">return</span> <span class="keyword">this</span>.name; &#125;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">public</span> <span class="keyword">void</span> name_$eq(String x$<span class="number">1</span>) &#123; <span class="keyword">this</span>.name = x$<span class="number">1</span>; &#125;</span><br><span class="line"></span><br><span class="line">  <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">sayOk</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    scala.Predef$.MODULE$.println(<span class="string">"package object sayOk!"</span>);</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">private</span> <span class="keyword">package</span>$() &#123;</span><br><span class="line">    MODULE$ = <span class="keyword">this</span>;</span><br><span class="line">    <span class="keyword">this</span>.name = <span class="string">"jack"</span>;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// Test.class</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Test</span> </span>&#123;</span><br><span class="line">  <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">test</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    Predef$.MODULE$.println(<span class="keyword">package</span>$.MODULE$.name());</span><br><span class="line">    <span class="keyword">package</span>$.MODULE$.sayOk();</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// TestObj$.class</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">final</span> <span class="class"><span class="keyword">class</span> <span class="title">TestObj</span>$ </span>&#123;</span><br><span class="line">  <span class="keyword">public</span> <span class="keyword">static</span> TestObj$ MODULE$;</span><br><span class="line"></span><br><span class="line">  <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">    Test t = <span class="keyword">new</span> Test();</span><br><span class="line">    t.test();</span><br><span class="line">    scala.Predef$.MODULE$.println((<span class="keyword">new</span> StringBuilder(<span class="number">6</span>)).append(<span class="string">"name ="</span>).append(<span class="keyword">package</span>$.MODULE$.name()).toString());</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">private</span> TestObj$() &#123; MODULE$ = <span class="keyword">this</span>; &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+</li>
+<li><p>注意事项</p>
+<ul>
+<li>每个包都可以有一个包对象，需要在父包中定义它</li>
+<li>包对象名称需要和包名一致，一般用来对包的功能进行补充</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p>包的可见性</p>
+<ul>
+<li><p>回顾Java</p>
+<ul>
+<li><p>访问修饰符介绍(控制方法和变量的访问权限、范围)</p>
+<ul>
+<li>公开级别：用public修饰，对外公开</li>
+<li>受保护级别：用protected修饰，对子类和同一个包中的类公开</li>
+<li>默认级别：没有修饰符号，向同一个包的类公开</li>
+<li>私有级别：用private修饰，只有类本身可以访问，不对外公开</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>访问级别</th>
+<th>访问控制修饰符</th>
+<th>同类</th>
+<th>同包</th>
+<th>子类</th>
+<th>不同包</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>公开</td>
+<td>public</td>
+<td>√</td>
+<td>√</td>
+<td>√</td>
+<td>√</td>
+</tr>
+<tr>
+<td>受保护</td>
+<td>protected</td>
+<td>√</td>
+<td>√</td>
+<td>√</td>
+<td>×</td>
+</tr>
+<tr>
+<td>默认</td>
+<td>/</td>
+<td>√</td>
+<td>√</td>
+<td>×</td>
+<td>×</td>
+</tr>
+<tr>
+<td>私有</td>
+<td>private</td>
+<td>√</td>
+<td>×</td>
+<td>×</td>
+<td>×</td>
+</tr>
+</tbody></table>
+</li>
+<li><p>修饰符注意事项</p>
+<ul>
+<li>修饰符可以用来修饰类中的属性，成员方法以及类</li>
+<li>只有默认和public才能修饰类，并且遵循上述访问权限的特点</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p>Scala的包的可见性(四种修饰符与Java一样)</p>
+<ul>
+<li><p>当属性访问权限为默认时，从底层看属性是private的，但是因为提供了xxx_$eq()[类似setter]/xxx()[类似getter]方法，因此从使用效果看任何地方都可以访问</p>
+</li>
+<li><p>当方法访问权限为默认时，默认为public访问权限</p>
+</li>
+<li><p>private为私有权限，只在类的内部和伴生对象中可用</p>
+</li>
+<li><p>protected为受保护权限，scala中受保护权限比Java中更严格，只能子类访问，同包无法访问(编译器)</p>
+</li>
+<li><p>在scala中没有public关键字，即不能用public显式地修饰属性和方法</p>
+</li>
+<li><p>包访问权限(表示属性有了限制，同时包也有了限制)，这点和Java不一样，体现出Scala包使用的灵活性</p>
+<figure class="highlight scala"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> com.xiong.scala</span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Person</span> </span>&#123;</span><br><span class="line">  <span class="comment">/*</span></span><br><span class="line"><span class="comment">  增加包访问权限后</span></span><br><span class="line"><span class="comment">  1、private同时起作用,不仅同类可以使用</span></span><br><span class="line"><span class="comment">  2、同时com.xiong.scala中包下其他类也可以使用</span></span><br><span class="line"><span class="comment">  3、修饰符也可以设置为public、protected等</span></span><br><span class="line"><span class="comment">  4、包可见性可以延展到上曾,如改为xiong</span></span><br><span class="line"><span class="comment">  */</span></span><br><span class="line">  <span class="keyword">private</span>[scala] <span class="keyword">val</span> pname = <span class="string">"hello"</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p>包的引入</p>
+<ul>
+<li><p>基本介绍：Scala引入包也是使用import，基本的原理和机制和Java一样，但Scala中的import功能更加强大，也更灵活</p>
+</li>
+<li><p>使用细节和注意事项：</p>
+<ul>
+<li><p>在Scala中，<strong>import语句可以出现在任何地方，并不仅限于文件顶部</strong>，import语句的作用一直延伸到包含该语句的块末尾。这种语法的好处是：<strong>在需要时在引入包，缩小import包的作用范围，提高效率</strong></p>
+</li>
+<li><p>Java中如果想要导入包中所有的类，可以通过通配符*，Scala中采用下_</p>
+</li>
+<li><p>如果不想要某个包中全部的类，而是其中的几个类，可以采用选取器(大括号)</p>
+</li>
+<li><p>如果引入的多个包中含有相同的类，那么可以将不需要的类进行重命名进行区分，这个就是<strong>重命名</strong></p>
+</li>
+<li><p>如果某个冲突的类根本就不会用到，那么这个类可以直接<strong>隐藏</strong>掉</p>
+<figure class="highlight scala"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 将HashMap重命名为JavaHashMap</span></span><br><span class="line"><span class="keyword">import</span> java.util.&#123; <span class="type">HashMap</span>=&gt;<span class="type">JavaHashMap</span>, <span class="type">List</span>&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 引入java.util包的所有类,但是忽略HashMap</span></span><br><span class="line"><span class="keyword">import</span> java.util.&#123; <span class="type">HashMap</span>=&gt;_, _&#125;</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p>继承</p>
+<ul>
+<li>Java继承回顾<ul>
+<li>语法：class 子类名 extends 父类名 { 类体 }</li>
+<li>子类继承父类的属性和方法</li>
+<li>单继承</li>
+</ul>
+</li>
+<li>Scala继承<ul>
+<li>语法同Java</li>
+<li>单继承同Java</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+          
+            <div class='article_footer'>
+              
+                
+  
+    
+    
+
+
+
+  
+
+  
+    
+    
+
+
+
+  
+
+  
+    
+    
+
+<section class="widget copyright  desktop mobile">
+  <div class='content'>
+    
+      <blockquote>
+        
+          
+            <p>博客内容遵循 署名-非商业性使用-相同方式共享 4.0 国际 (CC BY-NC-SA 4.0) 协议</p>
+
+          
+        
+          
+            <p>本文永久链接是：<a href=https://sobxiong.github.io/2020/07/24/language/Scala/Scala/>https://sobxiong.github.io/2020/07/24/language/Scala/Scala/</a></p>
+          
+        
+      </blockquote>
+    
+  </div>
+</section>
+
+  
+
+  
+    
+    
+
+<section class="widget qrcode  desktop mobile">
+  
+
+  <div class='content article-entry'>
+    
+      
+        <div class='fancybox'><img src='https://cdn.jsdelivr.net/gh/xaoxuu/cdn-assets/qrcode/wiki_volantis.png'
+        
+          height='64px'
+        ></div>
+      
+    
+      
+        <div class='fancybox'><img src='https://cdn.jsdelivr.net/gh/xaoxuu/cdn-assets/qrcode/wiki_volantis.png'
+        
+          height='64px'
+        ></div>
+      
+    
+  </div>
+</section>
+
+  
+
+
+              
+            </div>
+          
+        </div>
+        
+          
+
+
+  <section class='meta' id="footer-meta">
+    <div class='new-meta-box'>
+      
+        
+          <div class="new-meta-item date" itemprop="dateUpdated" datetime="2020-09-20T22:22:49+08:00">
+  <a class='notlink'>
+    <i class="fas fa-edit fa-fw" aria-hidden="true"></i>
+    <p>更新于：2020年9月20日</p>
+  </a>
+</div>
+
+        
+      
+        
+          
+  
+  <div class="new-meta-item meta-tags"><a class="tag" href="/tags/%E5%A4%A7%E6%95%B0%E6%8D%AE/" rel="nofollow"><i class="fas fa-hashtag fa-fw" aria-hidden="true"></i><p>大数据</p></a></div> <div class="new-meta-item meta-tags"><a class="tag" href="/tags/Scala/" rel="nofollow"><i class="fas fa-hashtag fa-fw" aria-hidden="true"></i><p>Scala</p></a></div>
+
+
+        
+      
+        
+          
+
+        
+      
+        
+          
+  <div class="new-meta-item share -mob-share-list">
+  <div class="-mob-share-list share-body">
+    
+      
+        <a class="-mob-share-qq" title="" rel="external nofollow noopener noreferrer"
+          
+          href="http://connect.qq.com/widget/shareqq/index.html?url=https://sobxiong.github.io/2020/07/24/language/Scala/Scala/&title=Scala - SOBXiong的博客&summary=内容
+Scala概述
+变量
+运算符
+程序流程控制
+函数式编程基础
+面向对象编程-基础
+面向对象编程-中级
+"
+          
+          >
+          
+            <img src="https://cdn.jsdelivr.net/gh/xaoxuu/cdn-assets/logo/128/qq.png">
+          
+        </a>
+      
+    
+      
+        <a class="-mob-share-qzone" title="" rel="external nofollow noopener noreferrer"
+          
+          href="https://sns.qzone.qq.com/cgi-bin/qzshare/cgi_qzshare_onekey?url=https://sobxiong.github.io/2020/07/24/language/Scala/Scala/&title=Scala - SOBXiong的博客&summary=内容
+Scala概述
+变量
+运算符
+程序流程控制
+函数式编程基础
+面向对象编程-基础
+面向对象编程-中级
+"
+          
+          >
+          
+            <img src="https://cdn.jsdelivr.net/gh/xaoxuu/cdn-assets/logo/128/qzone.png">
+          
+        </a>
+      
+    
+      
+        <a class="-mob-share-weibo" title="" rel="external nofollow noopener noreferrer"
+          
+          href="http://service.weibo.com/share/share.php?url=https://sobxiong.github.io/2020/07/24/language/Scala/Scala/&title=Scala - SOBXiong的博客&summary=内容
+Scala概述
+变量
+运算符
+程序流程控制
+函数式编程基础
+面向对象编程-基础
+面向对象编程-中级
+"
+          
+          >
+          
+            <img src="https://cdn.jsdelivr.net/gh/xaoxuu/cdn-assets/logo/128/weibo.png">
+          
+        </a>
+      
+    
+  </div>
+</div>
+
+
+
+        
+      
+    </div>
+  </section>
+
+
+        
+        
+          <div class="prev-next">
+            
+              <a class='prev' href='/2020/09/04/BigData/Spark/'>
+                <p class='title'><i class="fas fa-chevron-left" aria-hidden="true"></i>Spark</p>
+                <p class='content'>内容
+Spark概述
+Spark快速上手
+Spark运行环境
+Spark核心编程
+
+
+
+Spark概述
+Spark是什么：一种基于内存的快速、通用、可扩展的大数据分析计算引擎(unified a...</p>
+              </a>
+            
+            
+              <a class='next' href='/2020/07/17/BigData/HBase/'>
+                <p class='title'>HBase<i class="fas fa-chevron-right" aria-hidden="true"></i></p>
+                <p class='content'>内容
+HBase简介
+HBase快速入门
+HBase进阶
+HBase-API
+HBase优化
+
+
+
+HBase简介
+HBase定义：HBase是一种分布式、可扩展、支持海量数据存储的NoSQL数...</p>
+              </a>
+            
+          </div>
+        
+      </section>
+    </article>
+  
+
+  
+    <!-- 显示推荐文章和评论 -->
+
+
+
+  <article class="post white-box reveal comments shadow">
+    <section class="article typo">
+      <p ct><i class='fas fa-comments'></i> 评论</p>
+      
+      
+      
+      
+      
+      
+        <section id="comments">
+          <div id="valine_container" class="valine_thread">
+            <i class="fas fa-cog fa-spin fa-fw fa-2x"></i>
+          </div>
+        </section>
+      
+      
+    </section>
+  </article>
+
+
+  
+
+
+
+
+<!-- 根据页面mathjax变量决定是否加载MathJax数学公式js -->
+
+
+
+  <script>
+    window.subData = {
+      title: 'Scala',
+      tools: true
+    }
+  </script>
+
+
+</div>
+<aside class='l_side'>
+  
+  
+
+  
+    
+    
+
+
+
+  <section class="widget toc-wrapper shadow desktop mobile" id="toc-div" >
+    
+  <header>
+    
+      <i class="fas fa-list fa-fw" aria-hidden="true"></i><span class='name'>本文目录</span>
+    
+  </header>
+
+
+    <div class='content'>
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#内容"><span class="toc-text">内容</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Scala概述"><span class="toc-text">Scala概述</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#变量"><span class="toc-text">变量</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#运算符"><span class="toc-text">运算符</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#程序流程控制"><span class="toc-text">程序流程控制</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#函数式编程基础"><span class="toc-text">函数式编程基础</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#面向对象编程-基础"><span class="toc-text">面向对象编程-基础</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#面向对象编程-中级"><span class="toc-text">面向对象编程-中级</span></a></li></ol>
+    </div>
+  </section>
+
+
+  
+
+
+</aside>
+
+
+  
+  <footer class="clearfix">
+    <br><br>
+    
+      
+        <br>
+        <div class="social-wrapper">
+          
+            
+              <a href="mailto:1942991710@qq.com"
+                class="social fas fa-envelope flat-btn"
+                target="_blank"
+                rel="external nofollow noopener noreferrer">
+              </a>
+            
+          
+            
+              <a href="https://github.com/SOBXiong"
+                class="social fab fa-github flat-btn"
+                target="_blank"
+                rel="external nofollow noopener noreferrer">
+              </a>
+            
+          
+        </div>
+      
+    
+      
+        <div><p>博客内容遵循 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh" target="_blank" rel="noopener">署名-非商业性使用-相同方式共享 4.0 国际 (CC BY-NC-SA 4.0) 协议</a></p>
+</div>
+      
+    
+      
+        <div class='copyright'>
+        <p><a href="http://xiongjc.top" target="_blank" rel="noopener">Copyright © 2017-2020 SOBXiong</a></p>
+
+        </div>
+      
+    
+  </footer>
+
+<script>setLoadingBarProgress(80);</script>
+
+
+      <script>setLoadingBarProgress(60);</script>
+    </div>
+    <a class="s-top fas fa-arrow-up fa-fw" href='javascript:void(0)'></a>
+  </div>
+  
+<script src="https://cdn.jsdelivr.net/npm/jquery@3.4/dist/jquery.min.js"></script>
+
+
+  <script>
+    
+    var SEARCH_SERVICE = "hexo" || "hexo";
+    var ROOT = "/" || "/";
+    if (!ROOT.endsWith('/')) ROOT += '/';
+  </script>
+
+
+
+
+
+  <script async src="https://cdn.jsdelivr.net/gh/xaoxuu/cdn-volantis@2/js/instant_page.js" type="module" defer integrity="sha384-OeDn4XE77tdHo8pGtE1apMPmAipjoxUQ++eeJa6EtJCfHlvijigWiJpD7VDPWXV1"></script>
+
+
+  <script src="https://cdn.jsdelivr.net/npm/scrollreveal@4.0.6/dist/scrollreveal.min.js"></script>
+  <script type="text/javascript">
+    $(function() {
+      ScrollReveal().reveal('.l_main .reveal', {
+        distance: '8px',
+        duration: '800',
+        interval: '100',
+        scale: '1'
+      });
+    });
+  </script>
+
+
+  
+<script src="https://cdn.jsdelivr.net/npm/node-waves@0.7.6/dist/waves.min.js"></script>
+
+  <script type="text/javascript">
+    $(function() {
+      Waves.attach('.flat-btn', ['waves-button']);
+      Waves.attach('.float-btn', ['waves-button', 'waves-float']);
+      Waves.attach('.float-btn-light', ['waves-button', 'waves-float', 'waves-light']);
+      Waves.attach('.flat-box', ['waves-block']);
+      Waves.attach('.float-box', ['waves-block', 'waves-float']);
+      Waves.attach('.waves-image');
+      Waves.init();
+    });
+  </script>
+
+
+  <script defer src="https://cdn.jsdelivr.net/gh/xaoxuu/cdn-busuanzi@2.3/js/busuanzi.pure.mini.js"></script>
+
+
+
+  
+  
+  
+    
+<script src="https://cdn.jsdelivr.net/npm/jquery-backstretch@2.1.18/jquery.backstretch.min.js"></script>
+
+    <script type="text/javascript">
+      $(function(){
+        var imgs=["https://cdn.jsdelivr.net/gh/xaoxuu/cdn-wallpaper/abstract/41F215B9-261F-48B4-80B5-4E86E165259E.jpeg"];
+        if ('true' == 'true') {
+          function shuffle(arr){
+            /*From countercurrent-time*/
+            var n = arr.length;
+            while(n--) {
+              var index = Math.floor(Math.random() * n);
+              var temp = arr[index];
+              arr[index] = arr[n];
+              arr[n] = temp;
+            }
+          }
+          shuffle(imgs);
+        }
+        if ('.cover') {
+          $('.cover').backstretch(
+            imgs,
+          {
+            duration: "20000",
+            fade: "1500"
+          });
+        } else {
+          $.backstretch(
+            imgs,
+          {
+            duration: "20000",
+            fade: "1500"
+          });
+        }
+      });
+    </script>
+  
+
+
+
+  
+    
+<script src="https://cdn.jsdelivr.net/npm/aplayer@1.10/dist/APlayer.min.js"></script>
+
+  
+    
+<script src="https://cdn.jsdelivr.net/npm/meting@2.0/dist/Meting.min.js"></script>
+
+  
+
+
+
+
+
+
+
+
+
+  
+    
+<script src="https://cdn.jsdelivr.net/npm/valine@1.4/dist/Valine.min.js"></script>
+
+  
+  <script>
+  var GUEST_INFO = ['nick','mail','link'];
+  var meta = 'nick,mail,link'.split(',').filter(function(item){
+    return GUEST_INFO.indexOf(item) > -1
+  });
+  var REQUIRED_FIELDS = ['nick','mail','link'];
+  var requiredFields = 'nick,mail'.split(',').filter(function(item){
+    return REQUIRED_FIELDS.indexOf(item) > -1
+  });
+  var valine = new Valine();
+  function emoji(path, idx, ext) {
+      return path + "/" + path + "-" + idx + "." + ext;
+  }
+  var emojiMaps = {};
+  for (var i = 1; i <= 54; i++) {
+    emojiMaps['tieba-' + i] = emoji('tieba', i, 'png');
+  }
+  for (var i = 1; i <= 101; i++) {
+    emojiMaps['qq-' + i] = emoji('qq', i, 'gif');
+  }
+  for (var i = 1; i <= 116; i++) {
+    emojiMaps['aru-' + i] = emoji('aru', i, 'gif');
+  }
+  for (var i = 1; i <= 125; i++) {
+    emojiMaps['twemoji-' + i] = emoji('twemoji', i, 'png');
+  }
+  for (var i = 1; i <= 4; i++) {
+    emojiMaps['weibo-' + i] = emoji('weibo', i, 'png');
+  }
+  valine.init({
+    el: '#valine_container',
+    meta: meta,
+    
+    appId: "dogUA2FSKGTo029M1SEwGROT-MdYXbMMI",
+    appKey: "u0NdtQ8nvHoMdJPSYqm1LRxE",
+    placeholder: "快来评论吧~",
+    pageSize:'10',
+    avatar:'robohash',
+    lang:'zh-cn',
+    visitor: 'true',
+    highlight: 'true',
+    mathJax: 'false',
+    enableQQ: 'true',
+    requiredFields: requiredFields,
+    emojiCDN: 'https://cdn.jsdelivr.net/gh/xaoxuu/cdn-assets/emoji/valine/',
+    emojiMaps: emojiMaps
+  })
+  </script>
+
+
+
+
+
+  
+<script src="https://cdn.jsdelivr.net/gh/xaoxuu/cdn-volantis@2.6.5/js/app.js"></script>
+
+
+
+  
+<script src="https://cdn.jsdelivr.net/gh/xaoxuu/cdn-volantis@2.6.5/js/search.js"></script>
+
+
+
+  
+<script src="https://cdn.jsdelivr.net/gh/xaoxuu/cdn-volantis@2/js/comment_typing.js"></script>
+
+
+
+
+
+
+<!-- 复制 -->
+
+  <script src="https://cdn.jsdelivr.net/npm/clipboard@2/dist/clipboard.min.js"></script>
+<script>
+  function wait(callback, seconds) {
+    var timelag = null;
+    timelag = window.setTimeout(callback, seconds);
+  }
+  !function (e, t, a) {
+    var initCopyCode = function(){
+      var copyHtml = '';
+      copyHtml += '<button class="btn-copy" data-clipboard-snippet="">';
+      copyHtml += '<i class="fas fa-copy"></i><span>COPY</span>';
+      copyHtml += '</button>';
+      $(".highlight .code pre").before(copyHtml);
+      $(".article pre code").before(copyHtml);
+      var clipboard = new ClipboardJS('.btn-copy', {
+        target: function(trigger) {
+          return trigger.nextElementSibling;
+        }
+      });
+      clipboard.on('success', function(e) {
+        let $btn = $(e.trigger);
+        $btn.addClass('copied');
+        let $icon = $($btn.find('i'));
+        $icon.removeClass('fa-copy');
+        $icon.addClass('fa-check-circle');
+        let $span = $($btn.find('span'));
+        $span[0].innerText = 'COPIED';
+        
+        wait(function () { // 等待两秒钟后恢复
+          $icon.removeClass('fa-check-circle');
+          $icon.addClass('fa-copy');
+          $span[0].innerText = 'COPY';
+        }, 2000);
+      });
+      clipboard.on('error', function(e) {
+        e.clearSelection();
+        let $btn = $(e.trigger);
+        $btn.addClass('copy-failed');
+        let $icon = $($btn.find('i'));
+        $icon.removeClass('fa-copy');
+        $icon.addClass('fa-times-circle');
+        let $span = $($btn.find('span'));
+        $span[0].innerText = 'COPY FAILED';
+        
+        wait(function () { // 等待两秒钟后恢复
+          $icon.removeClass('fa-times-circle');
+          $icon.addClass('fa-copy');
+          $span[0].innerText = 'COPY';
+        }, 2000);
+      });
+    }
+    initCopyCode();
+  }(window, document);
+</script>
+
+
+
+
+<!-- fancybox -->
+<script src="https://cdn.jsdelivr.net/gh/fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.js"></script>
+<script>
+  function pjax_fancybox() {
+    $(".article-entry").find("img").not('.inline').not('a img').each(function () { //渲染 fancybox
+      var element = document.createElement("a"); // a 标签
+      $(element).attr("pjax-fancybox", "");  // 过滤 pjax
+      $(element).attr("href", $(this).attr("src"));
+      if ($(this).attr("data-original")) {
+        $(element).attr("href", $(this).attr("data-original"));
+      }
+      $(element).attr("data-fancybox", "images");
+      var caption = "";   // 描述信息
+      if ($(this).attr('alt')) {  // 标准 markdown 描述信息
+        $(element).attr('data-caption', $(this).attr('alt'));
+        caption = $(this).attr('alt');
+      }
+      var div = document.createElement("div");
+      $(div).addClass("fancybox");
+      $(this).wrap(div); // 最外层套 div ，其实主要作用还是 class 样式
+      var span = document.createElement("span");
+      $(span).addClass("image-caption");
+      $(span).text(caption); // 加描述
+      $(this).after(span);  // 再套一层描述
+      $(this).wrap(element);  // 最后套 a 标签
+    })
+    $(".article-entry").find("img").fancybox({
+      selector: '[data-fancybox="images"]',
+      hash: false,
+      loop: false,
+      closeClick: true,
+      helpers: {
+        overlay: {closeClick: true}
+      },
+      buttons: [
+        "zoom",
+        "close"
+      ]
+    });
+  };
+  $(function () {
+    pjax_fancybox();
+  });
+</script>
+
+
+
+
+
+  <script>setLoadingBarProgress(100);</script>
+</body>
+</html>

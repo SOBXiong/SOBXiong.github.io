@@ -1,0 +1,1289 @@
+<!DOCTYPE html>
+<html>
+<head hexo-theme='https://volantis.js.org/#2.6.6'>
+  <meta charset="utf-8">
+  <!-- SEO相关 -->
+  
+    
+  
+  <!-- 渲染优化 -->
+  <meta name="renderer" content="webkit">
+  <meta name="force-rendering" content="webkit">
+  <meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1">
+  <meta name="HandheldFriendly" content="True" >
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+  <!-- 页面元数据 -->
+  
+    <title>Zookeeper入门 - SOBXiong的博客</title>
+  
+    <meta name="keywords" content="大数据,Zookeeper">
+  
+  
+    <meta name="description" content="内容
+Zookeeper入门
+Zookeeper安装
+Zookeeper实战
+Zookeeper内部原理
+面试真题
+">
+  
+
+  <!-- feed -->
+  
+
+  <!-- import meta -->
+  
+
+  <!-- link -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@5.13/css/all.min.css">
+  
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.css">
+
+  
+  
+    
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/node-waves@0.7.6/dist/waves.min.css">
+
+  
+
+  
+  <link rel="shortcut icon" type='image/x-icon' href="https://cdn.jsdelivr.net/gh/SOBXiong/imageBed/favicon.png">
+  
+
+  
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/aplayer@1.10/dist/APlayer.min.css">
+  
+
+  
+
+  <!-- import link -->
+  
+
+  
+  
+    
+<link rel="stylesheet" href="/css/style.css">
+
+  
+
+  <script>
+    function setLoadingBarProgress(num) {
+      document.getElementById('loading-bar').style.width=num+"%";
+    }
+  </script>
+
+  
+  
+</head>
+
+<body>
+  
+  <div id="loading-bar-wrapper">
+  <div id="loading-bar"></div>
+</div>
+<header class="l_header shadow blur">
+  <div class='container'>
+  <div class='wrapper'>
+    <div class='nav-sub'>
+      <p class="title"></p>
+      <ul class='switcher nav-list-h'>
+        <li><a class="s-comment fas fa-comments fa-fw" target="_self" href='javascript:void(0)'></a></li>
+        
+          <li><a class="s-toc fas fa-list fa-fw" target="_self" href='javascript:void(0)'></a></li>
+        
+      </ul>
+    </div>
+		<div class="nav-main">
+      
+        
+        <a class="title flat-box" target="_self" href='/'>
+          
+          
+            <i class='https://cdn.jsdelivr.net/gh/SOBXiong/imageBed/favicon.png'></i>
+          
+          
+            SOBXiong
+          
+          
+        </a>
+      
+
+			<div class='menu navigation'>
+				<ul class='nav-list-h'>
+          
+          
+          
+            
+            
+              <li>
+                <a class="flat-box" href=/
+                  
+                  
+                  
+                    id="home"
+                  >
+                  <i class='fas fa-rss fa-fw'></i>博客
+                </a>
+                
+              </li>
+            
+          
+          
+            
+            
+              <li>
+                <a class="flat-box" href=/categories/
+                  
+                  
+                  
+                    id="categories"
+                  >
+                  <i class='fas fa-folder-open fa-fw'></i>分类
+                </a>
+                
+              </li>
+            
+          
+          
+            
+            
+              <li>
+                <a class="flat-box" href=/tags/
+                  
+                  
+                  
+                    id="tags"
+                  >
+                  <i class='fas fa-tags fa-fw'></i>标签
+                </a>
+                
+              </li>
+            
+          
+          
+            
+            
+              <li>
+                <a class="flat-box" href=/archives/
+                  
+                  
+                  
+                    id="archives"
+                  >
+                  <i class='fas fa-archive fa-fw'></i>归档
+                </a>
+                
+              </li>
+            
+          
+          
+            
+            
+              <li>
+                <a class="flat-box" href=/about/
+                  
+                  
+                  
+                    id="about"
+                  >
+                  <i class='fas fa-info-circle fa-fw'></i>关于
+                </a>
+                
+              </li>
+            
+          
+          
+				</ul>
+			</div>
+
+      <div class="m_search">
+        <form name="searchform" class="form u-search-form">
+          <i class="icon fas fa-search fa-fw"></i>
+          <input type="text" class="input u-search-input" placeholder="Search..." />
+        </form>
+      </div>
+
+			<ul class='switcher nav-list-h'>
+				
+					<li><a class="s-search fas fa-search fa-fw" target="_self" href='javascript:void(0)'></a></li>
+				
+				<li>
+          <a class="s-menu fas fa-bars fa-fw" target="_self" href='javascript:void(0)'></a>
+          <ul class="menu-phone list-v navigation white-box">
+            
+              
+            
+              <li>
+                <a class="flat-box" href=/
+                  
+                  
+                  
+                    id="home"
+                  >
+                  <i class='fas fa-rss fa-fw'></i>博客
+                </a>
+                
+              </li>
+            
+          
+            
+              
+            
+              <li>
+                <a class="flat-box" href=/categories/
+                  
+                  
+                  
+                    id="categories"
+                  >
+                  <i class='fas fa-folder-open fa-fw'></i>分类
+                </a>
+                
+              </li>
+            
+          
+            
+              
+            
+              <li>
+                <a class="flat-box" href=/tags/
+                  
+                  
+                  
+                    id="tags"
+                  >
+                  <i class='fas fa-tags fa-fw'></i>标签
+                </a>
+                
+              </li>
+            
+          
+            
+              
+            
+              <li>
+                <a class="flat-box" href=/archives/
+                  
+                  
+                  
+                    id="archives"
+                  >
+                  <i class='fas fa-archive fa-fw'></i>归档
+                </a>
+                
+              </li>
+            
+          
+            
+              
+            
+              <li>
+                <a class="flat-box" href=/about/
+                  
+                  
+                  
+                    id="about"
+                  >
+                  <i class='fas fa-info-circle fa-fw'></i>关于
+                </a>
+                
+              </li>
+            
+          
+            
+          </ul>
+        </li>
+			</ul>
+		</div>
+	</div>
+  </div>
+</header>
+
+<script>setLoadingBarProgress(40);</script>
+
+
+
+  <div class="l_body nocover">
+    <div class='body-wrapper'>
+      
+
+<div class='l_main'>
+  
+
+  
+    <article id="post" class="post white-box reveal shadow article-type-post" itemscope itemprop="blogPost">
+      
+
+
+  <section class='meta'>
+    
+      
+      
+      <div class="meta" id="header-meta">
+        
+          
+  <h1 class="title">
+    <a href="/2020/06/26/BigData/Zookeeper/">
+      Zookeeper入门
+    </a>
+  </h1>
+
+
+        
+        <div class='new-meta-box'>
+          
+            
+          
+            
+              
+<div class='new-meta-item author'>
+  <a href="http://xiongjc.top" target="_blank" rel="nofollow noopener">
+    <img src="https://cdn.jsdelivr.net/gh/SOBXiong/imageBed/hdImg_f757fa7e0fd65077ce52d251fc7a01d815860762755.jpg">
+    <p>SOBXiong</p>
+  </a>
+</div>
+
+            
+          
+            
+              
+  
+  <div class='new-meta-item category'>
+    <a href='/categories/%E7%BC%96%E7%A8%8B/' rel="nofollow">
+      <i class="fas fa-folder-open fa-fw" aria-hidden="true"></i>
+      <p>编程</p>
+    </a>
+  </div>
+
+
+            
+          
+            
+              <div class="new-meta-item date">
+  <a class='notlink'>
+    <i class="fas fa-calendar-alt fa-fw" aria-hidden="true"></i>
+    <p>发布于：2020年6月26日</p>
+  </a>
+</div>
+
+            
+          
+            
+              
+
+            
+          
+        </div>
+        
+          <hr>
+        
+      </div>
+    
+  </section>
+
+
+      <section class="article typo">
+        <div class="article-entry" itemprop="articleBody">
+          
+          <h2 id="内容"><a href="#内容" class="headerlink" title="内容"></a>内容</h2><ul>
+<li><a href="#Zookeeper入门">Zookeeper入门</a></li>
+<li><a href="#Zookeeper安装">Zookeeper安装</a></li>
+<li><a href="#Zookeeper实战">Zookeeper实战</a></li>
+<li><a href="#Zookeeper内部原理">Zookeeper内部原理</a></li>
+<li><a href="#面试真题">面试真题</a></li>
+</ul>
+<a id="more"></a>
+
+<h2 id="Zookeeper入门"><a href="#Zookeeper入门" class="headerlink" title="Zookeeper入门"></a>Zookeeper入门</h2><ul>
+<li><p>概述<br>Zookeeper是一个开源的分布式的，为分布式应用提供协调服务的Apache项目<br><img src="Zookeeper%E5%B7%A5%E4%BD%9C%E6%9C%BA%E5%88%B6.png" alt="Zookeeper工作机制"></p>
+</li>
+<li><p>特点<br><img src="Zookeeper%E7%89%B9%E7%82%B9.png" alt="Zookeeper特点"></p>
+</li>
+<li><p>数据结构<br><img src="Zookeeper%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84.png" alt="Zookeeper数据结构"></p>
+</li>
+<li><p>应用场景<br>提供的服务包括：统一命名服务、统一配置管理、统一集群管理、服务器节点动态上下线、软负载均衡等</p>
+<ul>
+<li>统一命名服务<br><img src="Zookeeper%E7%BB%9F%E4%B8%80%E5%91%BD%E5%90%8D%E6%9C%8D%E5%8A%A1.png" alt="Zookeeper统一命名服务"></li>
+<li>统一配置管理<br><img src="Zookeeper%E7%BB%9F%E4%B8%80%E9%85%8D%E7%BD%AE%E7%AE%A1%E7%90%86.png" alt="Zookeeper统一配置管理"></li>
+<li>统一集群管理<br><img src="Zookeeper%E7%BB%9F%E4%B8%80%E9%9B%86%E7%BE%A4%E7%AE%A1%E7%90%86.png" alt="Zookeeper统一集群管理"></li>
+<li>服务器节点动态上下线<br><img src="Zookeeper%E6%9C%8D%E5%8A%A1%E5%99%A8%E5%8A%A8%E6%80%81%E4%B8%8A%E4%B8%8B%E7%BA%BF.png" alt="Zookeeper服务器动态上下线"></li>
+<li>软负载均衡<br><img src="Zookeeper%E8%BD%AF%E8%B4%9F%E8%BD%BD%E5%9D%87%E8%A1%A1.png" alt="Zookeeper软负载均衡"></li>
+</ul>
+</li>
+<li><p>下载地址：官网地址——<a href="https://zookeeper.apache.org" target="_blank" rel="noopener">https://zookeeper.apache.org</a></p>
+</li>
+</ul>
+<h2 id="Zookeeper安装"><a href="#Zookeeper安装" class="headerlink" title="Zookeeper安装"></a>Zookeeper安装</h2><ul>
+<li><p>本地模式安装部署</p>
+<ul>
+<li>安装前准备<ul>
+<li>安装jdk</li>
+<li>拷贝Zookeeper安装包到Linux系统下</li>
+<li>解压到指定目录：tar -zxvf apache-zookeeper-3.6.1-bin.tar.gz -C /opt/module/</li>
+</ul>
+</li>
+<li>配置修改<ul>
+<li>修改配置文件(conf目录下)：mv zoo_sample.cfg zoo.cfg</li>
+<li>打开zoo.cfg文件，修改dataDir路径：dataDir=/opt/module/zookeeper-3.6.1/zkData</li>
+<li>新建zkData目录(不同于Hadoop目录不能存在)：mkdir zkData</li>
+</ul>
+</li>
+<li>操作Zookeeper<ul>
+<li>启动Zookeeper Server(服务端)：bin/zkServer.sh start</li>
+<li>查看进程是否启动：jps(正常会有一个QuorumPeerMain)</li>
+<li>查看状态：bin/zkServer.sh status</li>
+<li>启动Zookeeper Client(客户端)：bin/zkCli.sh</li>
+<li>查看文件列表：ls /(一开始只有[zookeeper])</li>
+<li>退出Zookeeper Client：quit</li>
+<li>停止Zookeeper Server：bin/zkServer.sh stop</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p>配置参数解读<br>Zookeeper中的配置文件zoo.cfg中参数含义解读如下：</p>
+<ul>
+<li><em>tickTime = 2000：通信心跳数，Zookeeper服务器与客户端心跳时间，单位毫秒</em><br>Zookeeper使用的基本时间，服务器之间或客户端与服务器之间维持心跳的时间间隔，也就是每个tickTime时间就会发送一个心跳，时间单位为毫秒。<br>它用于心跳机制，并且设置最小的session超时时间为两倍心跳时间。(session的最小超时时间是2*tickTime)</li>
+<li><em>initLimit = 10：LF初始通信时限</em><br>集群中的Follower跟随者服务器与Leader领导者服务器之间<strong>初始连接时</strong>能容忍的最多心跳数(tickTime的数量)，用它来限定集群中的Zookeeper服务器连接到Leader的时限</li>
+<li><em>syncLimit = 5：LF同步通信时限</em><br>集群中Leader与Follower之间的最大响应时间单位，假如响应超过syncLimit * tickTime，Leader认为Follwer死掉，从服务器列表中删除Follwer</li>
+<li><em>dataDir：数据文件目录 + 数据持久化路径</em><br>主要用于保存Zookeeper中的数据</li>
+<li><em>clientPort = 2181：客户端连接端口</em><br>监听客户端连接的端口</li>
+</ul>
+</li>
+</ul>
+<h2 id="Zookeeper实战"><a href="#Zookeeper实战" class="headerlink" title="Zookeeper实战"></a>Zookeeper实战</h2><ul>
+<li><p>分布式安装部署</p>
+<ul>
+<li><p>集群规划：在hadoop1、hadoop2、hadoop3三个节点上部署Zookeeper形成集群</p>
+</li>
+<li><p>安装：分发zookeeper到hadoop2、hadoop3：xsync zookeeper-3.6.1/</p>
+</li>
+<li><p>配置服务器编号：</p>
+<ul>
+<li>在zookeeper-3.6.1目录下创建zkData目录：mkdir zkData</li>
+<li>在zkData目录下创建myid文件：touch myid</li>
+<li>编辑myid文件(设置当前server编号)：1</li>
+<li>同步zkData到hadoop2、hadoop3上：xsync zkData/</li>
+<li>在hadoop2、hadoop3上修改myid中的内容为2、3</li>
+</ul>
+</li>
+<li><p>配置zoo.cfg文件</p>
+<ul>
+<li>新增集群节点配置</li>
+</ul>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> cluster</span></span><br><span class="line">server.1=hadoop1:2888:3888</span><br><span class="line">server.2=hadoop2:2888:3888</span><br><span class="line">server.3=hadoop3:2888:3888</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>同步zoo.cfg文件：xsync zoo.cfg</li>
+<li>配置参数解读：server.A=B:C:D<ul>
+<li>A是一个数，表示这是第几号服务器。集群模式下配置文件myid中的数字就是A的值，<strong>Zookeeper启动时读取此文件，拿到里面的数据与zoo.cfg里面的配置信息比较从而判断到底是哪个server</strong></li>
+<li>B是这个服务器的地址</li>
+<li>C是这个服务器Follower与集群中的Leader服务器交换信息的端口</li>
+<li>D是用来执行选举时服务器相互通信的端口：万一集群中的Leader服务器挂了，需要一个端口来重新进行选举，选出一个新的Leader</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p>集群操作</p>
+<ul>
+<li>分别启动Zookeeper(启动前需要关闭Linux防火墙,使得各节点能够相互通信)：bin/zkServer.sh start</li>
+<li>查看状态：bin/zkServer.sh status</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p>客户端命令行操作(启动命令行：bin/zkCli.sh)</p>
+</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>命令基本语法</th>
+<th>功能描述</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>help(打错也是一个效果,当前无help命令)</td>
+<td>显示所有操作命令</td>
+</tr>
+<tr>
+<td>ls [-s] [-w] [-R] path</td>
+<td>使用ls命令来查看当前path下znode中所包含的内容(-s：查看更新次数等详细数据,替代ls2;-w：设置watcher监听器,只有效一次;-R：递归查看节点)</td>
+</tr>
+<tr>
+<td>create [-s] [-e] path [data]</td>
+<td>创建节点(-s：含有序列;-e：临时(重启或者超时消失);data：写入path的内容,如果没有data创建不出节点)</td>
+</tr>
+<tr>
+<td>get [-s] [-w] path</td>
+<td>获得节点的值(-s：获取更加详细的节点数据;-w：设置watcher监听器,只有效一次)</td>
+</tr>
+<tr>
+<td>set path data</td>
+<td>设置节点的具体值</td>
+</tr>
+<tr>
+<td>stat path</td>
+<td>查看节点状态</td>
+</tr>
+<tr>
+<td>delete path</td>
+<td>删除节点</td>
+</tr>
+<tr>
+<td>deleteall path</td>
+<td>递归删除节点</td>
+</tr>
+</tbody></table>
+<ul>
+<li><p>API应用</p>
+<ul>
+<li><p>IDEA环境搭建</p>
+<ul>
+<li>创建空maven项目</li>
+<li>添加pom文件：</li>
+</ul>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">dependencies</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>junit<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>junit<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">version</span>&gt;</span>RELEASE<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.apache.logging.log4j<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>log4j-core<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">version</span>&gt;</span>2.13.3<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.apache.zookeeper<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>zookeeper<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">version</span>&gt;</span>3.6.1<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">dependencies</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>在resources目录下新建一个日志配置文件log4j.properties</li>
+</ul>
+<figure class="highlight properties"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">log4j.rootLogger</span>=<span class="string">INFO, stdout</span></span><br><span class="line"><span class="meta">log4j.appender.stdout</span>=<span class="string">org.apache.log4j.ConsoleAppender</span></span><br><span class="line"><span class="meta">log4j.appender.stdout.layout</span>=<span class="string">org.apache.log4j.PatternLayout</span></span><br><span class="line"><span class="meta">log4j.appender.stdout.layout.ConversionPattern</span>=<span class="string">%d %p [%c] - %m%n</span></span><br><span class="line"><span class="meta">log4j.appender.logfile</span>=<span class="string">org.apache.log4j.FileAppender</span></span><br><span class="line"><span class="meta">log4j.appender.logfile.File</span>=<span class="string">target/spring.log</span></span><br><span class="line"><span class="meta">log4j.appender.logfile.layout</span>=<span class="string">org.apache.log4j.PatternLayout</span></span><br><span class="line"><span class="meta">log4j.appender.logfile.layout.ConversionPattern</span>=<span class="string">%d %p [%c] - %m%n</span></span><br></pre></td></tr></table></figure>
+</li>
+<li><p>创建ZooKeeper客户端</p>
+</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 访问的ip</span></span><br><span class="line"><span class="keyword">private</span> String connectString = <span class="string">"hadoop1:2181,hadoop2:2181,hadoop3:2181"</span>;</span><br><span class="line"><span class="comment">// 会话超时时间</span></span><br><span class="line"><span class="keyword">private</span> <span class="keyword">int</span> sessionTimeout = <span class="number">2000</span>;</span><br><span class="line"><span class="comment">// zookeeper客户端</span></span><br><span class="line"><span class="keyword">private</span> ZooKeeper zkClient;</span><br><span class="line"></span><br><span class="line"><span class="meta">@Before</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">init</span><span class="params">()</span> <span class="keyword">throws</span> IOException </span>&#123;</span><br><span class="line">    zkClient = <span class="keyword">new</span> ZooKeeper(connectString, sessionTimeout, <span class="keyword">new</span> Watcher() &#123;</span><br><span class="line">        <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">process</span><span class="params">(WatchedEvent event)</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">        &#125;</span><br><span class="line">    &#125;);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>创建子节点</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 1、创建节点</span></span><br><span class="line"><span class="meta">@Test</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">createNode</span><span class="params">()</span> <span class="keyword">throws</span> IOException, KeeperException, InterruptedException </span>&#123;</span><br><span class="line">  String path = zkClient.create(<span class="string">"/sobxiong"</span>, <span class="string">"sobxiong,xixixihahaha"</span>.getBytes(),</span><br><span class="line">          ZooDefs.Ids.OPEN_ACL_UNSAFE, CreateMode.PERSISTENT);</span><br><span class="line">  System.out.println(<span class="string">"path = "</span> + path);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>获取子节点并监听节点变化</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 2、获取子节点,并监控节点的变化</span></span><br><span class="line"><span class="meta">@Test</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">getDataAndWatch</span><span class="params">()</span> <span class="keyword">throws</span> KeeperException, InterruptedException </span>&#123;</span><br><span class="line">  List&lt;String&gt; children = zkClient.getChildren(<span class="string">"/"</span>, <span class="keyword">true</span>);</span><br><span class="line">  <span class="keyword">for</span> (String child : children) &#123;</span><br><span class="line">      System.out.println(<span class="string">"child = "</span> + child);</span><br><span class="line">  &#125;</span><br><span class="line">  System.out.println(<span class="string">"------------"</span>);</span><br><span class="line">  Thread.sleep(Long.MAX_VALUE);</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">// 设置watcher中的process方法,使其继续调用自身继续监听</span></span><br><span class="line"><span class="meta">@Before</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">init</span><span class="params">()</span> <span class="keyword">throws</span> IOException </span>&#123;</span><br><span class="line">  zkClient = <span class="keyword">new</span> ZooKeeper(connectString, sessionTimeout, <span class="keyword">new</span> Watcher() &#123;</span><br><span class="line">      <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">process</span><span class="params">(WatchedEvent event)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">try</span> &#123;</span><br><span class="line">          List&lt;String&gt; children = zkClient.getChildren(<span class="string">"/"</span>, <span class="keyword">true</span>);</span><br><span class="line">          <span class="keyword">for</span> (String child : children) &#123;</span><br><span class="line">              System.out.println(<span class="string">"child = "</span> + child);</span><br><span class="line">          &#125;</span><br><span class="line">          System.out.println(<span class="string">"------------"</span>);</span><br><span class="line">        &#125; <span class="keyword">catch</span> (KeeperException e) &#123;</span><br><span class="line">          e.printStackTrace();</span><br><span class="line">        &#125; <span class="keyword">catch</span> (InterruptedException e) &#123;</span><br><span class="line">          e.printStackTrace();</span><br><span class="line">        &#125;</span><br><span class="line">      &#125;</span><br><span class="line">  &#125;);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>判断Znode是否存在</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 3、判断节点是否存在</span></span><br><span class="line"><span class="meta">@Test</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">judgeNodeExist</span><span class="params">()</span> <span class="keyword">throws</span> KeeperException, InterruptedException </span>&#123;</span><br><span class="line">  Stat stat = zkClient.exists(<span class="string">"/sobxiong"</span>, <span class="keyword">false</span>);</span><br><span class="line">  System.out.println(<span class="string">"stat = "</span> + stat);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>监听服务器节点动态上下线案例</p>
+<ul>
+<li><p>需求：某分布式系统中，主节点可以有多台，可以动态上下线，任意一台客户端都能实时感知到主节点服务器的上下线</p>
+</li>
+<li><p>案例分析：<br><img src="%E6%9C%8D%E5%8A%A1%E5%99%A8%E5%8A%A8%E6%80%81%E4%B8%8A%E4%B8%8B%E7%BA%BF%E6%A1%88%E4%BE%8B%E5%88%86%E6%9E%90.png" alt="服务器动态上下线案例分析"></p>
+</li>
+<li><p>具体实现</p>
+<ul>
+<li>先在集群上创建/servers节点：create /servers “servers”</li>
+<li>服务端向Zookeeper注册：</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">DistributeServer</span> </span>&#123;</span><br><span class="line">  <span class="comment">// 访问的ip</span></span><br><span class="line">  <span class="keyword">private</span> String connectString = <span class="string">"hadoop1:2181,hadoop2:2181,hadoop3:2181"</span>;</span><br><span class="line">  <span class="comment">// 会话超时时间</span></span><br><span class="line">  <span class="keyword">private</span> <span class="keyword">int</span> sessionTimeout = <span class="number">2000</span>;</span><br><span class="line">  <span class="comment">// zookeeper客户端</span></span><br><span class="line">  <span class="keyword">private</span> ZooKeeper zkClient;</span><br><span class="line"></span><br><span class="line">  <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> <span class="keyword">throws</span> IOException, KeeperException, InterruptedException </span>&#123;</span><br><span class="line">    DistributeServer server = <span class="keyword">new</span> DistributeServer();</span><br><span class="line">    <span class="comment">// 1、连接zookeeper集群</span></span><br><span class="line">    server.getConnect();</span><br><span class="line">    <span class="comment">// 2、注册节点</span></span><br><span class="line">    server.register(args[<span class="number">0</span>]);</span><br><span class="line">    <span class="comment">// 3、业务逻辑</span></span><br><span class="line">    server.business();</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">business</span><span class="params">()</span> <span class="keyword">throws</span> InterruptedException </span>&#123;</span><br><span class="line">    Thread.sleep(Long.MAX_VALUE);</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">register</span><span class="params">(String hostName)</span> <span class="keyword">throws</span> KeeperException, InterruptedException </span>&#123;</span><br><span class="line">    String path = zkClient.create(<span class="string">"/servers/server"</span>, hostName.getBytes(),</span><br><span class="line">            ZooDefs.Ids.OPEN_ACL_UNSAFE, CreateMode.EPHEMERAL_SEQUENTIAL);</span><br><span class="line">    System.out.println(hostName + <span class="string">" is online..."</span>);</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">getConnect</span><span class="params">()</span> <span class="keyword">throws</span> IOException </span>&#123;</span><br><span class="line">    zkClient = <span class="keyword">new</span> ZooKeeper(connectString, sessionTimeout, <span class="keyword">new</span> Watcher() &#123;</span><br><span class="line">        <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">process</span><span class="params">(WatchedEvent event)</span> </span>&#123;&#125;</span><br><span class="line">    &#125;);</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>客户端注册监听：</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">DistributeClient</span> </span>&#123;</span><br><span class="line">  <span class="comment">// 访问的ip</span></span><br><span class="line">  <span class="keyword">private</span> String connectString = <span class="string">"hadoop1:2181,hadoop2:2181,hadoop3:2181"</span>;</span><br><span class="line">  <span class="comment">// 会话超时时间</span></span><br><span class="line">  <span class="keyword">private</span> <span class="keyword">int</span> sessionTimeout = <span class="number">2000</span>;</span><br><span class="line">  <span class="comment">// zookeeper客户端</span></span><br><span class="line">  <span class="keyword">private</span> ZooKeeper zkClient;</span><br><span class="line"></span><br><span class="line">  <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> <span class="keyword">throws</span> IOException, KeeperException, InterruptedException </span>&#123;</span><br><span class="line">    DistributeClient client = <span class="keyword">new</span> DistributeClient();</span><br><span class="line">    <span class="comment">// 1、获取zookeeper集群连接</span></span><br><span class="line">    client.getConnect();</span><br><span class="line">    <span class="comment">// 2、注册监听</span></span><br><span class="line">    client.getChildren();</span><br><span class="line">    <span class="comment">// 3、业务逻辑处理</span></span><br><span class="line">    client.business();</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">business</span><span class="params">()</span> <span class="keyword">throws</span> InterruptedException </span>&#123;</span><br><span class="line">    Thread.sleep(Long.MAX_VALUE);</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">getChildren</span><span class="params">()</span> <span class="keyword">throws</span> KeeperException, InterruptedException </span>&#123;</span><br><span class="line">    List&lt;String&gt; children = zkClient.getChildren(<span class="string">"/servers"</span>, <span class="keyword">true</span>);</span><br><span class="line">    <span class="comment">// 存储服务器节点主机名称集合</span></span><br><span class="line">    List&lt;String&gt; hostNames = <span class="keyword">new</span> ArrayList();</span><br><span class="line">    <span class="keyword">for</span> (String child : children) &#123;</span><br><span class="line">      <span class="keyword">byte</span>[] data = zkClient.getData(<span class="string">"/servers/"</span> + child, <span class="keyword">false</span>, <span class="keyword">null</span>);</span><br><span class="line">      hostNames.add(<span class="keyword">new</span> String(data));</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">// 将所有在线主机名称打印</span></span><br><span class="line">    System.out.println(<span class="string">"hostNames = "</span> + hostNames);</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">getConnect</span><span class="params">()</span> <span class="keyword">throws</span> IOException </span>&#123;</span><br><span class="line">    zkClient = <span class="keyword">new</span> ZooKeeper(connectString, sessionTimeout, <span class="keyword">new</span> Watcher() &#123;</span><br><span class="line">        <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">process</span><span class="params">(WatchedEvent event)</span> </span>&#123;</span><br><span class="line">          <span class="keyword">try</span> &#123;</span><br><span class="line">            getChildren();</span><br><span class="line">          &#125; <span class="keyword">catch</span> (Exception e) &#123;</span><br><span class="line">            e.printStackTrace();</span><br><span class="line">          &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;);</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+</li>
+</ul>
+</li>
+</ul>
+<h2 id="Zookeeper内部原理"><a href="#Zookeeper内部原理" class="headerlink" title="Zookeeper内部原理"></a>Zookeeper内部原理</h2><ul>
+<li><p>节点类型<br><img src="Zookeeper%E8%8A%82%E7%82%B9%E7%B1%BB%E5%9E%8B.png" alt="Zookeeper节点类型"></p>
+</li>
+<li><p>Stat结构体</p>
+<ul>
+<li>cZxid：创建节点的事务zxid——每次修改ZooKeeper状态都会收到一个zxid形式的时间戳，也就是ZooKeeper事务ID。事务ID是ZooKeeper中所有修改总的次序。每个修改都有唯一的zxid，如果zxid1小于zxid2，那么zxid1在zxid2之前发生</li>
+<li>ctime：znode被创建的毫秒数(从1970年开始)</li>
+<li>mzxid：znode最后更新的事务zxid</li>
+<li>mtime：znode最后修改的毫秒数(从1970年开始)</li>
+<li>pZxid：znode最后更新的子节点zxid</li>
+<li>cversion：znode子节点变化号，znode子节点修改次数</li>
+<li>dataversion：znode数据变化号</li>
+<li>aclVersion：znode访问控制列表的变化号</li>
+<li>ephemeralOwner：如果是临时节点，这个是znode拥有者的session id；如果不是临时节点则是0</li>
+<li><strong>dataLength：znode的数据长度</strong></li>
+<li><strong>numChildren：znode子节点数量</strong></li>
+</ul>
+</li>
+<li><p>监听器原理<br><img src="Zookeeper%E7%9B%91%E5%90%AC%E5%99%A8%E5%8E%9F%E7%90%86.png" alt="Zookeeper监听器原理"></p>
+</li>
+<li><p>选举机制</p>
+<ul>
+<li><strong>半数机制：集群中半数以上机器存活，集群可用。所以Zookeeper适合安装奇数台服务器</strong></li>
+<li>Zookeeper虽然在配置文件中并没有指定Master和Slave。但是，Zookeeper工作时是有一个节点为Leader，其他则为Follower，Leader是通过内部的选举机制临时产生的</li>
+<li>选举过程的举例(假设有五台服务器组成的Zookeeper集群，它们的id从1-5，同时它们都是最新启动的——没有历史数据，在存放数据量这一点上，都是一样的)：<br><img src="Zookeeper%E9%80%89%E4%B8%BE%E6%9C%BA%E5%88%B6.png" alt="Zookeeper选举机制"><ul>
+<li>服务器1启动，发起一次选举。服务器1投自己一票。此时服务器1票数一票，不够半数以上(3票)，选举无法完成，服务器1状态保持为LOOKING</li>
+<li>服务器2启动，再发起一次选举。服务器1和2分别投自己一票并交换选票信息：此时服务器1发现服务器2的ID比自己目前投票推举的(服务器1)大，更改选票为推举服务器2。此时服务器1票数0票，服务器2票数2票，没有半数以上结果，选举无法完成，服务器1、2状态保持LOOKING</li>
+<li>服务器3启动，发起一次选举。此时服务器1和2都会更改选票为服务器3。此次投票结果：服务器1为0票，服务器2为0票，服务器3为3票。此时服务器3的票数已经超过半数，服务器3当选Leader。服务器1，2更改状态为FOLLOWING，服务器3更改状态为LEADING</li>
+<li>服务器4启动，发起一次选举。此时服务器1、2、3已经不是LOOKING状态，不会更改选票信息。交换选票信息结果：服务器3为3票，服务器4为1票。此时服务器4服从多数，更改选票信息为服务器3，并更改状态为FOLLOWING</li>
+<li>服务器5启动，同4一样当小弟</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p>写数据流程<br><img src="Zookeeper%E5%86%99%E6%95%B0%E6%8D%AE%E6%B5%81%E7%A8%8B.png" alt="Zookeeper写数据流程"></p>
+</li>
+</ul>
+<h2 id="面试真题"><a href="#面试真题" class="headerlink" title="面试真题"></a>面试真题</h2><ul>
+<li><p>请简述ZooKeeper的选举机制？<br>参见4.4</p>
+</li>
+<li><p>ZooKeeper的监听原理是什么？<br>参见4.3</p>
+</li>
+<li><p>ZooKeeper的部署方式有哪几种？集群中的角色有哪些？集群最少需要几台机器？<br>(1)部署方式：单机模式、集群模式；(2)角色：Leader和Follower；(3)集群最少需要机器数：3</p>
+</li>
+<li><p>ZooKeeper的常用命令有哪些？<br>ls create get delete set</p>
+</li>
+</ul>
+
+          
+            <div class='article_footer'>
+              
+                
+  
+    
+    
+
+
+
+  
+
+  
+    
+    
+
+
+
+  
+
+  
+    
+    
+
+<section class="widget copyright  desktop mobile">
+  <div class='content'>
+    
+      <blockquote>
+        
+          
+            <p>博客内容遵循 署名-非商业性使用-相同方式共享 4.0 国际 (CC BY-NC-SA 4.0) 协议</p>
+
+          
+        
+          
+            <p>本文永久链接是：<a href=https://sobxiong.github.io/2020/06/26/BigData/Zookeeper/>https://sobxiong.github.io/2020/06/26/BigData/Zookeeper/</a></p>
+          
+        
+      </blockquote>
+    
+  </div>
+</section>
+
+  
+
+  
+    
+    
+
+<section class="widget qrcode  desktop mobile">
+  
+
+  <div class='content article-entry'>
+    
+      
+        <div class='fancybox'><img src='https://cdn.jsdelivr.net/gh/xaoxuu/cdn-assets/qrcode/wiki_volantis.png'
+        
+          height='64px'
+        ></div>
+      
+    
+      
+        <div class='fancybox'><img src='https://cdn.jsdelivr.net/gh/xaoxuu/cdn-assets/qrcode/wiki_volantis.png'
+        
+          height='64px'
+        ></div>
+      
+    
+  </div>
+</section>
+
+  
+
+
+              
+            </div>
+          
+        </div>
+        
+          
+
+
+  <section class='meta' id="footer-meta">
+    <div class='new-meta-box'>
+      
+        
+          <div class="new-meta-item date" itemprop="dateUpdated" datetime="2020-07-06T22:21:35+08:00">
+  <a class='notlink'>
+    <i class="fas fa-edit fa-fw" aria-hidden="true"></i>
+    <p>更新于：2020年7月6日</p>
+  </a>
+</div>
+
+        
+      
+        
+          
+  
+  <div class="new-meta-item meta-tags"><a class="tag" href="/tags/%E5%A4%A7%E6%95%B0%E6%8D%AE/" rel="nofollow"><i class="fas fa-hashtag fa-fw" aria-hidden="true"></i><p>大数据</p></a></div> <div class="new-meta-item meta-tags"><a class="tag" href="/tags/Zookeeper/" rel="nofollow"><i class="fas fa-hashtag fa-fw" aria-hidden="true"></i><p>Zookeeper</p></a></div>
+
+
+        
+      
+        
+          
+
+        
+      
+        
+          
+  <div class="new-meta-item share -mob-share-list">
+  <div class="-mob-share-list share-body">
+    
+      
+        <a class="-mob-share-qq" title="" rel="external nofollow noopener noreferrer"
+          
+          href="http://connect.qq.com/widget/shareqq/index.html?url=https://sobxiong.github.io/2020/06/26/BigData/Zookeeper/&title=Zookeeper入门 - SOBXiong的博客&summary=内容
+Zookeeper入门
+Zookeeper安装
+Zookeeper实战
+Zookeeper内部原理
+面试真题
+"
+          
+          >
+          
+            <img src="https://cdn.jsdelivr.net/gh/xaoxuu/cdn-assets/logo/128/qq.png">
+          
+        </a>
+      
+    
+      
+        <a class="-mob-share-qzone" title="" rel="external nofollow noopener noreferrer"
+          
+          href="https://sns.qzone.qq.com/cgi-bin/qzshare/cgi_qzshare_onekey?url=https://sobxiong.github.io/2020/06/26/BigData/Zookeeper/&title=Zookeeper入门 - SOBXiong的博客&summary=内容
+Zookeeper入门
+Zookeeper安装
+Zookeeper实战
+Zookeeper内部原理
+面试真题
+"
+          
+          >
+          
+            <img src="https://cdn.jsdelivr.net/gh/xaoxuu/cdn-assets/logo/128/qzone.png">
+          
+        </a>
+      
+    
+      
+        <a class="-mob-share-weibo" title="" rel="external nofollow noopener noreferrer"
+          
+          href="http://service.weibo.com/share/share.php?url=https://sobxiong.github.io/2020/06/26/BigData/Zookeeper/&title=Zookeeper入门 - SOBXiong的博客&summary=内容
+Zookeeper入门
+Zookeeper安装
+Zookeeper实战
+Zookeeper内部原理
+面试真题
+"
+          
+          >
+          
+            <img src="https://cdn.jsdelivr.net/gh/xaoxuu/cdn-assets/logo/128/weibo.png">
+          
+        </a>
+      
+    
+  </div>
+</div>
+
+
+
+        
+      
+    </div>
+  </section>
+
+
+        
+        
+          <div class="prev-next">
+            
+              <a class='prev' href='/2020/07/06/BigData/Hive/'>
+                <p class='title'><i class="fas fa-chevron-left" aria-hidden="true"></i>Hive</p>
+                <p class='content'>内容
+Hive基本概念
+Hive安装
+Hive数据类型
+DDL数据定义
+DML数据操作
+查询
+例题实战(蚂蚁金服)
+函数
+压缩和存储
+企业级调优
+谷粒影音Hive实战
+常见错误及解决方案
+
+
+
+...</p>
+              </a>
+            
+            
+              <a class='next' href='/2020/06/19/Spring/Spring%E6%B3%A8%E8%A7%A3%E9%A9%B1%E5%8A%A8%E5%BC%80%E5%8F%91/'>
+                <p class='title'>Spring注解驱动开发<i class="fas fa-chevron-right" aria-hidden="true"></i></p>
+                <p class='content'>内容
+容器
+扩展原理
+Web
+
+
+
+容器
+@Configuration：类注解(配置类=配置文件,注解告诉Spring这是一个配置类)
+@Bean：方法注解，在类方法中给出返回Bean的方法，并...</p>
+              </a>
+            
+          </div>
+        
+      </section>
+    </article>
+  
+
+  
+    <!-- 显示推荐文章和评论 -->
+
+
+
+  <article class="post white-box reveal comments shadow">
+    <section class="article typo">
+      <p ct><i class='fas fa-comments'></i> 评论</p>
+      
+      
+      
+      
+      
+      
+        <section id="comments">
+          <div id="valine_container" class="valine_thread">
+            <i class="fas fa-cog fa-spin fa-fw fa-2x"></i>
+          </div>
+        </section>
+      
+      
+    </section>
+  </article>
+
+
+  
+
+
+
+
+<!-- 根据页面mathjax变量决定是否加载MathJax数学公式js -->
+
+
+
+  <script>
+    window.subData = {
+      title: 'Zookeeper入门',
+      tools: true
+    }
+  </script>
+
+
+</div>
+<aside class='l_side'>
+  
+  
+
+  
+    
+    
+
+
+
+  <section class="widget toc-wrapper shadow desktop mobile" id="toc-div" >
+    
+  <header>
+    
+      <i class="fas fa-list fa-fw" aria-hidden="true"></i><span class='name'>本文目录</span>
+    
+  </header>
+
+
+    <div class='content'>
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#内容"><span class="toc-text">内容</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Zookeeper入门"><span class="toc-text">Zookeeper入门</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Zookeeper安装"><span class="toc-text">Zookeeper安装</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Zookeeper实战"><span class="toc-text">Zookeeper实战</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Zookeeper内部原理"><span class="toc-text">Zookeeper内部原理</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#面试真题"><span class="toc-text">面试真题</span></a></li></ol>
+    </div>
+  </section>
+
+
+  
+
+
+</aside>
+
+
+  
+  <footer class="clearfix">
+    <br><br>
+    
+      
+        <br>
+        <div class="social-wrapper">
+          
+            
+              <a href="mailto:1942991710@qq.com"
+                class="social fas fa-envelope flat-btn"
+                target="_blank"
+                rel="external nofollow noopener noreferrer">
+              </a>
+            
+          
+            
+              <a href="https://github.com/SOBXiong"
+                class="social fab fa-github flat-btn"
+                target="_blank"
+                rel="external nofollow noopener noreferrer">
+              </a>
+            
+          
+        </div>
+      
+    
+      
+        <div><p>博客内容遵循 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh" target="_blank" rel="noopener">署名-非商业性使用-相同方式共享 4.0 国际 (CC BY-NC-SA 4.0) 协议</a></p>
+</div>
+      
+    
+      
+        <div class='copyright'>
+        <p><a href="http://xiongjc.top" target="_blank" rel="noopener">Copyright © 2017-2020 SOBXiong</a></p>
+
+        </div>
+      
+    
+  </footer>
+
+<script>setLoadingBarProgress(80);</script>
+
+
+      <script>setLoadingBarProgress(60);</script>
+    </div>
+    <a class="s-top fas fa-arrow-up fa-fw" href='javascript:void(0)'></a>
+  </div>
+  
+<script src="https://cdn.jsdelivr.net/npm/jquery@3.4/dist/jquery.min.js"></script>
+
+
+  <script>
+    
+    var SEARCH_SERVICE = "hexo" || "hexo";
+    var ROOT = "/" || "/";
+    if (!ROOT.endsWith('/')) ROOT += '/';
+  </script>
+
+
+
+
+
+  <script async src="https://cdn.jsdelivr.net/gh/xaoxuu/cdn-volantis@2/js/instant_page.js" type="module" defer integrity="sha384-OeDn4XE77tdHo8pGtE1apMPmAipjoxUQ++eeJa6EtJCfHlvijigWiJpD7VDPWXV1"></script>
+
+
+  <script src="https://cdn.jsdelivr.net/npm/scrollreveal@4.0.6/dist/scrollreveal.min.js"></script>
+  <script type="text/javascript">
+    $(function() {
+      ScrollReveal().reveal('.l_main .reveal', {
+        distance: '8px',
+        duration: '800',
+        interval: '100',
+        scale: '1'
+      });
+    });
+  </script>
+
+
+  
+<script src="https://cdn.jsdelivr.net/npm/node-waves@0.7.6/dist/waves.min.js"></script>
+
+  <script type="text/javascript">
+    $(function() {
+      Waves.attach('.flat-btn', ['waves-button']);
+      Waves.attach('.float-btn', ['waves-button', 'waves-float']);
+      Waves.attach('.float-btn-light', ['waves-button', 'waves-float', 'waves-light']);
+      Waves.attach('.flat-box', ['waves-block']);
+      Waves.attach('.float-box', ['waves-block', 'waves-float']);
+      Waves.attach('.waves-image');
+      Waves.init();
+    });
+  </script>
+
+
+  <script defer src="https://cdn.jsdelivr.net/gh/xaoxuu/cdn-busuanzi@2.3/js/busuanzi.pure.mini.js"></script>
+
+
+
+  
+  
+  
+    
+<script src="https://cdn.jsdelivr.net/npm/jquery-backstretch@2.1.18/jquery.backstretch.min.js"></script>
+
+    <script type="text/javascript">
+      $(function(){
+        var imgs=["https://cdn.jsdelivr.net/gh/xaoxuu/cdn-wallpaper/abstract/41F215B9-261F-48B4-80B5-4E86E165259E.jpeg"];
+        if ('true' == 'true') {
+          function shuffle(arr){
+            /*From countercurrent-time*/
+            var n = arr.length;
+            while(n--) {
+              var index = Math.floor(Math.random() * n);
+              var temp = arr[index];
+              arr[index] = arr[n];
+              arr[n] = temp;
+            }
+          }
+          shuffle(imgs);
+        }
+        if ('.cover') {
+          $('.cover').backstretch(
+            imgs,
+          {
+            duration: "20000",
+            fade: "1500"
+          });
+        } else {
+          $.backstretch(
+            imgs,
+          {
+            duration: "20000",
+            fade: "1500"
+          });
+        }
+      });
+    </script>
+  
+
+
+
+  
+    
+<script src="https://cdn.jsdelivr.net/npm/aplayer@1.10/dist/APlayer.min.js"></script>
+
+  
+    
+<script src="https://cdn.jsdelivr.net/npm/meting@2.0/dist/Meting.min.js"></script>
+
+  
+
+
+
+
+
+
+
+
+
+  
+    
+<script src="https://cdn.jsdelivr.net/npm/valine@1.4/dist/Valine.min.js"></script>
+
+  
+  <script>
+  var GUEST_INFO = ['nick','mail','link'];
+  var meta = 'nick,mail,link'.split(',').filter(function(item){
+    return GUEST_INFO.indexOf(item) > -1
+  });
+  var REQUIRED_FIELDS = ['nick','mail','link'];
+  var requiredFields = 'nick,mail'.split(',').filter(function(item){
+    return REQUIRED_FIELDS.indexOf(item) > -1
+  });
+  var valine = new Valine();
+  function emoji(path, idx, ext) {
+      return path + "/" + path + "-" + idx + "." + ext;
+  }
+  var emojiMaps = {};
+  for (var i = 1; i <= 54; i++) {
+    emojiMaps['tieba-' + i] = emoji('tieba', i, 'png');
+  }
+  for (var i = 1; i <= 101; i++) {
+    emojiMaps['qq-' + i] = emoji('qq', i, 'gif');
+  }
+  for (var i = 1; i <= 116; i++) {
+    emojiMaps['aru-' + i] = emoji('aru', i, 'gif');
+  }
+  for (var i = 1; i <= 125; i++) {
+    emojiMaps['twemoji-' + i] = emoji('twemoji', i, 'png');
+  }
+  for (var i = 1; i <= 4; i++) {
+    emojiMaps['weibo-' + i] = emoji('weibo', i, 'png');
+  }
+  valine.init({
+    el: '#valine_container',
+    meta: meta,
+    
+    appId: "dogUA2FSKGTo029M1SEwGROT-MdYXbMMI",
+    appKey: "u0NdtQ8nvHoMdJPSYqm1LRxE",
+    placeholder: "快来评论吧~",
+    pageSize:'10',
+    avatar:'robohash',
+    lang:'zh-cn',
+    visitor: 'true',
+    highlight: 'true',
+    mathJax: 'false',
+    enableQQ: 'true',
+    requiredFields: requiredFields,
+    emojiCDN: 'https://cdn.jsdelivr.net/gh/xaoxuu/cdn-assets/emoji/valine/',
+    emojiMaps: emojiMaps
+  })
+  </script>
+
+
+
+
+
+  
+<script src="https://cdn.jsdelivr.net/gh/xaoxuu/cdn-volantis@2.6.5/js/app.js"></script>
+
+
+
+  
+<script src="https://cdn.jsdelivr.net/gh/xaoxuu/cdn-volantis@2.6.5/js/search.js"></script>
+
+
+
+  
+<script src="https://cdn.jsdelivr.net/gh/xaoxuu/cdn-volantis@2/js/comment_typing.js"></script>
+
+
+
+
+
+
+<!-- 复制 -->
+
+  <script src="https://cdn.jsdelivr.net/npm/clipboard@2/dist/clipboard.min.js"></script>
+<script>
+  function wait(callback, seconds) {
+    var timelag = null;
+    timelag = window.setTimeout(callback, seconds);
+  }
+  !function (e, t, a) {
+    var initCopyCode = function(){
+      var copyHtml = '';
+      copyHtml += '<button class="btn-copy" data-clipboard-snippet="">';
+      copyHtml += '<i class="fas fa-copy"></i><span>COPY</span>';
+      copyHtml += '</button>';
+      $(".highlight .code pre").before(copyHtml);
+      $(".article pre code").before(copyHtml);
+      var clipboard = new ClipboardJS('.btn-copy', {
+        target: function(trigger) {
+          return trigger.nextElementSibling;
+        }
+      });
+      clipboard.on('success', function(e) {
+        let $btn = $(e.trigger);
+        $btn.addClass('copied');
+        let $icon = $($btn.find('i'));
+        $icon.removeClass('fa-copy');
+        $icon.addClass('fa-check-circle');
+        let $span = $($btn.find('span'));
+        $span[0].innerText = 'COPIED';
+        
+        wait(function () { // 等待两秒钟后恢复
+          $icon.removeClass('fa-check-circle');
+          $icon.addClass('fa-copy');
+          $span[0].innerText = 'COPY';
+        }, 2000);
+      });
+      clipboard.on('error', function(e) {
+        e.clearSelection();
+        let $btn = $(e.trigger);
+        $btn.addClass('copy-failed');
+        let $icon = $($btn.find('i'));
+        $icon.removeClass('fa-copy');
+        $icon.addClass('fa-times-circle');
+        let $span = $($btn.find('span'));
+        $span[0].innerText = 'COPY FAILED';
+        
+        wait(function () { // 等待两秒钟后恢复
+          $icon.removeClass('fa-times-circle');
+          $icon.addClass('fa-copy');
+          $span[0].innerText = 'COPY';
+        }, 2000);
+      });
+    }
+    initCopyCode();
+  }(window, document);
+</script>
+
+
+
+
+<!-- fancybox -->
+<script src="https://cdn.jsdelivr.net/gh/fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.js"></script>
+<script>
+  function pjax_fancybox() {
+    $(".article-entry").find("img").not('.inline').not('a img').each(function () { //渲染 fancybox
+      var element = document.createElement("a"); // a 标签
+      $(element).attr("pjax-fancybox", "");  // 过滤 pjax
+      $(element).attr("href", $(this).attr("src"));
+      if ($(this).attr("data-original")) {
+        $(element).attr("href", $(this).attr("data-original"));
+      }
+      $(element).attr("data-fancybox", "images");
+      var caption = "";   // 描述信息
+      if ($(this).attr('alt')) {  // 标准 markdown 描述信息
+        $(element).attr('data-caption', $(this).attr('alt'));
+        caption = $(this).attr('alt');
+      }
+      var div = document.createElement("div");
+      $(div).addClass("fancybox");
+      $(this).wrap(div); // 最外层套 div ，其实主要作用还是 class 样式
+      var span = document.createElement("span");
+      $(span).addClass("image-caption");
+      $(span).text(caption); // 加描述
+      $(this).after(span);  // 再套一层描述
+      $(this).wrap(element);  // 最后套 a 标签
+    })
+    $(".article-entry").find("img").fancybox({
+      selector: '[data-fancybox="images"]',
+      hash: false,
+      loop: false,
+      closeClick: true,
+      helpers: {
+        overlay: {closeClick: true}
+      },
+      buttons: [
+        "zoom",
+        "close"
+      ]
+    });
+  };
+  $(function () {
+    pjax_fancybox();
+  });
+</script>
+
+
+
+
+
+  <script>setLoadingBarProgress(100);</script>
+</body>
+</html>
