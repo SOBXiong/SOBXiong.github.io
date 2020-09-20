@@ -18,7 +18,7 @@
   
     <title>Hive - SOBXiong的博客</title>
   
-    <meta name="keywords" content="大数据,Hive">
+    <meta name="keywords" content="BigData">
   
   
     <meta name="description" content="内容
@@ -2456,7 +2456,7 @@ DML数据操作
 <li><strong>对于使用了order by语句的查询，要求必须使用limit语句</strong>。因为order by为了执行排序过程会将所有的结果数据分发到同一个Reducer中进行处理，强制要求用户增加这个LIMIT语句可以防止Reducer额外执行很长一段时间</li>
 <li><strong>限制笛卡尔积的查询</strong>。对关系型数据库非常了解的用户可能期望在执行JOIN查询的时候不使用ON语句而是使用where语句，这样关系数据库的执行优化器就可以高效地将WHERE语句转化成那个ON语句。不幸的是，Hive并不会执行这种优化，因此，如果表足够大，那么这个查询就会出现不可控的情况</li>
 </ul>
-<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">property</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">name</span>&gt;</span>hive.mapred.mode<span class="tag">&lt;/<span class="name">name</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">value</span>&gt;</span>strict<span class="tag">&lt;/<span class="name">value</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">description</span>&gt;</span></span><br><span class="line">    The mode in which the Hive operations are being performed. </span><br><span class="line">    In strict mode, some risky queries are not allowed to run. They include:</span><br><span class="line">      Cartesian Product.</span><br><span class="line">      No partition being picked up for a query.</span><br><span class="line">      Comparing bigints and strings.</span><br><span class="line">      Comparing bigints and doubles.</span><br><span class="line">      Orderby without limit.</span><br><span class="line">  <span class="tag">&lt;/<span class="name">description</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">property</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">property</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">name</span>&gt;</span>hive.mapred.mode<span class="tag">&lt;/<span class="name">name</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">value</span>&gt;</span>strict<span class="tag">&lt;/<span class="name">value</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">description</span>&gt;</span></span><br><span class="line">    The mode in which the Hive operations are being performed.</span><br><span class="line">    In strict mode, some risky queries are not allowed to run. They include:</span><br><span class="line">      Cartesian Product.</span><br><span class="line">      No partition being picked up for a query.</span><br><span class="line">      Comparing bigints and strings.</span><br><span class="line">      Comparing bigints and doubles.</span><br><span class="line">      Orderby without limit.</span><br><span class="line">  <span class="tag">&lt;/<span class="name">description</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">property</span>&gt;</span></span><br></pre></td></tr></table></figure>
 </li>
 <li><p>JVM重用<br>JVM重用是Hadoop调优参数的内容，其对Hive的性能具有非常大的影响，特别是对于很难避免小文件的场景或task特别多的场景，这类场景大多数执行时间都很短<br>Hadoop的默认配置通常是使用派生JVM来执行map和Reduce任务的。这时JVM的启动过程可能会造成相当大的开销，尤其是执行的job包含有成百上千task任务的情况。JVM重用可以使得JVM实例在同一个job中重新使用N次。N的值可以在Hadoop的mapred-site.xml文件中进行配置。通常在10-20之间，具体多少需要根据具体业务场景测试得出</p>
 <figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">property</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">name</span>&gt;</span>mapreduce.job.jvm.numtasks<span class="tag">&lt;/<span class="name">name</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">value</span>&gt;</span>10<span class="tag">&lt;/<span class="name">value</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">description</span>&gt;</span>How many tasks to run per jvm. If set to -1, there is</span><br><span class="line">  no limit.</span><br><span class="line">  <span class="tag">&lt;/<span class="name">description</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">property</span>&gt;</span></span><br></pre></td></tr></table></figure>
@@ -2732,10 +2732,10 @@ DML数据操作
     <div class='new-meta-box'>
       
         
-          <div class="new-meta-item date" itemprop="dateUpdated" datetime="2020-07-18T16:37:11+08:00">
+          <div class="new-meta-item date" itemprop="dateUpdated" datetime="2020-09-20T22:30:20+08:00">
   <a class='notlink'>
     <i class="fas fa-edit fa-fw" aria-hidden="true"></i>
-    <p>更新于：2020年7月18日</p>
+    <p>更新于：2020年9月20日</p>
   </a>
 </div>
 
@@ -2744,7 +2744,7 @@ DML数据操作
         
           
   
-  <div class="new-meta-item meta-tags"><a class="tag" href="/tags/%E5%A4%A7%E6%95%B0%E6%8D%AE/" rel="nofollow"><i class="fas fa-hashtag fa-fw" aria-hidden="true"></i><p>大数据</p></a></div> <div class="new-meta-item meta-tags"><a class="tag" href="/tags/Hive/" rel="nofollow"><i class="fas fa-hashtag fa-fw" aria-hidden="true"></i><p>Hive</p></a></div>
+  <div class="new-meta-item meta-tags"><a class="tag" href="/tags/BigData/" rel="nofollow"><i class="fas fa-hashtag fa-fw" aria-hidden="true"></i><p>BigData</p></a></div>
 
 
         
@@ -2866,7 +2866,7 @@ HBase定义：HBase是一种分布式、可扩展、支持海量数据存储的N
             
             
               <a class='next' href='/2020/06/26/BigData/Zookeeper/'>
-                <p class='title'>Zookeeper入门<i class="fas fa-chevron-right" aria-hidden="true"></i></p>
+                <p class='title'>Zookeeper<i class="fas fa-chevron-right" aria-hidden="true"></i></p>
                 <p class='content'>内容
 Zookeeper入门
 Zookeeper安装
