@@ -30,6 +30,12 @@ Lock接口
 线程不安全集合
 Callable接口
 JUC辅助类
+ReentrantReadWriteLock读写锁
+BlockingQueue阻塞队列
+ThreadPool线程池
+Java8流式计算
+Java8分支合并
+异步回调
 ">
   
 
@@ -352,6 +358,14 @@ JUC辅助类
           
             
               
+  
+  <div class='new-meta-item category'>
+    <a href='/categories/%E7%BC%96%E7%A8%8B/' rel="nofollow">
+      <i class="fas fa-folder-open fa-fw" aria-hidden="true"></i>
+      <p>编程</p>
+    </a>
+  </div>
+
 
             
           
@@ -391,6 +405,12 @@ JUC辅助类
 <li><a href="#线程不安全集合">线程不安全集合</a></li>
 <li><a href="#Callable接口">Callable接口</a></li>
 <li><a href="#JUC辅助类">JUC辅助类</a></li>
+<li><a href="#ReentrantReadWriteLock读写锁">ReentrantReadWriteLock读写锁</a></li>
+<li><a href="#BlockingQueue阻塞队列">BlockingQueue阻塞队列</a></li>
+<li><a href="#ThreadPool线程池">ThreadPool线程池</a></li>
+<li><a href="#Java8流式计算">Java8流式计算</a></li>
+<li><a href="#Java8分支合并">Java8分支合并</a></li>
+<li><a href="#异步回调">异步回调</a></li>
 </ul>
 <a id="more"></a>
 
@@ -699,6 +719,185 @@ JUC辅助类
 </ul>
 </li>
 </ul>
+<h2 id="ReentrantReadWriteLock读写锁"><a href="#ReentrantReadWriteLock读写锁" class="headerlink" title="ReentrantReadWriteLock读写锁"></a>ReentrantReadWriteLock读写锁</h2><ul>
+<li><p>类似案例：缓存(允许多个线程读,但读写和写写互斥)</p>
+</li>
+<li><p>案例：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">MyCache</span> </span>&#123;</span><br><span class="line">  <span class="keyword">private</span> <span class="keyword">volatile</span> Map&lt;String, Object&gt; map = <span class="keyword">new</span> HashMap&lt;&gt;();</span><br><span class="line">  <span class="keyword">private</span> <span class="keyword">final</span> ReadWriteLock readWriteLock = <span class="keyword">new</span> ReentrantReadWriteLock();</span><br><span class="line"></span><br><span class="line">  <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">put</span><span class="params">(String key, Object value)</span> </span>&#123;</span><br><span class="line">    readWriteLock.writeLock().lock();</span><br><span class="line">    <span class="keyword">try</span> &#123;</span><br><span class="line">      System.out.println(Thread.currentThread().getName() + <span class="string">"写入数据: [key = "</span> + key + <span class="string">']'</span>);</span><br><span class="line">      <span class="keyword">try</span> &#123;</span><br><span class="line">        TimeUnit.MILLISECONDS.sleep(<span class="number">300</span>);</span><br><span class="line">      &#125; <span class="keyword">catch</span> (InterruptedException e) &#123;</span><br><span class="line">        e.printStackTrace();</span><br><span class="line">      &#125;</span><br><span class="line">      map.put(key, value);</span><br><span class="line">      System.out.println((Thread.currentThread().getName() + <span class="string">"写入完成"</span>));</span><br><span class="line">    &#125; <span class="keyword">catch</span> (Exception e) &#123;</span><br><span class="line">      e.printStackTrace();</span><br><span class="line">    &#125; <span class="keyword">finally</span> &#123;</span><br><span class="line">      readWriteLock.writeLock().unlock();</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">get</span><span class="params">(String key)</span> </span>&#123;</span><br><span class="line">    readWriteLock.readLock().lock();</span><br><span class="line">    <span class="keyword">try</span> &#123;</span><br><span class="line">      System.out.println(Thread.currentThread().getName() + <span class="string">"读取数据: [key = "</span> + key + <span class="string">']'</span>);</span><br><span class="line">      <span class="keyword">try</span> &#123;</span><br><span class="line">        TimeUnit.MILLISECONDS.sleep(<span class="number">300</span>);</span><br><span class="line">      &#125; <span class="keyword">catch</span> (InterruptedException e) &#123;</span><br><span class="line">        e.printStackTrace();</span><br><span class="line">      &#125;</span><br><span class="line">      Object value = map.get(key);</span><br><span class="line">      System.out.println((Thread.currentThread().getName() + <span class="string">"读取完成: [value = "</span> + value + <span class="string">']'</span>));</span><br><span class="line">    &#125; <span class="keyword">catch</span> (Exception e) &#123;</span><br><span class="line">      e.printStackTrace();</span><br><span class="line">    &#125; <span class="keyword">finally</span> &#123;</span><br><span class="line">      readWriteLock.readLock().unlock();</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment">* 多个线程同时读一个资源类没有任何问题,所以为了满足并发量,读取共享资源应该可以同时进行</span></span><br><span class="line"><span class="comment">* 但是如果有一个线程想去写共享资源,就不应该再有其他线程可以对该资源进行读或写</span></span><br><span class="line"><span class="comment">* 小总结：</span></span><br><span class="line"><span class="comment">* 读 - 读能共存</span></span><br><span class="line"><span class="comment">* 读 - 写不能共存</span></span><br><span class="line"><span class="comment">* 写 - 写不能共存</span></span><br><span class="line"><span class="comment">*/</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">ReadWriteLockDemo</span> </span>&#123;</span><br><span class="line">  <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">    MyCache myCache = <span class="keyword">new</span> MyCache();</span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; <span class="number">5</span>; i++) &#123;</span><br><span class="line">      <span class="keyword">int</span> finalI = i;</span><br><span class="line">      <span class="keyword">new</span> Thread(() -&gt; myCache.put(finalI + <span class="string">""</span>, finalI + <span class="string">""</span>), <span class="string">"Thread "</span> + i).start();</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; <span class="number">5</span>; i++) &#123;</span><br><span class="line">      <span class="keyword">int</span> finalI = i;</span><br><span class="line">      <span class="keyword">new</span> Thread(() -&gt; myCache.get(finalI + <span class="string">""</span>), <span class="string">"Thread "</span> + (i + <span class="number">5</span>)).start();</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+</li>
+</ul>
+<h2 id="BlockingQueue阻塞队列"><a href="#BlockingQueue阻塞队列" class="headerlink" title="BlockingQueue阻塞队列"></a>BlockingQueue阻塞队列</h2><ul>
+<li><p>阻塞队列介绍：<br><img src="%E9%98%BB%E5%A1%9E%E9%98%9F%E5%88%97%E7%A4%BA%E6%84%8F%E5%9B%BE.png" alt="阻塞队列示意图"></p>
+<ol>
+<li>线程1往阻塞队列里添加元素，线程2从阻塞队列里移除元素</li>
+<li>当队列是空的，从队列中获取元素的操作将会被阻塞</li>
+<li>当队列是满的，从队列中添加元素的操作将会被阻塞</li>
+<li>试图从空的队列中获取元素的线程将会被阻塞，直到其他线程往空的队列插入新的元素</li>
+<li>试图向已满的队列中添加新元素的线程将会被阻塞，直到其他线程从队列中移除一个或多个元素或者完全清空使队列变得空闲起来再进行后续新增</li>
+</ol>
+</li>
+<li><p>阻塞队列作用：</p>
+<ol>
+<li>在多线程领域所谓的阻塞就是指在某些情况下线程会被挂起，但一旦条件满足，被挂起的线程又会自动被唤起</li>
+<li>阻塞队列的好处是我们不需要关心什么时候需要阻塞线程，什么时候需要唤醒线程，为这一切BlockingQueue都给你一手包办了</li>
+<li>在concurrent包发布以前，在多线程环境下，我们每个程序员都必须去自己控制这些细节，尤其还要兼顾效率和线程安全，而这会给我们的程序带来不小的复杂度</li>
+</ol>
+</li>
+<li><p>阻塞队列种类：</p>
+<ul>
+<li>继承图介绍：<br><img src="%E9%98%BB%E5%A1%9E%E9%98%9F%E5%88%97%E7%B1%BB%E7%BB%A7%E6%89%BF%E5%9B%BE.png" alt="阻塞队列类继承图"></li>
+<li>各实现类介绍：<ol>
+<li><strong>ArrayBlockingQueue</strong>：由数组结构组成的有界阻塞队列</li>
+<li><strong>LinkedBlockingQueue</strong>：由链表结构组成的有界(但大小默认值为integer.MAX_VALUE)阻塞队列</li>
+<li>PriorityBlockingQueue：支持优先级排序的无界阻塞队列</li>
+<li>DelayQueue：使用优先级队列实现的延迟无界阻塞队列</li>
+<li><strong>SynchronousQueue</strong>：不存储元素的阻塞队列，也即单个元素的队列</li>
+<li>LinkedTransferQueue：由链表组成的无界阻塞队列</li>
+<li>LinkedBlockingDeque：由链表组成的双向阻塞队列</li>
+</ol>
+</li>
+</ul>
+</li>
+<li><p>阻塞队列核心方法：<br><img src="%E9%98%BB%E5%A1%9E%E9%98%9F%E5%88%97%E6%A0%B8%E5%BF%83%E6%96%B9%E6%B3%95.png" alt="阻塞队列核心方法"></p>
+<ol>
+<li>抛出异常：当阻塞队列满时，再往队列里add插入元素会抛出异常IllegalStateException:Queue full；当阻塞队列空时，再往队列里remove移除元素会抛出异常NoSuchElementException</li>
+<li>特殊值：插入方法——成功ture、失败false；移除方法——成功返回出队列的元素、队列里没有就返回null</li>
+<li>一直阻塞：当阻塞队列满时，生产者线程继续往队列里put元素，队列会一直阻塞生产者线程直到put数据成功(元素被消费)或响应中断退出；当阻塞队列空时，消费者线程试图从队列里take元素，队列会一直阻塞消费者线程直到队列可用(元素被生产)</li>
+<li>超时退出：当阻塞队列满时，队列会阻塞生产者线程一定时间，超过限时后生产者线程会退出</li>
+</ol>
+</li>
+<li><p>案例：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br></pre></td><td class="code"><pre><span class="line">BlockingQueue&lt;String&gt; blockingQueue = <span class="keyword">new</span> ArrayBlockingQueue&lt;&gt;(<span class="number">3</span>);</span><br><span class="line"><span class="comment">/*</span></span><br><span class="line"><span class="comment">System.out.println(blockingQueue.add("a"));</span></span><br><span class="line"><span class="comment">System.out.println(blockingQueue.add("b"));</span></span><br><span class="line"><span class="comment">System.out.println(blockingQueue.add("c"));</span></span><br><span class="line"><span class="comment">System.out.println(blockingQueue.add("x"));</span></span><br><span class="line"><span class="comment">System.out.println(blockingQueue.remove());</span></span><br><span class="line"><span class="comment">System.out.println(blockingQueue.remove());</span></span><br><span class="line"><span class="comment">System.out.println(blockingQueue.remove());</span></span><br><span class="line"><span class="comment">System.out.println(blockingQueue.remove());</span></span><br><span class="line"><span class="comment">*/</span></span><br><span class="line"></span><br><span class="line"><span class="comment">/*</span></span><br><span class="line"><span class="comment">System.out.println(blockingQueue.offer("a"));</span></span><br><span class="line"><span class="comment">System.out.println(blockingQueue.offer("b"));</span></span><br><span class="line"><span class="comment">System.out.println(blockingQueue.offer("c"));</span></span><br><span class="line"><span class="comment">System.out.println(blockingQueue.offer("d"));</span></span><br><span class="line"><span class="comment">System.out.println(blockingQueue.poll());</span></span><br><span class="line"><span class="comment">System.out.println(blockingQueue.poll());</span></span><br><span class="line"><span class="comment">System.out.println(blockingQueue.poll());</span></span><br><span class="line"><span class="comment">System.out.println(blockingQueue.poll());</span></span><br><span class="line"><span class="comment">*/</span></span><br><span class="line"></span><br><span class="line"><span class="comment">/*</span></span><br><span class="line"><span class="comment">blockingQueue.put("a");</span></span><br><span class="line"><span class="comment">blockingQueue.put("b");</span></span><br><span class="line"><span class="comment">blockingQueue.put("c");</span></span><br><span class="line"><span class="comment">blockingQueue.put("d");</span></span><br><span class="line"><span class="comment">System.out.println(blockingQueue.take());</span></span><br><span class="line"><span class="comment">System.out.println(blockingQueue.take());</span></span><br><span class="line"><span class="comment">System.out.println(blockingQueue.take());</span></span><br><span class="line"><span class="comment">System.out.println(blockingQueue.take());</span></span><br><span class="line"><span class="comment">  */</span></span><br><span class="line"></span><br><span class="line">System.out.println(blockingQueue.offer(<span class="string">"a"</span>, <span class="number">3</span>, TimeUnit.SECONDS));</span><br><span class="line">System.out.println(blockingQueue.offer(<span class="string">"b"</span>, <span class="number">3</span>, TimeUnit.SECONDS));</span><br><span class="line">System.out.println(blockingQueue.offer(<span class="string">"c"</span>, <span class="number">3</span>, TimeUnit.SECONDS));</span><br><span class="line">System.out.println(blockingQueue.offer(<span class="string">"e"</span>, <span class="number">3</span>, TimeUnit.SECONDS));</span><br></pre></td></tr></table></figure>
+
+</li>
+</ul>
+<h2 id="ThreadPool线程池"><a href="#ThreadPool线程池" class="headerlink" title="ThreadPool线程池"></a>ThreadPool线程池</h2><ul>
+<li><p>为什么使用线程池：主要特点有线程复用、控制最大并发数、管理线程</p>
+<ol>
+<li>降低资源消耗。通过重复利用已创建的线程降低线程创建和销毁造成的销耗</li>
+<li>提高响应速度。当任务到达时，任务可以不需要等待线程创建就能立即执行</li>
+<li>提高线程的可管理性。线程是稀缺资源，如果无限制的创建，不仅会销耗系统资源，还会降低系统的稳定性，使用线程池可以进行统一的分配，调优和监控</li>
+</ol>
+</li>
+<li><p>线程池如何使用：</p>
+<ul>
+<li>线程池类继承图：<br><img src="%E7%BA%BF%E7%A8%8B%E6%B1%A0%E7%B1%BB%E7%BB%A7%E6%89%BF%E5%9B%BE.png" alt="线程池类继承图"></li>
+<li>获取线程池的几种方式：<ol>
+<li>Executors.newFixedThreadPool(int)：执行长期任务性能好，创建一个线程池(有N个固定的线程)</li>
+<li>Executors.newSingleThreadExecutor()：一个任务一个任务的执行，一池一线程</li>
+<li>Executors.newCachedThreadPool()：执行很多短期异步任务，线程池根据需要创建新线程，但在先前构建的线程可用时将重用它们。可扩容，遇强则强</li>
+</ol>
+</li>
+</ul>
+</li>
+<li><p>Executors创建线程原理：<br><img src="Executors%E5%88%9B%E5%BB%BA%E7%BA%BF%E7%A8%8B%E5%8E%9F%E7%90%86.png" alt="Executors创建线程原理"></p>
+</li>
+<li><p>线程池参数解释：</p>
+<ol>
+<li>corePoolSize：线程池中的常驻核心线程数</li>
+<li>maximumPoolSize：线程池中能够容纳同时执行的最大线程数，此值必须大于等于1</li>
+<li>keepAliveTime：多余的空闲线程的存活时间，若当前池中线程数量超过corePoolSize时且当空闲时间达到keepAliveTime时，多余线程会被销毁直到只剩下corePoolSize个线程为止</li>
+<li>unit：keepAliveTime的单位</li>
+<li>workQueue：任务队列，用于存储被提交但尚未被执行的任务(也即上面介绍的阻塞队列)</li>
+<li>threadFactory：表示生成线程池中工作线程的线程工厂，用于创建线程，<strong>一般默认的即可</strong></li>
+<li>handler：拒绝策略，表示当队列满了，并且工作线程大于等于线程池的最大线程数(maximumPoolSize)时如何来拒绝请求执行的runnable的策略</li>
+</ol>
+</li>
+<li><p>线程池底层工作原理：<br><img src="%E7%BA%BF%E7%A8%8B%E6%B1%A0%E5%BA%95%E5%B1%82%E5%B7%A5%E4%BD%9C%E5%8E%9F%E7%90%86.png" alt="线程池底层工作原理"></p>
+<ol>
+<li>在创建了线程池后，开始等待请求</li>
+<li>当调用execute()方法添加一个请求任务时，线程池会做出如下判断：<ol>
+<li>如果正在运行的线程数量小于corePoolSize，那么马上创建线程运行这个任务</li>
+<li>如果正在运行的线程数量大于或等于corePoolSize，那么将这个任务<strong>放入队列</strong></li>
+<li>如果这个时候队列满了且正在运行的线程数量还小于maximumPoolSize，那么还是要创建非核心线程立刻运行这个任务</li>
+<li>如果队列满了且正在运行的线程数量大于或等于maximumPoolSize，那么线程池会<strong>启动饱和拒绝策略来执行</strong></li>
+</ol>
+</li>
+<li>当一个线程完成任务时，它会从队列中取下一个任务来执行</li>
+<li>当一个线程无事可做超过一定的时间(keepAliveTime)时，线程会判断：如果当前运行的线程数大于corePoolSize，那么多余的线程就被停掉。当线程池的所有任务完成后，<strong>线程池线程数目最终会收缩到corePoolSize</strong></li>
+</ol>
+</li>
+<li><p>线程池拒绝策略</p>
+<ul>
+<li>拒绝策略是什么：等待队列已经排满了，再也塞不下新任务了。同时，线程池中也达到了最大线程数，无法继续为新任务服务。这时就需要一种拒绝策略机制合理地处理这个问题</li>
+<li>JDK内置的拒绝策略(内置拒绝策略均实现了RejectedExecutionHandle接口)<ol>
+<li>AbortPolicy(默认)：直接抛出RejectedExecutionException异常阻止系统正常运行</li>
+<li>CallerRunsPolicy：”调用者运行”调节机制，该策略既不会抛弃任务也不会抛出异常，而是将某些任务回退到调用者，从而降低新任务的流量</li>
+<li>DiscardOldestPolicy：抛弃队列中等待最久的任务，然后把当前任务加入队列中尝试再次提交当前任务</li>
+<li>DiscardPolicy：该策略默默地丢弃无法处理的任务，不予任何处理也不抛出异常。如果允许任务丢失，这是最好的一种策略</li>
+</ol>
+</li>
+</ul>
+</li>
+<li><p>线程池的选用</p>
+<ul>
+<li><p>在工作中单一的/固定数的/可变的三种创建线程池的方法哪个用的多：一个都不用<br><img src="%E7%BA%BF%E7%A8%8B%E6%B1%A0%E9%98%BF%E9%87%8C%E5%BC%80%E5%8F%91%E6%89%8B%E5%86%8C%E8%A7%84%E5%AE%9A.png" alt="线程池阿里开发手册规定"></p>
+</li>
+<li><p>自定义线程池示例：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">MyThreadPoolDemo</span> </span>&#123;</span><br><span class="line">  <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">    System.out.println(Runtime.getRuntime().availableProcessors());</span><br><span class="line">    <span class="comment">// 最大承载线程数(理论)：max + Queue.capacity</span></span><br><span class="line"></span><br><span class="line">    <span class="comment">// RejectedExecutionException AbortPolicy</span></span><br><span class="line">    <span class="comment">// CallerRunsPolicy()</span></span><br><span class="line">    <span class="comment">// DiscardPolicy()</span></span><br><span class="line">    <span class="comment">// DiscardOldestPolicy()</span></span><br><span class="line">    ExecutorService threadPool = <span class="keyword">new</span> ThreadPoolExecutor(</span><br><span class="line">        <span class="number">2</span>,</span><br><span class="line">        <span class="number">5</span>,</span><br><span class="line">        <span class="number">2L</span>,</span><br><span class="line">        TimeUnit.SECONDS,</span><br><span class="line">        <span class="keyword">new</span> LinkedBlockingQueue&lt;&gt;(<span class="number">3</span>),</span><br><span class="line">        Executors.defaultThreadFactory(),</span><br><span class="line">        <span class="keyword">new</span> ThreadPoolExecutor.DiscardOldestPolicy());</span><br><span class="line">    <span class="keyword">try</span> &#123;</span><br><span class="line">      <span class="comment">// 模拟有10个顾客来银行办理业务</span></span><br><span class="line">      <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">1</span>; i &lt;= <span class="number">10</span>; i++) &#123;</span><br><span class="line">        threadPool.execute(() -&gt; &#123;</span><br><span class="line">          System.out.println(Thread.currentThread().getName() + <span class="string">"办理业务~~~"</span>);</span><br><span class="line">        &#125;);</span><br><span class="line">      &#125;</span><br><span class="line">    &#125; <span class="keyword">catch</span> (Exception e) &#123;</span><br><span class="line">      e.printStackTrace();</span><br><span class="line">    &#125; <span class="keyword">finally</span> &#123;</span><br><span class="line">      threadPool.shutdown();</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="function"><span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">useSystemPool</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="comment">// 1池5个工作线程</span></span><br><span class="line">    <span class="comment">// ExecutorService threadPool = Executors.newFixedThreadPool(5);</span></span><br><span class="line">    <span class="comment">// 1池1个工作线程</span></span><br><span class="line">    <span class="comment">// ExecutorService threadPool = Executors.newSingleThreadExecutor();</span></span><br><span class="line">    <span class="comment">// 1池N个工作线程</span></span><br><span class="line">    ExecutorService threadPool = Executors.newCachedThreadPool();</span><br><span class="line">    <span class="keyword">try</span> &#123;</span><br><span class="line">      <span class="comment">// 模拟有10个顾客来银行办理业务</span></span><br><span class="line">      <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">1</span>; i &lt;= <span class="number">10</span>; i++) &#123;</span><br><span class="line">        threadPool.execute(() -&gt; &#123;</span><br><span class="line">          System.out.println(Thread.currentThread().getName() + <span class="string">"办理业务~~~"</span>);</span><br><span class="line">        &#125;);</span><br><span class="line">      &#125;</span><br><span class="line">    &#125; <span class="keyword">catch</span> (Exception e) &#123;</span><br><span class="line">      e.printStackTrace();</span><br><span class="line">    &#125; <span class="keyword">finally</span> &#123;</span><br><span class="line">      threadPool.shutdown();</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+</li>
+</ul>
+</li>
+</ul>
+<h2 id="Java8流式计算"><a href="#Java8流式计算" class="headerlink" title="Java8流式计算"></a>Java8流式计算</h2><ul>
+<li><p>函数式接口(只有一个方法(除default和static方法)的接口)：</p>
+<ul>
+<li><p>Lambda表达式口诀：<strong>拷贝小括号，写死右括号，落地大括号</strong></p>
+</li>
+<li><p>Lambda案例：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">interface</span> <span class="title">Foo</span> </span>&#123;</span><br><span class="line">  <span class="function"><span class="keyword">void</span> <span class="title">sayHello</span><span class="params">()</span></span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">interface</span> <span class="title">Foo1</span> </span>&#123;</span><br><span class="line">  <span class="function"><span class="keyword">int</span> <span class="title">add</span><span class="params">(<span class="keyword">int</span> x, <span class="keyword">int</span> y)</span></span>;</span><br><span class="line"></span><br><span class="line">  <span class="function"><span class="keyword">default</span> <span class="keyword">double</span> <span class="title">div</span><span class="params">(<span class="keyword">double</span> x, <span class="keyword">double</span> y)</span> </span>&#123; <span class="keyword">return</span> x / y; &#125;</span><br><span class="line"></span><br><span class="line">  <span class="function"><span class="keyword">static</span> <span class="keyword">int</span> <span class="title">multiply</span><span class="params">(<span class="keyword">int</span> x, <span class="keyword">int</span> y)</span> </span>&#123; <span class="keyword">return</span> x * y; &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment">* Lambda表达式</span></span><br><span class="line"><span class="comment">* 口诀：拷贝小括号(参数),写死右括号,落地大括号</span></span><br><span class="line"><span class="comment">* 注释<span class="doctag">@FunctionalInterface</span>(只有一个方法的接口,函数式接口)</span></span><br><span class="line"><span class="comment">* default方法允许接口有默认实现(jdk1.8),可以有多个</span></span><br><span class="line"><span class="comment">* 静态方法实现</span></span><br><span class="line"><span class="comment">*/</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">LambdaExpress</span> </span>&#123;</span><br><span class="line">  <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">    Foo foo = () -&gt; System.out.println(<span class="string">"Hello LambdaExpress"</span>);</span><br><span class="line">    foo.sayHello();</span><br><span class="line"></span><br><span class="line">    Foo1 foo1 = (x, y) -&gt; <span class="number">2</span> * x + y;</span><br><span class="line">    System.out.println(foo1.add(<span class="number">1</span>, <span class="number">2</span>));</span><br><span class="line">    System.out.println(foo1.div(<span class="number">1.0</span>, <span class="number">0.3333</span>));</span><br><span class="line">    System.out.println(Foo1.multiply(<span class="number">2</span>, <span class="number">5</span>));</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>Java内置核心四大函数式接口<br><img src="Java%E5%86%85%E7%BD%AE%E6%A0%B8%E5%BF%83%E5%9B%9B%E5%A4%A7%E5%87%BD%E6%95%B0%E5%BC%8F%E6%8E%A5%E5%8F%A3.png" alt="Java内置核心四大函数式接口"></p>
+</li>
+</ul>
+</li>
+<li><p>Stream流</p>
+<ul>
+<li><p>是什么：流(Stream)是数据渠道，用于操作数据源(集合、数组等)所生成的元素序列。集合讲的是数据，流讲的是计算</p>
+</li>
+<li><p>特点：</p>
+<ol>
+<li>Stream自己不会存储元素</li>
+<li>Stream不会改变源对象。相反，他们会返回一个持有结果的新Stream</li>
+<li>Stream操作是延迟执行的。这意味着他们会等到需要结果的时候才执行(懒加载)</li>
+</ol>
+</li>
+<li><p>怎么用：</p>
+<ol>
+<li>创建一个Stream：一个数据源(数组、集合)</li>
+<li>中间操作：一个中间操作，处理数据源数据</li>
+<li>终止操作：一个终止操作，执行中间操作链，产生结果</li>
+</ol>
+</li>
+<li><p>案例：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Data</span></span><br><span class="line"><span class="meta">@NoArgsConstructor</span></span><br><span class="line"><span class="meta">@AllArgsConstructor</span></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">User</span> </span>&#123;</span><br><span class="line">  <span class="keyword">private</span> Integer id;</span><br><span class="line">  <span class="keyword">private</span> String  userName;</span><br><span class="line">  <span class="keyword">private</span> <span class="keyword">int</span>     age;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment">* 题目：请按照给出数据，找出同时满足</span></span><br><span class="line"><span class="comment">*      偶数ID且年龄大于24且用户名转为大写且用户名字母倒排序</span></span><br><span class="line"><span class="comment">*      最后只输出一个用户名字</span></span><br><span class="line"><span class="comment">*/</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">StreamDemo</span> </span>&#123;</span><br><span class="line">  <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">    User u1 = <span class="keyword">new</span> User(<span class="number">11</span>,<span class="string">"a"</span>,<span class="number">23</span>);</span><br><span class="line">    User u2 = <span class="keyword">new</span> User(<span class="number">12</span>,<span class="string">"b"</span>,<span class="number">24</span>);</span><br><span class="line">    User u3 = <span class="keyword">new</span> User(<span class="number">13</span>,<span class="string">"c"</span>,<span class="number">22</span>);</span><br><span class="line">    User u4 = <span class="keyword">new</span> User(<span class="number">14</span>,<span class="string">"d"</span>,<span class="number">28</span>);</span><br><span class="line">    User u5 = <span class="keyword">new</span> User(<span class="number">16</span>,<span class="string">"e"</span>,<span class="number">26</span>);</span><br><span class="line"></span><br><span class="line">    List list = Arrays.asList(u1,u2,u3,u4,u5);</span><br><span class="line">    list.stream().filter(p -&gt; p.getId() % <span class="number">2</span> == <span class="number">0</span>)</span><br><span class="line">      .filter(p -&gt; p.getAge() &gt; <span class="number">24</span>)</span><br><span class="line">      .map(f -&gt; f.getUserName().toUpperCase())</span><br><span class="line">      .sorted((o1, o2) -&gt; o2.compareTo(o1))</span><br><span class="line">      .limit(<span class="number">1</span>)</span><br><span class="line">      .forEach(System.out::println);</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+</li>
+</ul>
+</li>
+</ul>
+<h2 id="Java8分支合并"><a href="#Java8分支合并" class="headerlink" title="Java8分支合并"></a>Java8分支合并</h2><ul>
+<li><p>原理(类同MapReduce)：<br>Fork：把一个复杂任务进行分拆，大事化小<br>Join：把分拆任务的结果进行合并</p>
+</li>
+<li><p>相关类：</p>
+<ol>
+<li>ForkJoinPool(分支合并线程池)<br><img src="ForkJoinPool%E7%BB%A7%E6%89%BF%E5%9B%BE.png" alt="ForkJoinPool继承图"></li>
+<li>ForkJoinTask(类似FutureTask)<br><img src="ForkJoinTask%E7%BB%A7%E6%89%BF%E5%9B%BE.png" alt="ForkJoinTask继承图"></li>
+<li>RecursiveTask(递归任务,继承自ForkJoinTask,递归自己)<br><img src="RecursiveTask%E7%BB%A7%E6%89%BF%E5%9B%BE.png" alt="RecursiveTask继承图"></li>
+</ol>
+</li>
+<li><p>案例：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">MyTask</span> <span class="keyword">extends</span> <span class="title">RecursiveTask</span>&lt;<span class="title">Long</span>&gt; </span>&#123;</span><br><span class="line">  <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> Integer ADJUST_VALUE = <span class="number">20</span>;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">private</span> <span class="keyword">final</span> <span class="keyword">long</span> begin;</span><br><span class="line">  <span class="keyword">private</span> <span class="keyword">final</span> <span class="keyword">long</span> end;</span><br><span class="line">  <span class="keyword">private</span> <span class="keyword">long</span> result = <span class="number">0</span>;</span><br><span class="line"></span><br><span class="line">  <span class="function"><span class="keyword">public</span> <span class="title">MyTask</span><span class="params">(<span class="keyword">long</span> begin, <span class="keyword">long</span> end)</span> </span>&#123;</span><br><span class="line">      <span class="keyword">this</span>.begin = begin;</span><br><span class="line">      <span class="keyword">this</span>.end = end;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="meta">@Override</span></span><br><span class="line">  <span class="function"><span class="keyword">protected</span> Long <span class="title">compute</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="keyword">if</span> ((end - begin) &lt;= ADJUST_VALUE) &#123;</span><br><span class="line">      <span class="keyword">for</span> (<span class="keyword">long</span> i = begin; i &lt;= end; i++) &#123;</span><br><span class="line">        result += i;</span><br><span class="line">      &#125;</span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">      <span class="keyword">long</span> middle = (end + begin) / <span class="number">2</span>;</span><br><span class="line">      MyTask leftTask = <span class="keyword">new</span> MyTask(begin, middle);</span><br><span class="line">      MyTask rightTask = <span class="keyword">new</span> MyTask(middle + <span class="number">1</span>, end);</span><br><span class="line">      leftTask.fork();</span><br><span class="line">      rightTask.fork();</span><br><span class="line">      result = leftTask.join() + rightTask.join();</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> result;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">ForkJoinDemo</span> </span>&#123;</span><br><span class="line">  <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> <span class="keyword">throws</span> ExecutionException, InterruptedException </span>&#123;</span><br><span class="line">    MyTask myTask = <span class="keyword">new</span> MyTask(<span class="number">0</span>, <span class="number">1023423423L</span>);</span><br><span class="line">    ForkJoinPool threadPool = <span class="keyword">new</span> ForkJoinPool();</span><br><span class="line">    ForkJoinTask&lt;Long&gt; forkJoinTask = threadPool.submit(myTask);</span><br><span class="line">    System.out.println(forkJoinTask.get());</span><br><span class="line">    threadPool.shutdown();</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+</li>
+</ul>
+<h2 id="异步回调"><a href="#异步回调" class="headerlink" title="异步回调"></a>异步回调</h2><ul>
+<li><p>案例：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> <span class="keyword">throws</span> ExecutionException, InterruptedException </span>&#123;</span><br><span class="line">  <span class="comment">// 同步</span></span><br><span class="line">  CompletableFuture&lt;Void&gt; completableFuture = CompletableFuture.runAsync(() -&gt; System.out.println(Thread.currentThread().getName() + <span class="string">"无返回!"</span>));</span><br><span class="line">  completableFuture.get();</span><br><span class="line"></span><br><span class="line">  <span class="comment">// 异步</span></span><br><span class="line">  CompletableFuture&lt;Integer&gt; completableFuture2 = CompletableFuture.supplyAsync(() -&gt; &#123;</span><br><span class="line">    System.out.println(Thread.currentThread().getName() + <span class="string">"有返回!"</span>);</span><br><span class="line">    <span class="keyword">int</span> result = <span class="number">1</span> / <span class="number">0</span>;</span><br><span class="line">    <span class="keyword">return</span> <span class="number">1024</span>;</span><br><span class="line">  &#125;);</span><br><span class="line"></span><br><span class="line">  <span class="comment">// 异步回调</span></span><br><span class="line">  System.out.println(completableFuture2.whenComplete((t, u) -&gt; &#123;</span><br><span class="line">    System.out.println(Thread.currentThread().getName() + <span class="string">"：t = "</span> + t);</span><br><span class="line">    System.out.println(Thread.currentThread().getName() + <span class="string">"：u = "</span> + u);</span><br><span class="line">  &#125;).exceptionally(f -&gt; &#123;</span><br><span class="line">    System.out.println(Thread.currentThread().getName() + <span class="string">"：f = "</span> + f.getMessage());</span><br><span class="line">    <span class="keyword">return</span> <span class="number">4444</span>;</span><br><span class="line">  &#125;).get());</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
 
           
             <div class='article_footer'>
@@ -786,10 +985,10 @@ JUC辅助类
     <div class='new-meta-box'>
       
         
-          <div class="new-meta-item date" itemprop="dateUpdated" datetime="2020-09-20T22:26:22+08:00">
+          <div class="new-meta-item date" itemprop="dateUpdated" datetime="2020-09-28T21:30:34+08:00">
   <a class='notlink'>
     <i class="fas fa-edit fa-fw" aria-hidden="true"></i>
-    <p>更新于：2020年9月20日</p>
+    <p>更新于：2020年9月28日</p>
   </a>
 </div>
 
@@ -825,6 +1024,12 @@ Lock接口
 线程不安全集合
 Callable接口
 JUC辅助类
+ReentrantReadWriteLock读写锁
+BlockingQueue阻塞队列
+ThreadPool线程池
+Java8流式计算
+Java8分支合并
+异步回调
 "
           
           >
@@ -846,6 +1051,12 @@ Lock接口
 线程不安全集合
 Callable接口
 JUC辅助类
+ReentrantReadWriteLock读写锁
+BlockingQueue阻塞队列
+ThreadPool线程池
+Java8流式计算
+Java8分支合并
+异步回调
 "
           
           >
@@ -867,6 +1078,12 @@ Lock接口
 线程不安全集合
 Callable接口
 JUC辅助类
+ReentrantReadWriteLock读写锁
+BlockingQueue阻塞队列
+ThreadPool线程池
+Java8流式计算
+Java8分支合并
+异步回调
 "
           
           >
@@ -901,7 +1118,10 @@ LeetCode题集
 
 
 滑动窗口介绍方法总结LeetCode题集
-Q3：无重复字符的最长字串题解：
+3.无重复字符的最长字串
+
+30.串联所有单词的子串
+
 
 </p>
               </a>
@@ -990,7 +1210,7 @@ Q3：无重复字符的最长字串题解：
 
 
     <div class='content'>
-        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#内容"><span class="toc-text">内容</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#JUC是什么"><span class="toc-text">JUC是什么</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Lock接口"><span class="toc-text">Lock接口</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#线程间通信"><span class="toc-text">线程间通信</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#线程间定制化调用通信"><span class="toc-text">线程间定制化调用通信</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#线程八锁"><span class="toc-text">线程八锁</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#线程不安全集合"><span class="toc-text">线程不安全集合</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Callable接口"><span class="toc-text">Callable接口</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#JUC辅助类"><span class="toc-text">JUC辅助类</span></a></li></ol>
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#内容"><span class="toc-text">内容</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#JUC是什么"><span class="toc-text">JUC是什么</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Lock接口"><span class="toc-text">Lock接口</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#线程间通信"><span class="toc-text">线程间通信</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#线程间定制化调用通信"><span class="toc-text">线程间定制化调用通信</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#线程八锁"><span class="toc-text">线程八锁</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#线程不安全集合"><span class="toc-text">线程不安全集合</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Callable接口"><span class="toc-text">Callable接口</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#JUC辅助类"><span class="toc-text">JUC辅助类</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#ReentrantReadWriteLock读写锁"><span class="toc-text">ReentrantReadWriteLock读写锁</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#BlockingQueue阻塞队列"><span class="toc-text">BlockingQueue阻塞队列</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#ThreadPool线程池"><span class="toc-text">ThreadPool线程池</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Java8流式计算"><span class="toc-text">Java8流式计算</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Java8分支合并"><span class="toc-text">Java8分支合并</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#异步回调"><span class="toc-text">异步回调</span></a></li></ol>
     </div>
   </section>
 
