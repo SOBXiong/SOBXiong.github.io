@@ -25,6 +25,7 @@
 Kafka概述
 Kafka快速入门
 Kafka架构深入
+Kafka_API
 ">
   
 
@@ -389,6 +390,7 @@ Kafka架构深入
 <li><a href="#Kafka概述">Kafka概述</a></li>
 <li><a href="#Kafka快速入门">Kafka快速入门</a></li>
 <li><a href="#Kafka架构深入">Kafka架构深入</a></li>
+<li><a href="#Kafka_API">Kafka_API</a></li>
 </ul>
 <a id="more"></a>
 
@@ -490,7 +492,8 @@ Kafka架构深入
 </li>
 <li><p>Kafka生产者</p>
 <ul>
-<li>分区策略<ul>
+<li><p>分区策略</p>
+<ul>
 <li>分区原因<ol>
 <li><strong>方便在集群中扩展</strong>，每个Partition可以通过调整以适应它所在的机器，而一个topic又可以由多个Partition组成，因此整个集群就可以适应任意大小的数据了</li>
 <li><strong>可以提高并发能力</strong>，因为可以以Partition为单位读写了</li>
@@ -504,11 +507,90 @@ Kafka架构深入
 </li>
 </ul>
 </li>
-<li>数据可靠性保证<br>为保证producer发送的数据能可靠地发送到指定的topic，topic的每个partition收到producer发送的数据后都需要向producer发送ack(acknowledgement确认收到)，如果producer收到ack，就会进行下一轮的发送，否则重新发送数据</li>
+<li><p>数据可靠性保证<br>为保证producer发送的数据能可靠地发送到指定的topic，topic的每个partition收到producer发送的数据后都需要向producer发送ack(acknowledgement确认收到)，如果producer收到ack，就会进行下一轮的发送，否则重新发送数据<br><img src="ack%E7%A1%AE%E8%AE%A4%E4%BB%A5%E5%8F%8A%E9%87%8D%E5%8F%91.png" alt="ack确认以及重发"><br><img src="%E4%BD%95%E6%97%B6%E5%8F%91%E9%80%81ack.png" alt="何时发送ack"></p>
+<ol>
+<li><p>副本数据同步策略</p>
+<table>
+<thead>
+<tr>
+<th>方案</th>
+<th>优点</th>
+<th>缺点</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>半数以上完成同步,就发送ack</td>
+<td>延迟低</td>
+<td>选举新的leader时,容忍n台节点的故障,需要2n+1个副本</td>
+</tr>
+<tr>
+<td>全部完成同步,才发送ack</td>
+<td>选举新的leader时,容忍n台节点的故障,需要n+1个副本</td>
+<td>延迟高</td>
+</tr>
+</tbody></table>
+<p>Kafka选择了第二种方案，原因如下：</p>
+<ol>
+<li>同样为了容忍n台节点的故障，第一种方案需要2n+1个副本，而第二种方案只需要n+1个副本，而Kafka的每个分区都有大量的数据，第一种方案会造成大量数据的冗余</li>
+<li>虽然第二种方案的网络延迟会比较高，但网络延迟对Kafka的影响较小</li>
+</ol>
+</li>
+<li><p>ISR<br>采用第二种方案之后，设想以下情景：leader收到数据，所有follower都开始同步数据。但有一个follower因为某种故障迟迟不能与leader进行同步，那leader就要一直等下去，直到它完成同步才能发送ack。这个问题怎么解决呢？<br>Leader维护了一个动态的in-sync replica set(ISR)，意为和leader保持同步的follower集合。当ISR中的follower完成数据的同步之后，leader就会给producer发送ack。如果follower长时间未向leader同步数据，则该follower将被踢出ISR，<strong>该时间阈值由replica.lag.time.max.ms参数设定</strong>。Leader发生故障之后，就会从ISR中选举新的leader</p>
+</li>
+<li><p>ack应答机制<br>对于某些不太重要的数据，对数据的可靠性要求不是很高，能够容忍数据的少量丢失，所以没必要等ISR中的follower全部接收成功。所以Kafka为用户提供了三种可靠性级别，用户根据对可靠性和延迟的要求进行权衡，选择以下的acks参数配置：</p>
+<ol>
+<li>0：producer不等待broker的ack，这一操作提供了一个最低的延迟，broker一接收到还没有写入磁盘就已经返回，当broker故障时有可能<strong>丢失数据</strong></li>
+<li>1：producer等待broker的ack，partition的leader落盘成功后返回ack，如果在follower同步成功之前leader故障，那么将会<strong>丢失数据</strong><br><img src="ack=1%E6%95%B0%E6%8D%AE%E4%B8%A2%E5%A4%B1%E6%A1%88%E4%BE%8B%E7%A4%BA%E6%84%8F%E5%9B%BE1.png" alt="ack=1数据丢失案例示意图1"><br><img src="ack=1%E6%95%B0%E6%8D%AE%E4%B8%A2%E5%A4%B1%E6%A1%88%E4%BE%8B%E7%A4%BA%E6%84%8F%E5%9B%BE2.png" alt="ack=1数据丢失案例示意图2"></li>
+<li>-1(all)：producer等待broker的ack，partition的leader和follower全部落盘成功后才返回ack。但是如果在follower同步完成后，broker发送ack之前，leader发生故障，那么会造成<strong>数据重复</strong><br><img src="ack=-1%E6%95%B0%E6%8D%AE%E4%B8%A2%E5%A4%B1%E6%A1%88%E4%BE%8B%E7%A4%BA%E6%84%8F%E5%9B%BE1.png" alt="ack=-1数据丢失案例示意图1"><br><img src="ack=-1%E6%95%B0%E6%8D%AE%E4%B8%A2%E5%A4%B1%E6%A1%88%E4%BE%8B%E7%A4%BA%E6%84%8F%E5%9B%BE2.png" alt="ack=-1数据丢失案例示意图2"></li>
+</ol>
+</li>
+<li><p>故障处理细节<br> <img src="log%E6%96%87%E4%BB%B6%E4%B8%AD%E7%9A%84hw%E5%92%8Cleo.png" alt="log文件中的hw和leo"></p>
+<ol>
+<li>follower故障<br>follower发生故障后会被临时踢出ISR，待该follower恢复后，follower会读取本地磁盘记录的上次的HW，并将log文件高于HW的部分截取掉，从HW开始向leader进行同步。<strong>等该follower的LEO大于等于该Partition的HW</strong>，即follower追上leader之后，就可以重新加入ISR了</li>
+<li>leader故障<br>leader发生故障之后，会从ISR中选出一个新的leader。之后，为保证多个副本之间的数据一致性，其余的follower会先将各自的log文件高于HW的部分截掉，然后从新的leader同步数据<br>注意：<strong>这只能保证副本之间的数据一致性，并不能保证数据不丢失或者不重复</strong></li>
+</ol>
+</li>
+</ol>
+</li>
+<li><p>Exactly Once语义<br>将服务器的ACK级别设置为-1，可以保证Producer到Server之间不会丢失数据，即At Least Once语义。相对的，将服务器ACK级别设置为0，可以保证生产者每条消息只会被发送一次，即At Most Once语义<br>At Least Once可以保证数据不丢失，但是不能保证数据不重复；相对的，At Least Once可以保证数据不重复，但是不能保证数据不丢失。但是，对于一些非常重要的信息，比如说交易数据，下游数据消费者要求数据既不重复也不丢失，即Exactly Once语义。在0.11版本以前的Kafka，对此是无能为力的，只能保证数据不丢失，再在下游消费者对数据做全局去重。对于多个下游应用的情况，每个都需要单独做全局去重，这就对性能造成了很大影响<br>0.11版本的Kafka，引入了一项重大特性：幂等性。所谓的幂等性就是指Producer不论向Server发送多少次重复数据，Server端都只会持久化一条。幂等性结合At Least Once语义，就构成了Kafka的Exactly Once语义。即：At Least Once + 幂等性 = Exactly Once<br>要启用幂等性，只需要将Producer的参数中enable.idompotence设置为true即可。Kafka的幂等性实现其实就是将原来下游需要做的去重放在了数据上游。开启幂等性的Producer在初始化的时候会被分配一个PID，发往同一Partition的消息会附带Sequence Number。而Broker端会对&lt;PID, Partition, SeqNumber&gt;做缓存，当具有相同主键的消息提交时，Broker只会持久化一条。<br>但是PID重启就会变化，同时不同的Partition也具有不同主键，所以幂等性无法保证跨分区跨会话的Exactly Once</p>
+</li>
+</ul>
+</li>
+<li><p>Kafka消费者</p>
+<ul>
+<li>消费方式<br>consumer采用pull(拉)模式从broker中读取数据<br><strong>push(推)模式很难适应消费速率不同的消费者，因为消息发送速率是由broker决定的</strong>。它的目标是尽可能以最快速度传递消息，但是这样很容易造成consumer来不及处理消息，典型的表现就是拒绝服务以及网络拥塞。而pull模式则可以根据consumer的消费能力以适当的速率消费消息<br><strong>pull模式的不足之处：如果kafka没有数据，消费者可能会陷入循环中，一直返回空数据</strong>。针对这一点，Kafka的消费者在消费数据时会传入一个时长参数timeout，如果当前没有数据可供消费，consumer会等待一段时间之后再返回，这段时长即为timeout</li>
+<li>分区分配策略<br>一个consumer group中有多个consumer，一个topic有多个partition，所以必然会涉及到partition的分配问题——即确定哪个partition由哪个consumer来消费<br>Kafka有两种分配策略：<ol>
+<li>roundrobin：轮询<br><img src="roundrobin%E5%88%86%E9%85%8D%E7%AD%96%E7%95%A5.png" alt="roundrobin分配策略"></li>
+<li>range：按顺序均分<br><img src="range%E5%88%86%E9%85%8D%E7%AD%96%E7%95%A5.png" alt="range分配策略"></li>
+</ol>
+</li>
+<li>offset维护<br>由于consumer在消费过程中可能会出现断电宕机等故障，consumer恢复后，需要从故障前的位置的继续消费，所以consumer需要实时记录自己消费到了哪个offset，以便故障恢复后继续消费<br>在0.9版本之前，consumer默认将offset保存在Zookeeper中；从0.9版本开始，<strong>consumer默认将offset保存在Kafka一个内置的topic中，该topic为__consumer_offsets</strong></li>
+</ul>
+</li>
+<li><p>Kafka高效读写数据</p>
+<ol>
+<li>顺序写磁盘<br>Kafka的producer生产数据，要写入到log文件中，写的过程是一直追加到文件末端，为顺序写。官网有数据表明，同样的磁盘，顺序写能到到600M/s，而随机写只有100k/s。这与磁盘的机械机构有关，顺序写之所以快，是因为其省去了大量磁头寻址的时间</li>
+<li><strong>应用Pagecache</strong><br>Kafka数据持久化是直接持久化到Pagecache中，这样会产生以下几个好处：<ol>
+<li>I/O Scheduler会将连续的小块写组装成大块物理写从而提高性能</li>
+<li>I/O Scheduler会尝试将一些写操作重新按顺序排好，从而减少磁盘头的移动时间</li>
+<li>充分利用所有空闲内存(非JVM内存)。如果使用应用层Cache(即JVM堆内存)，会增加GC负担</li>
+<li>读操作可直接在Page Cache内进行。如果消费和生产速度相当，甚至不需要通过物理磁盘(直接通过Page Cache)交换数据</li>
+<li>如果进程重启，JVM内的Cache会失效，但Page Cache仍然可用<br>尽管持久化到Pagecache上可能会造成宕机丢失数据的情况，但这可以被Kafka的Replication机制解决。如果为了保证这种情况下数据不丢失而强制将Page Cache中的数据Flush到磁盘，反而会降低性能</li>
+</ol>
+</li>
+<li>零复制(拷贝)技术<br><img src="%E5%B8%B8%E8%A7%84%E6%95%B0%E6%8D%AE%E6%8C%81%E4%B9%85%E5%8C%96%E7%A4%BA%E6%84%8F%E5%9B%BE.png" alt="常规数据持久化示意图"><br><img src="%E4%BC%98%E5%8C%96%E7%9A%84%E6%95%B0%E6%8D%AE%E6%8C%81%E4%B9%85%E5%8C%96%E7%A4%BA%E6%84%8F%E5%9B%BE.png" alt="优化的数据持久化示意图"></li>
+</ol>
+</li>
+<li><p>Zookeeper在Kafka中的作用<br>Kafka集群中有一个broker会被选举为Controller，<strong>负责管理集群broker的上下线、所有topic的分区副本分配和leader选举等工作</strong><br>Controller的管理工作依赖于Zookeeper<br>以下为partition的leader选举过程：<br><img src="controller%E6%AD%A3%E5%B8%B8%E6%83%85%E5%86%B5%E7%A4%BA%E6%84%8F%E5%9B%BE.png" alt="controller正常情况示意图"><br><img src="leader%E5%AE%95%E6%9C%BA%E6%83%85%E5%86%B5%E7%A4%BA%E6%84%8F%E5%9B%BE.png" alt="leader宕机情况示意图"></p>
+</li>
+<li><p>Kafka事务<br>Kafka从0.11版本开始引入了事务支持。事务可以保证Kafka在Exactly Once语义的基础上，生产和消费可以跨分区和会话，要么全部成功，要么全部失败</p>
+<ul>
+<li>Producer事务<br>为了实现跨分区跨会话的事务，需要引入一个全局唯一的Transaction ID，并将Producer获得的PID和Transaction ID绑定。这样当Producer重启后就可以通过正在进行的Transaction ID获得原来的PID<br>为了管理Transaction，Kafka引入了一个新的组件Transaction Coordinator。Producer就是通过和Transaction Coordinator交互获得Transaction ID对应的任务状态。Transaction Coordinator还负责将事务所有写入Kafka的一个内部Topic，这样即使整个服务重启，由于事务状态得到保存，进行中的事务状态可以得到恢复，从而继续进行</li>
+<li>Consumer事务(精准一次性消费)<br>上述事务机制主要是从Producer方面考虑，对于Consumer而言，事务的保证就会相对较弱，尤其是无法保证Commit的信息被精确消费。这是由于Consumer可以通过offset访问任意信息，而且不同的Segment File生命周期不同，同一事务的消息可能会出现重启后被删除的情况<br>如果想完成Consumer端的精准一次性消费，那么需要kafka消费端将消费过程和提交offset过程做原子绑定。此时我们需要将kafka的offset保存到支持事务的自定义介质中(比如mysql)</li>
 </ul>
 </li>
 </ul>
-
+<h2 id="Kafka-API"><a href="#Kafka-API" class="headerlink" title="Kafka_API"></a>Kafka_API</h2>
           
             <div class='article_footer'>
               
@@ -595,10 +677,10 @@ Kafka架构深入
     <div class='new-meta-box'>
       
         
-          <div class="new-meta-item date" itemprop="dateUpdated" datetime="2020-09-27T22:08:44+08:00">
+          <div class="new-meta-item date" itemprop="dateUpdated" datetime="2020-09-29T17:08:02+08:00">
   <a class='notlink'>
     <i class="fas fa-edit fa-fw" aria-hidden="true"></i>
-    <p>更新于：2020年9月27日</p>
+    <p>更新于：2020年9月29日</p>
   </a>
 </div>
 
@@ -629,6 +711,7 @@ Kafka架构深入
 Kafka概述
 Kafka快速入门
 Kafka架构深入
+Kafka_API
 "
           
           >
@@ -645,6 +728,7 @@ Kafka架构深入
 Kafka概述
 Kafka快速入门
 Kafka架构深入
+Kafka_API
 "
           
           >
@@ -661,6 +745,7 @@ Kafka架构深入
 Kafka概述
 Kafka快速入门
 Kafka架构深入
+Kafka_API
 "
           
           >
@@ -685,8 +770,23 @@ Kafka架构深入
         
           <div class="prev-next">
             
+              <a class='prev' href='/2020/09/29/Algorithm/LeetCode/%E5%93%88%E5%B8%8C%E8%A1%A8/'>
+                <p class='title'><i class="fas fa-chevron-left" aria-hidden="true"></i>哈希表</p>
+                <p class='content'>内容
+哈希表介绍
+方法总结
+LeetCode题集
+
+
+
+动态规划介绍方法总结LeetCode题集
+41.缺失的第一个正数
+
+</p>
+              </a>
             
-              <a class='next' href='/2020/09/26/Language/Java/JVM/'>
+            
+              <a class='next' href='/2020/09/26/ProgrammingLanguage/Java/JVM/'>
                 <p class='title'>JVM<i class="fas fa-chevron-right" aria-hidden="true"></i></p>
                 <p class='content'>内容
 JVM体系结构概述
@@ -772,7 +872,7 @@ JVM位置：运行与操作系统之上(可以认为是一种中间件)，与硬
 
 
     <div class='content'>
-        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#内容"><span class="toc-text">内容</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Kafka概述"><span class="toc-text">Kafka概述</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Kafka快速入门"><span class="toc-text">Kafka快速入门</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Kafka架构深入"><span class="toc-text">Kafka架构深入</span></a></li></ol>
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#内容"><span class="toc-text">内容</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Kafka概述"><span class="toc-text">Kafka概述</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Kafka快速入门"><span class="toc-text">Kafka快速入门</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Kafka架构深入"><span class="toc-text">Kafka架构深入</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Kafka-API"><span class="toc-text">Kafka_API</span></a></li></ol>
     </div>
   </section>
 

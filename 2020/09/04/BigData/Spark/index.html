@@ -817,6 +817,33 @@ Spark核心编程
 <li>可分区、并行计算</li>
 </ul>
 </li>
+<li><p>核心属性</p>
+<ul>
+<li><p>分区列表：RDD数据结构中存在分区列表，用于执行任务时并行计算，是实现分布式计算的重要属性</p>
+<figure class="highlight scala"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">protected</span> <span class="function"><span class="keyword">def</span> <span class="title">getPartitions</span></span>: <span class="type">Array</span>[<span class="type">Partition</span>]</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>分区计算函数：Spark在计算时，是使用分区函数对每一个分区进行计算</p>
+<figure class="highlight scala"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@DeveloperApi</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">compute</span></span>(split: <span class="type">Partition</span>, context: <span class="type">TaskContext</span>): <span class="type">Iterator</span>[<span class="type">T</span>]</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>RDD之间的依赖关系：RDD是计算模型的封装，当需求中需要将多个计算模型进行组合时，就需要将多个RDD建立依赖关系</p>
+<figure class="highlight scala"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">protected</span> <span class="function"><span class="keyword">def</span> <span class="title">getDependencies</span></span>: <span class="type">Seq</span>[<span class="type">Dependency</span>[_]] = deps</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>分区器(可选)：当数据为KV类型数据时，可以通过设定分区器自定义数据的分区</p>
+<figure class="highlight scala"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@transient</span> <span class="keyword">val</span> partitioner: <span class="type">Option</span>[<span class="type">Partitioner</span>] = <span class="type">None</span></span><br></pre></td></tr></table></figure>
+</li>
+<li><p>首选位置(可选)：计算数据时，可以根据计算节点的状态选择不同的节点位置进行计算</p>
+<figure class="highlight scala"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">protected</span> <span class="function"><span class="keyword">def</span> <span class="title">getPreferredLocations</span></span>(split: <span class="type">Partition</span>): <span class="type">Seq</span>[<span class="type">String</span>] = <span class="type">Nil</span></span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+</li>
+<li><p>执行原理<br>从计算的角度来讲，数据处理过程中需要计算资源(内存 &amp; CPU)和计算模型(逻辑)。执行时，需要将计算资源和计算模型进行协调和整合<br>Spark框架在执行时，先申请资源，然后将应用程序的数据处理逻辑分解成一个一个的计算任务。然后将任务发到已经分配资源的计算节点上，按照指定的计算模型进行数据计算。最后得到计算结果<br>RDD是Spark框架中用于数据处理的核心模型<br>在Yarn环境中，RDD的工作原理：</p>
+<ol>
+<li>启动Yarn集群环境<br><img src="Yarn%E9%9B%86%E7%BE%A4%E7%8E%AF%E5%A2%83%E7%A4%BA%E6%84%8F%E5%9B%BE.png" alt="Yarn集群环境示意图"></li>
+<li>Spark通过申请资源创建调度节点和计算节点<br><img src="Spark%E7%94%B3%E8%AF%B7%E8%B5%84%E6%BA%90%E7%A4%BA%E6%84%8F%E5%9B%BE.png" alt="Spark申请资源示意图"></li>
+<li>Spark框架根据需求将计算逻辑根据分区划分成不同的任务<br><img src="Spark%E5%88%92%E5%88%86%E4%BB%BB%E5%8A%A1%E7%A4%BA%E6%84%8F%E5%9B%BE.png" alt="Spark划分任务示意图"></li>
+<li>调度节点将任务根据计算节点状态发送到对应的计算节点进行计算<br><img src="%E8%B0%83%E5%BA%A6%E8%AE%A1%E7%AE%97%E7%A4%BA%E6%84%8F%E5%9B%BE.png" alt="调度计算示意图"><br>RDD在整个流程中主要用于将逻辑进行封装，并生成Task发送给Executor节点执行计算</li>
+</ol>
+</li>
 <li><p>基础编程</p>
 <ul>
 <li><p>RDD创建</p>
@@ -1217,10 +1244,10 @@ Spark核心编程
 <li><p>函数签名：</p>
 <figure class="highlight scala"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">cogroup</span></span>[<span class="type">W</span>](other: <span class="type">RDD</span>[(<span class="type">K</span>, <span class="type">W</span>)]): <span class="type">RDD</span>[(<span class="type">K</span>, (<span class="type">Iterable</span>[<span class="type">V</span>], <span class="type">Iterable</span>[<span class="type">W</span>]))]</span><br></pre></td></tr></table></figure>
 </li>
-<li><p>函数说明：在类型为(K,V)和(K,W)的RDD上调用，返回一个(K,(Iterable<V>,Iterable<W>))类型的RDD</p>
+<li><p>函数说明：在类型为(K,V)和(K,W)的RDD上调用，返回一个(K,(Iterable&lt;V&gt;,Iterable&lt;W&gt;))类型的RDD</p>
 </li>
 <li><p>案例：</p>
-<figure class="highlight scala"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">val</span> sparkConf = <span class="keyword">new</span> <span class="type">SparkConf</span>().setMaster(<span class="string">"local[*]"</span>).setAppName(<span class="string">"rddMemory"</span>)</span><br><span class="line"><span class="keyword">val</span> sparkContext = <span class="keyword">new</span> <span class="type">SparkContext</span>(sparkConf)</span><br><span class="line"></span><br><span class="line"><span class="keyword">val</span> dataRDD1 = sparkContext.makeRDD(<span class="type">List</span>(</span><br><span class="line">  (<span class="string">"a"</span>, <span class="number">1</span>), (<span class="string">"b"</span>, <span class="number">2</span>), (<span class="string">"c"</span>, <span class="number">3</span>), (<span class="string">"d"</span>, <span class="number">5</span>), (<span class="string">"a"</span>, <span class="number">10</span>)</span><br><span class="line">))</span><br><span class="line"></span><br><span class="line"><span class="keyword">val</span> dataRDD2 = sparkContext.makeRDD(<span class="type">List</span>(</span><br><span class="line">  (<span class="string">"b"</span>, <span class="number">2</span>), (<span class="string">"a"</span>, <span class="number">5</span>), (<span class="string">"c"</span>, <span class="number">9</span>), (<span class="string">"c"</span>, <span class="number">2</span>), (<span class="string">"e"</span>, <span class="number">5</span>)</span><br><span class="line">))</span><br><span class="line"></span><br><span class="line"><span class="comment">//    dataRDD1.leftOuterJoin(dataRDD2).collect.foreach(println)</span></span><br><span class="line"><span class="comment">//    println("-----------")</span></span><br><span class="line"><span class="comment">//    dataRDD1.rightOuterJoin(dataRDD2).collect.foreach(println)</span></span><br><span class="line">dataRDD1.cogroup(dataRDD2).collect.foreach(println)</span><br><span class="line"></span><br><span class="line">sparkContext.stop</span><br></pre></td></tr></table></figure>
+<figure class="highlight scala"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">val</span> sparkConf = <span class="keyword">new</span> <span class="type">SparkConf</span>().setMaster(<span class="string">"local[*]"</span>).setAppName(<span class="string">"spark-sobxiong"</span>)</span><br><span class="line"><span class="keyword">val</span> sparkContext = <span class="keyword">new</span> <span class="type">SparkContext</span>(sparkConf)</span><br><span class="line"></span><br><span class="line"><span class="keyword">val</span> dataRDD1 = sparkContext.makeRDD(<span class="type">List</span>(</span><br><span class="line">  (<span class="string">"a"</span>, <span class="number">1</span>), (<span class="string">"b"</span>, <span class="number">2</span>), (<span class="string">"c"</span>, <span class="number">3</span>), (<span class="string">"d"</span>, <span class="number">5</span>), (<span class="string">"a"</span>, <span class="number">10</span>)</span><br><span class="line">))</span><br><span class="line"></span><br><span class="line"><span class="keyword">val</span> dataRDD2 = sparkContext.makeRDD(<span class="type">List</span>(</span><br><span class="line">  (<span class="string">"b"</span>, <span class="number">2</span>), (<span class="string">"a"</span>, <span class="number">5</span>), (<span class="string">"c"</span>, <span class="number">9</span>), (<span class="string">"c"</span>, <span class="number">2</span>), (<span class="string">"e"</span>, <span class="number">5</span>)</span><br><span class="line">))</span><br><span class="line"></span><br><span class="line"><span class="comment">//    dataRDD1.leftOuterJoin(dataRDD2).collect.foreach(println)</span></span><br><span class="line"><span class="comment">//    println("-----------")</span></span><br><span class="line"><span class="comment">//    dataRDD1.rightOuterJoin(dataRDD2).collect.foreach(println)</span></span><br><span class="line">dataRDD1.cogroup(dataRDD2).collect.foreach(println)</span><br><span class="line"></span><br><span class="line">sparkContext.stop</span><br></pre></td></tr></table></figure>
 </li>
 </ul>
 </li>
@@ -1228,11 +1255,20 @@ Spark核心编程
 </li>
 </ul>
 </li>
+<li><p>案例实操</p>
+<ul>
+<li><p>数据准备：agent.log(时间戳，省份，城市，用户，广告，中间字段使用空格分隔)</p>
+</li>
+<li><p>需求描述：统计出每一个省份每个广告被点击数量排行的Top3</p>
+</li>
+<li><p>代码实现：</p>
+<figure class="highlight scala"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">val</span> sparkConf = <span class="keyword">new</span> <span class="type">SparkConf</span>().setMaster(<span class="string">"local[*]"</span>).setAppName(<span class="string">"spark-sobxiong"</span>)</span><br><span class="line"><span class="keyword">val</span> sparkContext = <span class="keyword">new</span> <span class="type">SparkContext</span>(sparkConf)</span><br><span class="line"></span><br><span class="line"><span class="comment">// 统计出每一个省份每个广告被点击数量排行的Top3</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// 1、获取原始数据</span></span><br><span class="line"><span class="keyword">val</span> dataRDD = sparkContext.textFile(<span class="string">"input/agent.log"</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment">// 2、将原始数据进行结构转换,方便统计：(省份-广告, 1)</span></span><br><span class="line"><span class="keyword">val</span> mapRDD = dataRDD.map(line =&gt; &#123;</span><br><span class="line">  <span class="keyword">val</span> datas = line.split(<span class="string">" "</span>)</span><br><span class="line">  (<span class="string">s"<span class="subst">$&#123;datas(1)&#125;</span>-<span class="subst">$&#123;datas(4)&#125;</span>"</span>, <span class="number">1</span>)</span><br><span class="line">&#125;)</span><br><span class="line"></span><br><span class="line"><span class="comment">// 3、将相同Key的数据进行分组聚合：(省份-广告, sum)</span></span><br><span class="line"><span class="keyword">val</span> reduceRDD = mapRDD.reduceByKey(_ + _)</span><br><span class="line"></span><br><span class="line"><span class="comment">// 4、将聚合后的结果进行结构的转换：(省份, (广告, sum))</span></span><br><span class="line"><span class="keyword">val</span> mapRDD2 = reduceRDD.map &#123;</span><br><span class="line">  <span class="keyword">case</span> (key, sum) =&gt;</span><br><span class="line">    <span class="keyword">val</span> keys = key.split(<span class="string">"-"</span>)</span><br><span class="line">    (keys(<span class="number">0</span>), (keys(<span class="number">1</span>), sum))</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 5、将相同的身份的数据分在一个组中：(省份, Iterator[(广告1, sum1)、...])</span></span><br><span class="line"><span class="keyword">val</span> groupRDD = mapRDD2.groupByKey</span><br><span class="line"></span><br><span class="line"><span class="comment">// 6、将分组后的数据进行排序(降序),取Top3</span></span><br><span class="line"><span class="keyword">val</span> sortRDD = groupRDD.mapValues(iter =&gt; &#123;</span><br><span class="line">  iter.toList.sortWith((left, right) =&gt; left._2 &gt; right._2).take(<span class="number">3</span>)</span><br><span class="line">&#125;)</span><br><span class="line"></span><br><span class="line"><span class="comment">// 7、采集打印</span></span><br><span class="line">sortRDD.collect.foreach(println)</span><br><span class="line"></span><br><span class="line">sparkContext.stop</span><br></pre></td></tr></table></figure>
+</li>
 </ul>
 </li>
-<li><p>核心属性</p>
+<li><p>RDD行动算子</p>
 </li>
-<li><p>执行原理</p>
+</ul>
 </li>
 </ul>
 </li>
@@ -1324,10 +1360,10 @@ Spark核心编程
     <div class='new-meta-box'>
       
         
-          <div class="new-meta-item date" itemprop="dateUpdated" datetime="2020-09-26T12:01:06+08:00">
+          <div class="new-meta-item date" itemprop="dateUpdated" datetime="2020-10-08T23:33:33+08:00">
   <a class='notlink'>
     <i class="fas fa-edit fa-fw" aria-hidden="true"></i>
-    <p>更新于：2020年9月26日</p>
+    <p>更新于：2020年10月8日</p>
   </a>
 </div>
 
@@ -1417,19 +1453,21 @@ Spark核心编程
         
           <div class="prev-next">
             
-              <a class='prev' href='/2020/09/06/Spring/SpringCloud/SpringCloud%E7%AC%AC%E4%B8%80%E5%AD%A3/'>
-                <p class='title'><i class="fas fa-chevron-left" aria-hidden="true"></i>SpringCloud第一季</p>
+              <a class='prev' href='/2020/09/06/Middleware/Nginx/'>
+                <p class='title'><i class="fas fa-chevron-left" aria-hidden="true"></i>Nginx</p>
                 <p class='content'>内容
-微服务概述
-
-
-
-微服务概述
-微服务是什么：微服务的核心就是将传统的一站式应用根据业务拆分成一个一个的服务，彻底地去耦合。每一个微服务提供单个业务功能的服务，一个服务做一件事。从技术角度看...</p>
+Nginx简介
+Nginx安装
+Nginx常用的命令和配置文件
+Nginx配置实例-反向代理
+Nginx配置实例-负载均衡
+Nginx配置实例-动静分离
+Nginx搭建高可用集群
+Ngin...</p>
               </a>
             
             
-              <a class='next' href='/2020/07/24/Language/Scala/Scala/'>
+              <a class='next' href='/2020/07/24/ProgrammingLanguage/Scala/Scala/'>
                 <p class='title'>Scala<i class="fas fa-chevron-right" aria-hidden="true"></i></p>
                 <p class='content'>内容
 Scala概述

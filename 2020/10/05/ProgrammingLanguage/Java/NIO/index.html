@@ -1,0 +1,1540 @@
+<!DOCTYPE html>
+<html>
+<head hexo-theme='https://volantis.js.org/#2.6.6'>
+  <meta charset="utf-8">
+  <!-- SEO相关 -->
+  
+    
+  
+  <!-- 渲染优化 -->
+  <meta name="renderer" content="webkit">
+  <meta name="force-rendering" content="webkit">
+  <meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1">
+  <meta name="HandheldFriendly" content="True" >
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+  <!-- 页面元数据 -->
+  
+    <title>NIO - SOBXiong的博客</title>
+  
+    <meta name="keywords" content="Java高级">
+  
+  
+    <meta name="description" content="内容
+NIO简介
+缓冲区(Buffer)
+通道(Channel)
+选择器(Selector)
+其他
+">
+  
+
+  <!-- feed -->
+  
+
+  <!-- import meta -->
+  
+
+  <!-- link -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@5.13/css/all.min.css">
+  
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.css">
+
+  
+  
+    
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/node-waves@0.7.6/dist/waves.min.css">
+
+  
+
+  
+  <link rel="shortcut icon" type='image/x-icon' href="https://cdn.jsdelivr.net/gh/SOBXiong/imageBed/favicon.png">
+  
+
+  
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/aplayer@1.10/dist/APlayer.min.css">
+  
+
+  
+
+  <!-- import link -->
+  
+
+  
+  
+    
+<link rel="stylesheet" href="/css/style.css">
+
+  
+
+  <script>
+    function setLoadingBarProgress(num) {
+      document.getElementById('loading-bar').style.width=num+"%";
+    }
+  </script>
+
+  
+  
+</head>
+
+<body>
+  
+  <div id="loading-bar-wrapper">
+  <div id="loading-bar"></div>
+</div>
+<header class="l_header shadow blur">
+  <div class='container'>
+  <div class='wrapper'>
+    <div class='nav-sub'>
+      <p class="title"></p>
+      <ul class='switcher nav-list-h'>
+        <li><a class="s-comment fas fa-comments fa-fw" target="_self" href='javascript:void(0)'></a></li>
+        
+          <li><a class="s-toc fas fa-list fa-fw" target="_self" href='javascript:void(0)'></a></li>
+        
+      </ul>
+    </div>
+		<div class="nav-main">
+      
+        
+        <a class="title flat-box" target="_self" href='/'>
+          
+          
+            <i class='https://cdn.jsdelivr.net/gh/SOBXiong/imageBed/favicon.png'></i>
+          
+          
+            SOBXiong
+          
+          
+        </a>
+      
+
+			<div class='menu navigation'>
+				<ul class='nav-list-h'>
+          
+          
+          
+            
+            
+              <li>
+                <a class="flat-box" href=/
+                  
+                  
+                  
+                    id="home"
+                  >
+                  <i class='fas fa-rss fa-fw'></i>博客
+                </a>
+                
+              </li>
+            
+          
+          
+            
+            
+              <li>
+                <a class="flat-box" href=/categories/
+                  
+                  
+                  
+                    id="categories"
+                  >
+                  <i class='fas fa-folder-open fa-fw'></i>分类
+                </a>
+                
+              </li>
+            
+          
+          
+            
+            
+              <li>
+                <a class="flat-box" href=/tags/
+                  
+                  
+                  
+                    id="tags"
+                  >
+                  <i class='fas fa-tags fa-fw'></i>标签
+                </a>
+                
+              </li>
+            
+          
+          
+            
+            
+              <li>
+                <a class="flat-box" href=/archives/
+                  
+                  
+                  
+                    id="archives"
+                  >
+                  <i class='fas fa-archive fa-fw'></i>归档
+                </a>
+                
+              </li>
+            
+          
+          
+            
+            
+              <li>
+                <a class="flat-box" href=/about/
+                  
+                  
+                  
+                    id="about"
+                  >
+                  <i class='fas fa-info-circle fa-fw'></i>关于
+                </a>
+                
+              </li>
+            
+          
+          
+				</ul>
+			</div>
+
+      <div class="m_search">
+        <form name="searchform" class="form u-search-form">
+          <i class="icon fas fa-search fa-fw"></i>
+          <input type="text" class="input u-search-input" placeholder="Search..." />
+        </form>
+      </div>
+
+			<ul class='switcher nav-list-h'>
+				
+					<li><a class="s-search fas fa-search fa-fw" target="_self" href='javascript:void(0)'></a></li>
+				
+				<li>
+          <a class="s-menu fas fa-bars fa-fw" target="_self" href='javascript:void(0)'></a>
+          <ul class="menu-phone list-v navigation white-box">
+            
+              
+            
+              <li>
+                <a class="flat-box" href=/
+                  
+                  
+                  
+                    id="home"
+                  >
+                  <i class='fas fa-rss fa-fw'></i>博客
+                </a>
+                
+              </li>
+            
+          
+            
+              
+            
+              <li>
+                <a class="flat-box" href=/categories/
+                  
+                  
+                  
+                    id="categories"
+                  >
+                  <i class='fas fa-folder-open fa-fw'></i>分类
+                </a>
+                
+              </li>
+            
+          
+            
+              
+            
+              <li>
+                <a class="flat-box" href=/tags/
+                  
+                  
+                  
+                    id="tags"
+                  >
+                  <i class='fas fa-tags fa-fw'></i>标签
+                </a>
+                
+              </li>
+            
+          
+            
+              
+            
+              <li>
+                <a class="flat-box" href=/archives/
+                  
+                  
+                  
+                    id="archives"
+                  >
+                  <i class='fas fa-archive fa-fw'></i>归档
+                </a>
+                
+              </li>
+            
+          
+            
+              
+            
+              <li>
+                <a class="flat-box" href=/about/
+                  
+                  
+                  
+                    id="about"
+                  >
+                  <i class='fas fa-info-circle fa-fw'></i>关于
+                </a>
+                
+              </li>
+            
+          
+            
+          </ul>
+        </li>
+			</ul>
+		</div>
+	</div>
+  </div>
+</header>
+
+<script>setLoadingBarProgress(40);</script>
+
+
+
+  <div class="l_body nocover">
+    <div class='body-wrapper'>
+      
+
+<div class='l_main'>
+  
+
+  
+    <article id="post" class="post white-box reveal shadow article-type-post" itemscope itemprop="blogPost">
+      
+
+
+  <section class='meta'>
+    
+      
+      
+      <div class="meta" id="header-meta">
+        
+          
+  <h1 class="title">
+    <a href="/2020/10/05/ProgrammingLanguage/Java/NIO/">
+      NIO
+    </a>
+  </h1>
+
+
+        
+        <div class='new-meta-box'>
+          
+            
+          
+            
+              
+<div class='new-meta-item author'>
+  <a href="http://xiongjc.top" target="_blank" rel="nofollow noopener">
+    <img src="https://cdn.jsdelivr.net/gh/SOBXiong/imageBed/hdImg_f757fa7e0fd65077ce52d251fc7a01d815860762755.jpg">
+    <p>SOBXiong</p>
+  </a>
+</div>
+
+            
+          
+            
+              
+  
+  <div class='new-meta-item category'>
+    <a href='/categories/%E7%BC%96%E7%A8%8B/' rel="nofollow">
+      <i class="fas fa-folder-open fa-fw" aria-hidden="true"></i>
+      <p>编程</p>
+    </a>
+  </div>
+
+
+            
+          
+            
+              <div class="new-meta-item date">
+  <a class='notlink'>
+    <i class="fas fa-calendar-alt fa-fw" aria-hidden="true"></i>
+    <p>发布于：2020年10月5日</p>
+  </a>
+</div>
+
+            
+          
+            
+              
+
+            
+          
+        </div>
+        
+          <hr>
+        
+      </div>
+    
+  </section>
+
+
+      <section class="article typo">
+        <div class="article-entry" itemprop="articleBody">
+          
+          <h2 id="内容"><a href="#内容" class="headerlink" title="内容"></a>内容</h2><ul>
+<li><a href="#NIO简介">NIO简介</a></li>
+<li><a href="#缓冲区(Buffer)">缓冲区(Buffer)</a></li>
+<li><a href="#通道(Channel)">通道(Channel)</a></li>
+<li><a href="#选择器(Selector)">选择器(Selector)</a></li>
+<li><a href="#其他">其他</a></li>
+</ul>
+<a id="more"></a>
+
+<h2 id="NIO简介"><a href="#NIO简介" class="headerlink" title="NIO简介"></a>NIO简介</h2><ul>
+<li><p>NIO简介：Java NIO(New I0)是从Java 1.4版本开始引入的一个新的I0 API，可以替代标准的Java I0 API。NIO与原来的I0有同样的作用和目的，但是使用的方式完全不同，NIO支持面向缓冲区的、基于通道的I0操作。NIO将以更加高效的方式进行文件的读写操作</p>
+</li>
+<li><p>NIO系统的核心：通道(Channel)和缓冲区(Buffer)。通道表示打开到I0设备(例如：文件、套接字)的连接。若需要使用NIO系统，需要获取用于连接I0设备的通道以及用于容纳数据的缓冲区。然后操作缓冲区，对数据进行处理。<strong>简言之，Channel负责传输，Buffer负责存储</strong></p>
+</li>
+<li><p>NIO与IO的主要区别：</p>
+<table>
+<thead>
+<tr>
+<th>IO</th>
+<th>NIO</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>面向流(Stream Oriented)</td>
+<td>面向缓冲区(Buffer Oriented)</td>
+</tr>
+<tr>
+<td>阻塞IO(Blocking IO)</td>
+<td>非阻塞IO(Non Blocking IO)</td>
+</tr>
+<tr>
+<td>(无)</td>
+<td>选择器(Selectors)</td>
+</tr>
+</tbody></table>
+</li>
+<li><p>阻塞和非阻塞介绍：</p>
+<ol>
+<li>阻塞：传统的I0流都是阻塞式的。也就是说，当一个线程调用read()或write()时，该线程被阻塞，直到有一些数据被读取或写入，该线程在此期间不能执行其他任务。因此，在完成网络通信进行I0操作时，由于线程会阻塞，所以服务器端必须为每个客户端都提供一个独立的线程进行处理，当服务器端需要处理大量客户端时，性能急剧下降</li>
+<li>非阻塞：NIO是非阻塞模式的。当线程从某通道进行读写数据时，若没有数据可用时，该线程可以进行其他任务。线程通常将非阻塞I0的空闲时间用于在其他通道上执行I0操作，所以单独的线程可以管理多个输入和输出通道。因此，NIO可以让服务器端使用一个或有限几个线程来同时处理连接到服务器端的所有客户端</li>
+</ol>
+</li>
+<li><p>NIO主要有三大核心组件：通道(Channel)、缓冲区(Buffer)以及选择器(Selector)</p>
+</li>
+</ul>
+<h2 id="缓冲区-Buffer"><a href="#缓冲区-Buffer" class="headerlink" title="缓冲区(Buffer)"></a>缓冲区(Buffer)</h2><ul>
+<li><p>介绍：</p>
+<ul>
+<li><p>一个用于特定基本数据类型的容器的，在java.nio包中定义，所有缓冲区都是Buffer抽象类的子类。NIO中的Buffer主要用于与NIO通道进行交互，数据是从通道读入缓冲区，从缓冲区写入通道中的</p>
+</li>
+<li><p>Buffer就像一个数组，可以保存多个相同类型的数据。根据数据类型不同(boolean除外)，有以下Buffer常用子类：ByteBuffer、CharBuffer、ShortBuffer、IntBuffer、LongBuffer、FloatBuffer以及DoubleBuffer。上述Buffer类它们都采用相似的方法进行管理数据，只是各自管理的数据类型不同而已。都是通过如下方法获取一个Bufferd对象：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 创建一个容量为capacity的XxxBuffer对象</span></span><br><span class="line"><span class="function"><span class="keyword">static</span> XxxBuffer <span class="title">allocate</span><span class="params">(<span class="keyword">int</span> capacity)</span></span>;</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+</li>
+<li><p>基本属性(标记、位置、限制、容量遵守以下不变式：0 &lt;= mark &lt;= position &lt;= limit &lt;= capacity)：</p>
+<ol>
+<li><strong>容量(capacity)</strong>：表示Buffer最大数据容量，capacity不能为负，并且创建后不能更改</li>
+<li><strong>限制(limit)</strong>：第一个不应该读取或写入的数据的索引，即位于limit后的数据不可读写。limit不能为负，并且不能大于其容量capacity</li>
+<li><strong>位置(position)</strong>：下一个要读取或写入的数据的索引。position不能为负，并且不能大于其限制limit</li>
+<li>标记(mark)与重置(reset)：标记是一个索引，通过Buffer中的mark()方法指定Buffer中一个特定的position，之后可以通过调用reset()方法恢复到这个position<br><img src="%E7%BC%93%E5%86%B2%E5%8C%BA%E5%9F%BA%E6%9C%AC%E6%93%8D%E4%BD%9C%E7%A4%BA%E6%84%8F%E5%9B%BE.png" alt="缓冲区基本操作示意图"></li>
+</ol>
+</li>
+<li><p>常用方法</p>
+<table>
+<thead>
+<tr>
+<th>方法</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>Buffer clear()</strong></td>
+<td><strong>清空缓冲区并返回对缓冲区的引用</strong></td>
+</tr>
+<tr>
+<td><strong>Buffer flip()</strong></td>
+<td><strong>将缓冲区的界限设置为当前位置,并将当前位置重置为0</strong></td>
+</tr>
+<tr>
+<td>int capacity()</td>
+<td>返回Buffer的capacity大小</td>
+</tr>
+<tr>
+<td>boolean hasRemaining()</td>
+<td>判断缓冲区中是否还有元素</td>
+</tr>
+<tr>
+<td>int limit()</td>
+<td>返回Buffer的界限(limit)的位置</td>
+</tr>
+<tr>
+<td>Buffer limit(int n)</td>
+<td>将设置缓冲区界限为n,并返回一个具有新limit的缓冲区对象</td>
+</tr>
+<tr>
+<td>Buffer mark()</td>
+<td>对缓冲区设置标记</td>
+</tr>
+<tr>
+<td>int position()</td>
+<td>返回缓冲区的当前位置position</td>
+</tr>
+<tr>
+<td>Buffer position(int n)</td>
+<td>将设置缓冲区的当前位置为n,并返回修改后的Buffer对象</td>
+</tr>
+<tr>
+<td>int remaining()</td>
+<td>返回position和limit之间的元素个数</td>
+</tr>
+<tr>
+<td>Buffer reset()</td>
+<td>将位置position转到以前设置的mark所在的位置</td>
+</tr>
+<tr>
+<td>Buffer rewind()</td>
+<td>将位置设为为0,取消设置的mark</td>
+</tr>
+</tbody></table>
+</li>
+<li><p>数据操作：Buffer所有子类提供了两个用于数据操作的方法——get()与put()方法</p>
+<ul>
+<li>获取Buffer中的数据<ol>
+<li>get()：读取单个字节</li>
+<li>get(byte[] dst)：批量读取多个字节到dst中</li>
+<li>get(int index)：读取指定索引位置的字节(不会移动position)</li>
+</ol>
+</li>
+<li>放入数据到Buffer中<ol>
+<li>put(byte b)：将给定单个字节写入缓冲区的当前位置</li>
+<li>put(byte[]src)：将src中的字节写入缓冲区的当前位置</li>
+<li>put(int index, byte b)：将指定字节写入缓冲区的索引位置(不会移动position)</li>
+</ol>
+</li>
+</ul>
+</li>
+<li><p>直接与非直接缓冲区</p>
+<ul>
+<li>字节缓冲区要么是直接的，要么是非直接的。如果为直接字节缓冲区，则Java虚拟机会尽最大努力直接在此缓冲区上执行本机I/0操作。也就是说，在每次调用基础操作系统的一个本机I/0操作之前(或之后)，虚拟机都会尽量避免将缓冲区的内容复制到中间缓冲区中(或从中间缓冲区中复制内容)</li>
+<li>直接字节缓冲区可以通过调用此类的<strong>allocateDirect()</strong>工厂方法来创建。<strong>此方法返回的缓冲区进行分配和取消分配所需成本通常高于非直接缓冲区</strong>。直接缓冲区的内容可以驻留在常规的垃圾回收堆之外，因此，它们对应用程序的内存需求量造成的影响可能并不明显。所以，建议将直接缓冲区主要分配给那些易受基础系统的本机I/0操作影响的大型、持久的缓冲区。-般情况下，最好仅在直接缓冲区能在程序性能方面带来明显好处时分配它们</li>
+<li>直接字节缓冲区还可以通过<strong>FileChannel的map()方法</strong>将文件区域直接映射到内存中来创建。该方法返回<strong>MappedByteBuffer</strong>。Java平台的实现有助于通过JNI从本机代码创建直接字节缓冲区。如果以上这些缓冲区中的某个缓冲区实例指的是不可访问的内存区域，则试图访问该区域不会更改该缓冲区的内容，并且将会在访问期间或稍后的某个时间导致抛出不确定的异常</li>
+<li>字节缓冲区是直接缓冲区还是非直接缓冲区可通过调用其<strong>isDirect()</strong>方法来确定。提供此方法是为了能够在性能关键型代码中执行显式缓冲区管理<br><img src="%E9%9D%9E%E7%9B%B4%E6%8E%A5%E7%BC%93%E5%86%B2%E5%8C%BA.png" alt="非直接缓冲区示意图"><br><img src="%E7%9B%B4%E6%8E%A5%E7%BC%93%E5%86%B2%E5%8C%BA.png" alt="直接缓冲区示意图"></li>
+</ul>
+</li>
+</ul>
+<h2 id="通道-Channel"><a href="#通道-Channel" class="headerlink" title="通道(Channel)"></a>通道(Channel)</h2><ul>
+<li><p>介绍：由java.nio.channels包定义。Channel表示I0源与目标打开的连接。Channel类似于传统的”流”。只不过Channel本身不能直接访问数据，Channel只能与Buffer进行交互</p>
+</li>
+<li><p>主要实现类</p>
+<ol>
+<li>FileChannel：用于读取、写入、映射和操作文件的通道</li>
+<li>DatagramChannel：通过UDP读写网络中的数据通道</li>
+<li>SocketChannel：通过TCP读写网络中的数据</li>
+<li>ServerSocketChannel：可以监听新进来的TCP连接，对每一个新进来的连接都会创建一个Socke tChannel</li>
+</ol>
+</li>
+<li><p>获取通道：</p>
+<ol>
+<li>对支持通道的对象调用getChannel()方法。支持通道的类包括FileInputStream、FileOutputStream、RandomAccessFile、DatagramSocket、Socket、ServerSocket</li>
+<li>使用Files类的静态方法newByteChannel()获取字节通道、或者通过通道的静态方法open()打开并返回指定通道</li>
+</ol>
+</li>
+<li><p>数据传输：</p>
+<ol>
+<li><p>将Buffer数据写入Channel：</p>
+ <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">int</span> writeLen = channel.write(buffer);</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>从Channel读取数据到Buffer</p>
+ <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">int</span> readLen = channel.read(buffer);</span><br></pre></td></tr></table></figure>
+</li>
+</ol>
+</li>
+<li><p>分散与聚集</p>
+<ul>
+<li>分散读取(Scattering Reads)：从Channel中读取的数据”分散”到多个Buffer中<br><strong>注意：按照缓冲区的顺序,从Channel中读取的数据依次将Buffer填满</strong></li>
+<li>聚集写入(Gathering Writes)：将多个Buffer中的数据”聚集”到Channel<br><strong>注意：按照缓冲区的顺序,写入position和limit之间的数据到Channel</strong></li>
+</ul>
+</li>
+<li><p>数据通道相互传输：将数据从源通道传输到其他Channel中</p>
+  <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">toChannel.transferFrom(fromChannel, count, position);</span><br><span class="line">fromChannel.transforTo(position, count, toChannel);</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>FileChannel的常用方法：</p>
+<table>
+<thead>
+<tr>
+<th>方法</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>int read(ByteBuffer dst)</strong></td>
+<td>从Channel中读取数据到ByteBuffer</td>
+</tr>
+<tr>
+<td><strong>long read(ByteBuffer[] dsts)</strong></td>
+<td>将Channel中的数据”分散”到ByteBuffer[]</td>
+</tr>
+<tr>
+<td><strong>int write(ByteBuffer src)</strong></td>
+<td>将ByteBuffer中的数据写入到Channel</td>
+</tr>
+<tr>
+<td><strong>long write(ByteBuffer[] srcs)</strong></td>
+<td>将ByteBuffer[]中的数据”聚集”到Channel</td>
+</tr>
+<tr>
+<td>long position()</td>
+<td>返回此通道的文件位置</td>
+</tr>
+<tr>
+<td>FileChannel position(long p)</td>
+<td>设置此通道的文件位置</td>
+</tr>
+<tr>
+<td>long size()</td>
+<td>返回此通道的文件的当前大小</td>
+</tr>
+<tr>
+<td>FileChannel truncate(long s)</td>
+<td>将此通道的文件截取为给定大小</td>
+</tr>
+<tr>
+<td>void force(boolean metaData)</td>
+<td>强制将所有对此通道的文件更新写入到存储设备中</td>
+</tr>
+</tbody></table>
+</li>
+</ul>
+<h2 id="选择器-Selector"><a href="#选择器-Selector" class="headerlink" title="选择器(Selector)"></a>选择器(Selector)</h2><ul>
+<li><p>介绍：选择器(Selector)是SelectableChannle对象的多路复用器，<strong>Selector可以同时监控多个SelectableChannel的I0状况，也就是说，利用Selector可使一个单独的线程管理多个Channel。Selector是非阻塞I0的核心</strong></p>
+</li>
+<li><p>常见方法：</p>
+<table>
+<thead>
+<tr>
+<th>方法</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Set&lt;SelectionKey&gt; keys()</td>
+<td>所有的SelectionKey集合。代表注册在该Selector上的Channel</td>
+</tr>
+<tr>
+<td>selectedKeys()</td>
+<td>被选择的SelectionKey集合。返回此Selector的已选择键集</td>
+</tr>
+<tr>
+<td>int select()</td>
+<td>监控所有注册的Channel,当它们中间有需要处理的I0操作时,该方法返回,并将对应得的SelectionKey加入被选择的SelectionKey集合中,该方法返回这些Channel的数量</td>
+</tr>
+<tr>
+<td>int select(long timeout)</td>
+<td>可以设置超时时长的select()操作</td>
+</tr>
+<tr>
+<td>int selectNow()</td>
+<td>执行一个立即返回的select()操作,该方法不会阻塞线程</td>
+</tr>
+<tr>
+<td>Selector wakeup()</td>
+<td>使一个还未返回的select()方法立即返回</td>
+</tr>
+<tr>
+<td>void close()</td>
+<td>关闭该选择器</td>
+</tr>
+</tbody></table>
+</li>
+<li><p>SelectableChannle继承结构<br><img src="SelectableChannle%E7%BB%A7%E6%89%BF%E7%BB%93%E6%9E%84.png" alt="SelectableChannle继承结构"></p>
+</li>
+<li><p>选择器使用：</p>
+<ul>
+<li>创建Selector：通过调用Selector.open()方法创建一个Selector</li>
+<li>向选择器注册通道：SelectableChannel.register(Selector sel,int ops)<ul>
+<li>当调用register()向选择器注册通道时，选择器对通道的监听事件通过第二个参数ops指定</li>
+<li>可以监听的事件类型(<strong>可使用SelectionKey的四个常量表示</strong>)：<ol>
+<li>读：SelectionKey.OP_READ(1)</li>
+<li>写：SelectionKey.OP_WRITE(4)</li>
+<li>连接：SelectionKey.OP_CONNECT(8)</li>
+<li>接收：SelectionKey.OP_ ACCEPT(16)</li>
+</ol>
+</li>
+<li>若注册时不止监听一个事件，则可以使用”位或”操作符连接</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p>SelectionKey：</p>
+<ul>
+<li><p>介绍：表示SelectableChannel和Selector之间的注册关系。每次向选择器注册通道时就会选择一个事件(选择键)。选择键包含两个表示为整数值的操作集。操作集的每一位都表示该键的通道所支持的一类可选择操作</p>
+</li>
+<li><p>常用方法：</p>
+<table>
+<thead>
+<tr>
+<th>方法</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>int interestOps()</td>
+<td>获取感兴趣事件集合</td>
+</tr>
+<tr>
+<td>int readyOps()</td>
+<td>获取通道已经准备就绪的操作的集合</td>
+</tr>
+<tr>
+<td>SelectableChannel channel()</td>
+<td>获取注册通道</td>
+</tr>
+<tr>
+<td>Selector selector()</td>
+<td>返回选择器</td>
+</tr>
+<tr>
+<td>boolean isReadable()</td>
+<td>检测Channal中读事件是否就绪</td>
+</tr>
+<tr>
+<td>boolean isWritable()</td>
+<td>检测Channal中写事件是否就绪</td>
+</tr>
+<tr>
+<td>boolean isConnectable()</td>
+<td>检测Channel中连接是否就绪</td>
+</tr>
+<tr>
+<td>boolean isAcceptable()</td>
+<td>检测Channel中接收是否就绪</td>
+</tr>
+</tbody></table>
+</li>
+</ul>
+</li>
+</ul>
+<h2 id="其他"><a href="#其他" class="headerlink" title="其他"></a>其他</h2><ul>
+<li><p>管道(pipe)：NIO管道是2个线程之间的单向数据连接。Pipe有一个source通道和一个sink通道。数据会被写到sink通道，从source通道读取<br><img src="%E7%AE%A1%E9%81%93%E6%95%B0%E6%8D%AE%E8%BF%9E%E6%8E%A5%E7%A4%BA%E6%84%8F%E5%9B%BE.png" alt="管道数据连接示意图"></p>
+</li>
+<li><p>Path与Paths：</p>
+<ul>
+<li><p>java.nio.file.Path接口代表-一个平台无关的平台路径，描述了目录结构中文件的位置</p>
+</li>
+<li><p>Paths提供get()方法用来获取Path对象：<br>Path get(String first, String … more)：用于将多个字符串串连成路径</p>
+</li>
+<li><p>Path常用方法:</p>
+<table>
+<thead>
+<tr>
+<th>方法</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>boolean endsWith(String path)</td>
+<td>判断是否以path路径结束</td>
+</tr>
+<tr>
+<td>boolean startsWith(String path)</td>
+<td>判断是否以path路径开始</td>
+</tr>
+<tr>
+<td>boolean isAbsolute()</td>
+<td>判断是否是绝对路径</td>
+</tr>
+<tr>
+<td>Path getFileName()</td>
+<td>返回与调用Path对象关联的文件名</td>
+</tr>
+<tr>
+<td>Path getName(int idx)</td>
+<td>返回的指定索引位置idx的路径名称</td>
+</tr>
+<tr>
+<td>int getNameCount()</td>
+<td>返回Path根目录后面元素的数量</td>
+</tr>
+<tr>
+<td>Path getParent()</td>
+<td>返回Path对象包含整个路径,不包含Path对象指定的文件路径</td>
+</tr>
+<tr>
+<td>Path getRoot()</td>
+<td>返回调用Path对象的根路径</td>
+</tr>
+<tr>
+<td>Path resolve(Path p)</td>
+<td>将相对路径解析为绝对路径</td>
+</tr>
+<tr>
+<td>Path toAbsolutePath()</td>
+<td>作为绝对路径返回调用Path对象</td>
+</tr>
+<tr>
+<td>String toString()</td>
+<td>返回调用Path对象的字符串表示形式</td>
+</tr>
+</tbody></table>
+</li>
+</ul>
+</li>
+<li><p>Files：</p>
+<ul>
+<li><p>java.nio.file.Files用于操作文件或目录的工具类</p>
+</li>
+<li><p>Files常用方法：</p>
+<table>
+<thead>
+<tr>
+<th>方法</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Path copy(Path src, Path dest, CopyOption … how)</td>
+<td>文件的复制</td>
+</tr>
+<tr>
+<td>Path createDirectory(Path path, FileAttribute&lt;?&gt; … attr)</td>
+<td>创建一个目录</td>
+</tr>
+<tr>
+<td>Path createFile(Path path, FileAttribute&lt;?&gt; … arr)</td>
+<td>创建一个文件</td>
+</tr>
+<tr>
+<td>void delete(Path path)</td>
+<td>删除一个文件</td>
+</tr>
+<tr>
+<td>Path move(Path src, Path dest, CopyOption … how)</td>
+<td>将src移动到dest位置</td>
+</tr>
+<tr>
+<td>long size(Path path)</td>
+<td>返回path指定文件的大小</td>
+</tr>
+</tbody></table>
+</li>
+<li><p>Files常用方法(判断)：</p>
+<table>
+<thead>
+<tr>
+<th>方法</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>boolean exists(Path path, LinkOption … opts)</td>
+<td>判断文件是否存在</td>
+</tr>
+<tr>
+<td>boolean isDirectory(Path path, LinkOption … opts)</td>
+<td>判断是否是目录</td>
+</tr>
+<tr>
+<td>boolean isExecutable(Path path)</td>
+<td>判断是否是可执行文件</td>
+</tr>
+<tr>
+<td>boolean isHidden(Path path)</td>
+<td>判断是否是隐藏文件</td>
+</tr>
+<tr>
+<td>boolean isReadable(Path path)</td>
+<td>判断文件是否可读</td>
+</tr>
+<tr>
+<td>boolean isWritable(Path path)</td>
+<td>判断文件是否可写</td>
+</tr>
+<tr>
+<td>boolean notExists(Path path, LinkOption … opts)</td>
+<td>判断文件是否不存在</td>
+</tr>
+<tr>
+<td>public static &lt;A extends BasicFileAttributes&gt; A readAttributes(Path path, Class&lt;A&gt; type, LinkOption … options)</td>
+<td>获取与path指定的文件相关联的属性</td>
+</tr>
+</tbody></table>
+</li>
+<li><p>Files常用方法(操作内容)：</p>
+<table>
+<thead>
+<tr>
+<th>方法</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>SeekableByteChannel newByteChannel(Path path, OpenOptin … how)</td>
+<td>获取与指定文件的连接,how指定打开方式</td>
+</tr>
+<tr>
+<td>DirectoryStream newDirectoryStream(Path path)</td>
+<td>打开path指定的目录</td>
+</tr>
+<tr>
+<td>InputStream newInputStream(Path path, OpenOptin … how)</td>
+<td>获取InputStream对象</td>
+</tr>
+<tr>
+<td>OutputStream newOutputStream(Path path, OpenOptin … how)</td>
+<td>获取OutputStream对象</td>
+</tr>
+</tbody></table>
+</li>
+</ul>
+</li>
+</ul>
+
+          
+            <div class='article_footer'>
+              
+                
+  
+    
+    
+
+
+
+  
+
+  
+    
+    
+
+
+
+  
+
+  
+    
+    
+
+<section class="widget copyright  desktop mobile">
+  <div class='content'>
+    
+      <blockquote>
+        
+          
+            <p>博客内容遵循 署名-非商业性使用-相同方式共享 4.0 国际 (CC BY-NC-SA 4.0) 协议</p>
+
+          
+        
+          
+            <p>本文永久链接是：<a href=https://sobxiong.github.io/2020/10/05/ProgrammingLanguage/Java/NIO/>https://sobxiong.github.io/2020/10/05/ProgrammingLanguage/Java/NIO/</a></p>
+          
+        
+      </blockquote>
+    
+  </div>
+</section>
+
+  
+
+  
+    
+    
+
+<section class="widget qrcode  desktop mobile">
+  
+
+  <div class='content article-entry'>
+    
+      
+        <div class='fancybox'><img src='https://cdn.jsdelivr.net/gh/xaoxuu/cdn-assets/qrcode/wiki_volantis.png'
+        
+          height='64px'
+        ></div>
+      
+    
+      
+        <div class='fancybox'><img src='https://cdn.jsdelivr.net/gh/xaoxuu/cdn-assets/qrcode/wiki_volantis.png'
+        
+          height='64px'
+        ></div>
+      
+    
+  </div>
+</section>
+
+  
+
+
+              
+            </div>
+          
+        </div>
+        
+          
+
+
+  <section class='meta' id="footer-meta">
+    <div class='new-meta-box'>
+      
+        
+          <div class="new-meta-item date" itemprop="dateUpdated" datetime="2020-10-08T23:33:07+08:00">
+  <a class='notlink'>
+    <i class="fas fa-edit fa-fw" aria-hidden="true"></i>
+    <p>更新于：2020年10月8日</p>
+  </a>
+</div>
+
+        
+      
+        
+          
+  
+  <div class="new-meta-item meta-tags"><a class="tag" href="/tags/Java%E9%AB%98%E7%BA%A7/" rel="nofollow"><i class="fas fa-hashtag fa-fw" aria-hidden="true"></i><p>Java高级</p></a></div>
+
+
+        
+      
+        
+          
+
+        
+      
+        
+          
+  <div class="new-meta-item share -mob-share-list">
+  <div class="-mob-share-list share-body">
+    
+      
+        <a class="-mob-share-qq" title="" rel="external nofollow noopener noreferrer"
+          
+          href="http://connect.qq.com/widget/shareqq/index.html?url=https://sobxiong.github.io/2020/10/05/ProgrammingLanguage/Java/NIO/&title=NIO - SOBXiong的博客&summary=内容
+NIO简介
+缓冲区(Buffer)
+通道(Channel)
+选择器(Selector)
+其他
+"
+          
+          >
+          
+            <img src="https://cdn.jsdelivr.net/gh/xaoxuu/cdn-assets/logo/128/qq.png">
+          
+        </a>
+      
+    
+      
+        <a class="-mob-share-qzone" title="" rel="external nofollow noopener noreferrer"
+          
+          href="https://sns.qzone.qq.com/cgi-bin/qzshare/cgi_qzshare_onekey?url=https://sobxiong.github.io/2020/10/05/ProgrammingLanguage/Java/NIO/&title=NIO - SOBXiong的博客&summary=内容
+NIO简介
+缓冲区(Buffer)
+通道(Channel)
+选择器(Selector)
+其他
+"
+          
+          >
+          
+            <img src="https://cdn.jsdelivr.net/gh/xaoxuu/cdn-assets/logo/128/qzone.png">
+          
+        </a>
+      
+    
+      
+        <a class="-mob-share-weibo" title="" rel="external nofollow noopener noreferrer"
+          
+          href="http://service.weibo.com/share/share.php?url=https://sobxiong.github.io/2020/10/05/ProgrammingLanguage/Java/NIO/&title=NIO - SOBXiong的博客&summary=内容
+NIO简介
+缓冲区(Buffer)
+通道(Channel)
+选择器(Selector)
+其他
+"
+          
+          >
+          
+            <img src="https://cdn.jsdelivr.net/gh/xaoxuu/cdn-assets/logo/128/weibo.png">
+          
+        </a>
+      
+    
+  </div>
+</div>
+
+
+
+        
+      
+    </div>
+  </section>
+
+
+        
+        
+          <div class="prev-next">
+            
+              <a class='prev' href='/2020/10/08/ProgrammingLanguage/Java/Java%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86/'>
+                <p class='title'><i class="fas fa-chevron-left" aria-hidden="true"></i>Java基础知识</p>
+                <p class='content'>内容
+基础语法
+进阶语法
+
+
+
+基础语法进阶语法
+自动资源管理：Java7增加了一个新特性：该特性提供了另外一种管理资源的方式，这种方式能自动关闭文件(或资源)。这个特性有时被称为自动资源管理(...</p>
+              </a>
+            
+            
+              <a class='next' href='/2020/09/29/Algorithm/LeetCode/%E5%93%88%E5%B8%8C%E8%A1%A8/'>
+                <p class='title'>哈希表<i class="fas fa-chevron-right" aria-hidden="true"></i></p>
+                <p class='content'>内容
+哈希表介绍
+方法总结
+LeetCode题集
+
+
+
+动态规划介绍方法总结LeetCode题集
+41.缺失的第一个正数
+
+</p>
+              </a>
+            
+          </div>
+        
+      </section>
+    </article>
+  
+
+  
+    <!-- 显示推荐文章和评论 -->
+
+
+
+  <article class="post white-box reveal comments shadow">
+    <section class="article typo">
+      <p ct><i class='fas fa-comments'></i> 评论</p>
+      
+      
+      
+      
+      
+      
+        <section id="comments">
+          <div id="valine_container" class="valine_thread">
+            <i class="fas fa-cog fa-spin fa-fw fa-2x"></i>
+          </div>
+        </section>
+      
+      
+    </section>
+  </article>
+
+
+  
+
+
+
+
+<!-- 根据页面mathjax变量决定是否加载MathJax数学公式js -->
+
+
+
+  <script>
+    window.subData = {
+      title: 'NIO',
+      tools: true
+    }
+  </script>
+
+
+</div>
+<aside class='l_side'>
+  
+  
+
+  
+    
+    
+
+
+
+  <section class="widget toc-wrapper shadow desktop mobile" id="toc-div" >
+    
+  <header>
+    
+      <i class="fas fa-list fa-fw" aria-hidden="true"></i><span class='name'>本文目录</span>
+    
+  </header>
+
+
+    <div class='content'>
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#内容"><span class="toc-text">内容</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#NIO简介"><span class="toc-text">NIO简介</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#缓冲区-Buffer"><span class="toc-text">缓冲区(Buffer)</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#通道-Channel"><span class="toc-text">通道(Channel)</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#选择器-Selector"><span class="toc-text">选择器(Selector)</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#其他"><span class="toc-text">其他</span></a></li></ol>
+    </div>
+  </section>
+
+
+  
+
+
+</aside>
+
+
+  
+  <footer class="clearfix">
+    <br><br>
+    
+      
+        <br>
+        <div class="social-wrapper">
+          
+            
+              <a href="mailto:1942991710@qq.com"
+                class="social fas fa-envelope flat-btn"
+                target="_blank"
+                rel="external nofollow noopener noreferrer">
+              </a>
+            
+          
+            
+              <a href="https://github.com/SOBXiong"
+                class="social fab fa-github flat-btn"
+                target="_blank"
+                rel="external nofollow noopener noreferrer">
+              </a>
+            
+          
+        </div>
+      
+    
+      
+        <div><p>博客内容遵循 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh" target="_blank" rel="noopener">署名-非商业性使用-相同方式共享 4.0 国际 (CC BY-NC-SA 4.0) 协议</a></p>
+</div>
+      
+    
+      
+        <div class='copyright'>
+        <p><a href="http://xiongjc.top" target="_blank" rel="noopener">Copyright © 2017-2020 SOBXiong</a></p>
+
+        </div>
+      
+    
+  </footer>
+
+<script>setLoadingBarProgress(80);</script>
+
+
+      <script>setLoadingBarProgress(60);</script>
+    </div>
+    <a class="s-top fas fa-arrow-up fa-fw" href='javascript:void(0)'></a>
+  </div>
+  
+<script src="https://cdn.jsdelivr.net/npm/jquery@3.4/dist/jquery.min.js"></script>
+
+
+  <script>
+    
+    var SEARCH_SERVICE = "hexo" || "hexo";
+    var ROOT = "/" || "/";
+    if (!ROOT.endsWith('/')) ROOT += '/';
+  </script>
+
+
+
+
+
+  <script async src="https://cdn.jsdelivr.net/gh/xaoxuu/cdn-volantis@2/js/instant_page.js" type="module" defer integrity="sha384-OeDn4XE77tdHo8pGtE1apMPmAipjoxUQ++eeJa6EtJCfHlvijigWiJpD7VDPWXV1"></script>
+
+
+  <script src="https://cdn.jsdelivr.net/npm/scrollreveal@4.0.6/dist/scrollreveal.min.js"></script>
+  <script type="text/javascript">
+    $(function() {
+      ScrollReveal().reveal('.l_main .reveal', {
+        distance: '8px',
+        duration: '800',
+        interval: '100',
+        scale: '1'
+      });
+    });
+  </script>
+
+
+  
+<script src="https://cdn.jsdelivr.net/npm/node-waves@0.7.6/dist/waves.min.js"></script>
+
+  <script type="text/javascript">
+    $(function() {
+      Waves.attach('.flat-btn', ['waves-button']);
+      Waves.attach('.float-btn', ['waves-button', 'waves-float']);
+      Waves.attach('.float-btn-light', ['waves-button', 'waves-float', 'waves-light']);
+      Waves.attach('.flat-box', ['waves-block']);
+      Waves.attach('.float-box', ['waves-block', 'waves-float']);
+      Waves.attach('.waves-image');
+      Waves.init();
+    });
+  </script>
+
+
+  <script defer src="https://cdn.jsdelivr.net/gh/xaoxuu/cdn-busuanzi@2.3/js/busuanzi.pure.mini.js"></script>
+
+
+
+  
+  
+  
+    
+<script src="https://cdn.jsdelivr.net/npm/jquery-backstretch@2.1.18/jquery.backstretch.min.js"></script>
+
+    <script type="text/javascript">
+      $(function(){
+        var imgs=["https://cdn.jsdelivr.net/gh/xaoxuu/cdn-wallpaper/abstract/41F215B9-261F-48B4-80B5-4E86E165259E.jpeg"];
+        if ('true' == 'true') {
+          function shuffle(arr){
+            /*From countercurrent-time*/
+            var n = arr.length;
+            while(n--) {
+              var index = Math.floor(Math.random() * n);
+              var temp = arr[index];
+              arr[index] = arr[n];
+              arr[n] = temp;
+            }
+          }
+          shuffle(imgs);
+        }
+        if ('.cover') {
+          $('.cover').backstretch(
+            imgs,
+          {
+            duration: "20000",
+            fade: "1500"
+          });
+        } else {
+          $.backstretch(
+            imgs,
+          {
+            duration: "20000",
+            fade: "1500"
+          });
+        }
+      });
+    </script>
+  
+
+
+
+  
+    
+<script src="https://cdn.jsdelivr.net/npm/aplayer@1.10/dist/APlayer.min.js"></script>
+
+  
+    
+<script src="https://cdn.jsdelivr.net/npm/meting@2.0/dist/Meting.min.js"></script>
+
+  
+
+
+
+
+
+
+
+
+
+  
+    
+<script src="https://cdn.jsdelivr.net/npm/valine@1.4/dist/Valine.min.js"></script>
+
+  
+  <script>
+  var GUEST_INFO = ['nick','mail','link'];
+  var meta = 'nick,mail,link'.split(',').filter(function(item){
+    return GUEST_INFO.indexOf(item) > -1
+  });
+  var REQUIRED_FIELDS = ['nick','mail','link'];
+  var requiredFields = 'nick,mail'.split(',').filter(function(item){
+    return REQUIRED_FIELDS.indexOf(item) > -1
+  });
+  var valine = new Valine();
+  function emoji(path, idx, ext) {
+      return path + "/" + path + "-" + idx + "." + ext;
+  }
+  var emojiMaps = {};
+  for (var i = 1; i <= 54; i++) {
+    emojiMaps['tieba-' + i] = emoji('tieba', i, 'png');
+  }
+  for (var i = 1; i <= 101; i++) {
+    emojiMaps['qq-' + i] = emoji('qq', i, 'gif');
+  }
+  for (var i = 1; i <= 116; i++) {
+    emojiMaps['aru-' + i] = emoji('aru', i, 'gif');
+  }
+  for (var i = 1; i <= 125; i++) {
+    emojiMaps['twemoji-' + i] = emoji('twemoji', i, 'png');
+  }
+  for (var i = 1; i <= 4; i++) {
+    emojiMaps['weibo-' + i] = emoji('weibo', i, 'png');
+  }
+  valine.init({
+    el: '#valine_container',
+    meta: meta,
+    
+    appId: "dogUA2FSKGTo029M1SEwGROT-MdYXbMMI",
+    appKey: "u0NdtQ8nvHoMdJPSYqm1LRxE",
+    placeholder: "快来评论吧~",
+    pageSize:'10',
+    avatar:'robohash',
+    lang:'zh-cn',
+    visitor: 'true',
+    highlight: 'true',
+    mathJax: 'false',
+    enableQQ: 'true',
+    requiredFields: requiredFields,
+    emojiCDN: 'https://cdn.jsdelivr.net/gh/xaoxuu/cdn-assets/emoji/valine/',
+    emojiMaps: emojiMaps
+  })
+  </script>
+
+
+
+
+
+  
+<script src="https://cdn.jsdelivr.net/gh/xaoxuu/cdn-volantis@2.6.5/js/app.js"></script>
+
+
+
+  
+<script src="https://cdn.jsdelivr.net/gh/xaoxuu/cdn-volantis@2.6.5/js/search.js"></script>
+
+
+
+  
+<script src="https://cdn.jsdelivr.net/gh/xaoxuu/cdn-volantis@2/js/comment_typing.js"></script>
+
+
+
+
+
+
+<!-- 复制 -->
+
+  <script src="https://cdn.jsdelivr.net/npm/clipboard@2/dist/clipboard.min.js"></script>
+<script>
+  function wait(callback, seconds) {
+    var timelag = null;
+    timelag = window.setTimeout(callback, seconds);
+  }
+  !function (e, t, a) {
+    var initCopyCode = function(){
+      var copyHtml = '';
+      copyHtml += '<button class="btn-copy" data-clipboard-snippet="">';
+      copyHtml += '<i class="fas fa-copy"></i><span>COPY</span>';
+      copyHtml += '</button>';
+      $(".highlight .code pre").before(copyHtml);
+      $(".article pre code").before(copyHtml);
+      var clipboard = new ClipboardJS('.btn-copy', {
+        target: function(trigger) {
+          return trigger.nextElementSibling;
+        }
+      });
+      clipboard.on('success', function(e) {
+        let $btn = $(e.trigger);
+        $btn.addClass('copied');
+        let $icon = $($btn.find('i'));
+        $icon.removeClass('fa-copy');
+        $icon.addClass('fa-check-circle');
+        let $span = $($btn.find('span'));
+        $span[0].innerText = 'COPIED';
+        
+        wait(function () { // 等待两秒钟后恢复
+          $icon.removeClass('fa-check-circle');
+          $icon.addClass('fa-copy');
+          $span[0].innerText = 'COPY';
+        }, 2000);
+      });
+      clipboard.on('error', function(e) {
+        e.clearSelection();
+        let $btn = $(e.trigger);
+        $btn.addClass('copy-failed');
+        let $icon = $($btn.find('i'));
+        $icon.removeClass('fa-copy');
+        $icon.addClass('fa-times-circle');
+        let $span = $($btn.find('span'));
+        $span[0].innerText = 'COPY FAILED';
+        
+        wait(function () { // 等待两秒钟后恢复
+          $icon.removeClass('fa-times-circle');
+          $icon.addClass('fa-copy');
+          $span[0].innerText = 'COPY';
+        }, 2000);
+      });
+    }
+    initCopyCode();
+  }(window, document);
+</script>
+
+
+
+
+<!-- fancybox -->
+<script src="https://cdn.jsdelivr.net/gh/fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.js"></script>
+<script>
+  function pjax_fancybox() {
+    $(".article-entry").find("img").not('.inline').not('a img').each(function () { //渲染 fancybox
+      var element = document.createElement("a"); // a 标签
+      $(element).attr("pjax-fancybox", "");  // 过滤 pjax
+      $(element).attr("href", $(this).attr("src"));
+      if ($(this).attr("data-original")) {
+        $(element).attr("href", $(this).attr("data-original"));
+      }
+      $(element).attr("data-fancybox", "images");
+      var caption = "";   // 描述信息
+      if ($(this).attr('alt')) {  // 标准 markdown 描述信息
+        $(element).attr('data-caption', $(this).attr('alt'));
+        caption = $(this).attr('alt');
+      }
+      var div = document.createElement("div");
+      $(div).addClass("fancybox");
+      $(this).wrap(div); // 最外层套 div ，其实主要作用还是 class 样式
+      var span = document.createElement("span");
+      $(span).addClass("image-caption");
+      $(span).text(caption); // 加描述
+      $(this).after(span);  // 再套一层描述
+      $(this).wrap(element);  // 最后套 a 标签
+    })
+    $(".article-entry").find("img").fancybox({
+      selector: '[data-fancybox="images"]',
+      hash: false,
+      loop: false,
+      closeClick: true,
+      helpers: {
+        overlay: {closeClick: true}
+      },
+      buttons: [
+        "zoom",
+        "close"
+      ]
+    });
+  };
+  $(function () {
+    pjax_fancybox();
+  });
+</script>
+
+
+
+
+
+  <script>setLoadingBarProgress(100);</script>
+</body>
+</html>
