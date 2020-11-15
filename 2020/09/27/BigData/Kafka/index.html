@@ -590,7 +590,54 @@ Kafka_API
 </ul>
 </li>
 </ul>
-<h2 id="Kafka-API"><a href="#Kafka-API" class="headerlink" title="Kafka_API"></a>Kafka_API</h2>
+<h2 id="Kafka-API"><a href="#Kafka-API" class="headerlink" title="Kafka_API"></a>Kafka_API</h2><ul>
+<li><p>Producer API</p>
+<ul>
+<li><p>消息发送流程<br>Kafka的Producer发送消息采用的是<strong>异步发送</strong>的方式。在消息发送的过程中，涉及到了两个线程——<strong>main线程和Sender线程</strong>，以及<strong>一个线程共享变量RecordAccumulator</strong>。main线程将消息发送给RecordAccumulator，Sender线程不断从RecordAccumulator中拉取消息发送到Kafka broker<br><img src="Kafka%E6%B6%88%E6%81%AF%E5%8F%91%E9%80%81%E6%B5%81%E7%A8%8B.png" alt="Kafka消息发送流程示意图"><br>相关参数：<br><strong>batch.size</strong>：只有数据积累到batch.size之后，sender才会发送数据<br><strong>linger.ms</strong>：如果数据迟迟未达到batch.size，sender等待linger.time之后就会发送数据</p>
+</li>
+<li><p>发送API</p>
+<ol>
+<li><p>导入依赖：</p>
+ <figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.apache.kafka<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>kafka-clients<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">version</span>&gt;</span>2.4.1<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br></pre></td></tr></table></figure>
+</li>
+<li><p>编写测试代码</p>
+<ul>
+<li><p>异步发送</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// ProducerConfig封装了一系列配置参数名的常量</span></span><br><span class="line"><span class="comment">// 1、实例化kafka集群</span></span><br><span class="line">Properties properties = <span class="keyword">new</span> Properties();</span><br><span class="line">properties.put(<span class="string">"key.serializer"</span>, <span class="string">"org.apache.kafka.common.serialization.StringSerializer"</span>);</span><br><span class="line">properties.put(<span class="string">"value.serializer"</span>, <span class="string">"org.apache.kafka.common.serialization.StringSerializer"</span>);</span><br><span class="line">properties.put(<span class="string">"acks"</span>, <span class="string">"all"</span>);</span><br><span class="line">properties.put(<span class="string">"bootstrap.servers"</span>, <span class="string">"hadoop101:9092"</span>);</span><br><span class="line"><span class="comment">// 重试次数</span></span><br><span class="line">properties.put(<span class="string">"retries"</span>, <span class="number">1</span>);</span><br><span class="line"><span class="comment">// 批次大小</span></span><br><span class="line">properties.put(<span class="string">"batch.size"</span>, <span class="number">16384</span>);</span><br><span class="line"><span class="comment">// 等待时间</span></span><br><span class="line">properties.put(<span class="string">"linger.ms"</span>, <span class="number">1</span>);</span><br><span class="line"><span class="comment">// RecordAccumulator缓冲区大小</span></span><br><span class="line">properties.put(<span class="string">"buffer.memory"</span>, <span class="number">33554432</span>);</span><br><span class="line"></span><br><span class="line"><span class="comment">// KafkaProducer,生产者对象,用来发送数据</span></span><br><span class="line">KafkaProducer&lt;String, String&gt; producer = <span class="keyword">new</span> KafkaProducer&lt;&gt;(properties);</span><br><span class="line"></span><br><span class="line"><span class="comment">// 2、用集群对象发送数据</span></span><br><span class="line"><span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; <span class="number">1000</span>; i++) &#123;</span><br><span class="line">  <span class="comment">// 封装ProducerRecord(发送的消息封装类)</span></span><br><span class="line"></span><br><span class="line">  <span class="comment">// 同步</span></span><br><span class="line">  <span class="comment">// producer.send(new ProducerRecord&lt;&gt;("test",Integer.toString(i),"value" + i);</span></span><br><span class="line"></span><br><span class="line">  <span class="comment">// 异步</span></span><br><span class="line">  <span class="comment">// 回调函数会在producer收到ack时调用,为异步调用</span></span><br><span class="line">  <span class="comment">// 该方法有两个参数,分别是RecordMetadata和Exception;如果Exception为null,说明消息发送成功。如果Exception不为null,说明消息发送失败</span></span><br><span class="line">  <span class="comment">// 注意：消息发送失败会自动重试,不需要我们在回调函数中手动重试</span></span><br><span class="line">  producer.send(<span class="keyword">new</span> ProducerRecord&lt;&gt;(</span><br><span class="line">    <span class="string">"test"</span>,</span><br><span class="line">    Integer.toString(i),</span><br><span class="line">    <span class="string">"value"</span> + i</span><br><span class="line">  ), (metadata, exception) -&gt; &#123;</span><br><span class="line">    <span class="keyword">if</span> (<span class="keyword">null</span> == exception) System.out.println(<span class="string">"metadata = "</span> + metadata);</span><br><span class="line">    <span class="keyword">else</span> exception.printStackTrace();</span><br><span class="line">  &#125;);</span><br><span class="line"></span><br><span class="line">  System.out.println(<span class="string">"发送了第"</span> + i + <span class="string">"条"</span>);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 3、关闭资源</span></span><br><span class="line">producer.close();</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>同步发送</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 同步发送：一条消息发送之后,会阻塞当前线程直至返回ack</span></span><br><span class="line"><span class="comment">// 由于send()方法返回的是一个Future对象,根据Futrue对象的特点,也可实现同步发送效果,只需调用Future对象的get()方法即可</span></span><br><span class="line"><span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; <span class="number">100</span>; i++) &#123;</span><br><span class="line">  producer.send(<span class="keyword">new</span> ProducerRecord&lt;String, String&gt;(<span class="string">"test"</span>, Integer.toString(i), Integer.toString(i))).get();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+</li>
+</ol>
+</li>
+</ul>
+</li>
+<li><p>Consumer API<br>Consumer消费数据时的可靠性是容易保证的，因为数据在Kafka中是持久化的，不用担心数据丢失问题。但由于consumer在消费过程中可能会出现断电宕机等故障，consumer恢复后，需从故障前的位置继续消费，因此consumer需要实时记录消费到了哪个offset以便故障恢复后继续消费。offset的维护是Consumer消费数据必须考虑的问题</p>
+<ul>
+<li><p>提交offset</p>
+<ol>
+<li><p>导入依赖，同producer</p>
+</li>
+<li><p>编写测试代码</p>
+<ul>
+<li><p>自动提交offset</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// ConsumerConfig封装了一系列配置参数名的常量</span></span><br><span class="line"><span class="comment">// 1、新建一个Consumer对象</span></span><br><span class="line">Properties props = <span class="keyword">new</span> Properties();</span><br><span class="line">props.put(<span class="string">"bootstrap.servers"</span>, <span class="string">"hadoop101:9092"</span>);</span><br><span class="line">props.put(<span class="string">"group.id"</span>, <span class="string">"test"</span>);</span><br><span class="line"><span class="comment">// 是否开启自动提交offset</span></span><br><span class="line">props.put(<span class="string">"enable.auto.commit"</span>, <span class="string">"true"</span>);</span><br><span class="line"><span class="comment">// 自动提交offset时间间隔</span></span><br><span class="line">props.put(<span class="string">"auto.commit.interval.ms"</span>, <span class="string">"1000"</span>);</span><br><span class="line">props.put(<span class="string">"key.deserializer"</span>, <span class="string">"org.apache.kafka.common.serialization.StringDeserializer"</span>);</span><br><span class="line">props.put(<span class="string">"value.deserializer"</span>, <span class="string">"org.apache.kafka.common.serialization.StringDeserializer"</span>);</span><br><span class="line"><span class="comment">// KafkaConsumer,消费者对象,用于消费数据</span></span><br><span class="line">KafkaConsumer&lt;String, String&gt; consumer = <span class="keyword">new</span> KafkaConsumer&lt;&gt;(props);</span><br><span class="line"></span><br><span class="line"><span class="comment">// 2、用这个对象接受消息</span></span><br><span class="line">consumer.subscribe(Collections.singleton(<span class="string">"first"</span>));</span><br><span class="line"><span class="comment">// 从订阅的话题中拉取数据</span></span><br><span class="line">ConsumerRecords&lt;String, String&gt; consumerRecords = consumer.poll(Duration.ofSeconds(<span class="number">2</span>));</span><br><span class="line"><span class="comment">// 消费拉取的数据</span></span><br><span class="line"><span class="comment">// ConsumerRecord(接受的消息封装)</span></span><br><span class="line"><span class="keyword">for</span> (ConsumerRecord&lt;String, String&gt; record : consumerRecords) &#123;</span><br><span class="line">  System.out.println(<span class="string">"record = "</span> + record);</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">// 3、关闭Consumer</span></span><br><span class="line">consumer.close();</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>手动提交offset<br>虽然自动提交offset十分简洁便利，但由于是基于时间提交的，难以把握offset提交的时机。Kafka还提供了手动提交offset的API<br>手动提交offset的方法有两种：commitSync(同步提交)和commitAsync(异步提交)<br>两者相同点：<strong>将本次poll的一批数据最高的偏移量提交</strong><br>两者不同点：commitSync阻塞当前线程一直到提交成功，并且会自动失败重试(由不可控因素导致,也会出现提交失败)；commitAsync则没有失败重试机制，故有可能提交失败</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 同步提交offset</span></span><br><span class="line"><span class="comment">// 有失败重试机制,更加可靠</span></span><br><span class="line"><span class="keyword">while</span> (<span class="keyword">true</span>) &#123;</span><br><span class="line">  <span class="comment">// 消费者拉取数据</span></span><br><span class="line">  ConsumerRecords&lt;String, String&gt; records = consumer.poll(<span class="number">100</span>);</span><br><span class="line">  <span class="keyword">for</span> (ConsumerRecord&lt;String, String&gt; record : records) &#123;</span><br><span class="line">    System.out.printf(record);</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="comment">// 同步提交,当前线程会阻塞直到offset提交成功</span></span><br><span class="line">  consumer.commitSync();</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 异步提交offset</span></span><br><span class="line"><span class="comment">// 比同步吞吐量高</span></span><br><span class="line"><span class="keyword">while</span> (<span class="keyword">true</span>) &#123;</span><br><span class="line">  <span class="comment">// 消费者拉取数据</span></span><br><span class="line">  ConsumerRecords&lt;String, String&gt; records = consumer.poll(<span class="number">100</span>);</span><br><span class="line">  <span class="keyword">for</span> (ConsumerRecord&lt;String, String&gt; record : records) &#123;</span><br><span class="line">    System.out.printf(record);</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="comment">// 异步提交</span></span><br><span class="line">  consumer.commitAsync(<span class="keyword">new</span> OffsetCommitCallback() &#123;</span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">onComplete</span><span class="params">(Map&lt;TopicPartition, OffsetAndMetadata&gt; offsets, Exception exception)</span> </span>&#123;</span><br><span class="line">      <span class="keyword">if</span> (exception != <span class="keyword">null</span>) &#123;</span><br><span class="line">        System.err.println(<span class="string">"Commit failed -&gt; "</span> + offsets);</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+</li>
+</ol>
+</li>
+<li><p>数据漏消费和重复消费分析<br>无论是同步提交还是异步提交offset，都有可能会造成数据的漏消费或重复消费。先提交offset后消费，有可能造成数据的漏消费；而先消费后提交offset，有可能会造成数据的重复消费<br><img src="%E6%95%B0%E6%8D%AE%E9%87%8D%E5%A4%8D%E6%B6%88%E8%B4%B9%E7%A4%BA%E6%84%8F%E5%9B%BE1.png" alt="数据重复消费示意图1"><br><img src="%E6%95%B0%E6%8D%AE%E9%87%8D%E5%A4%8D%E6%B6%88%E8%B4%B9%E7%A4%BA%E6%84%8F%E5%9B%BE2.png" alt="数据重复消费示意图2"></p>
+</li>
+</ul>
+</li>
+</ul>
+
           
             <div class='article_footer'>
               
@@ -677,10 +724,10 @@ Kafka_API
     <div class='new-meta-box'>
       
         
-          <div class="new-meta-item date" itemprop="dateUpdated" datetime="2020-09-29T17:08:02+08:00">
+          <div class="new-meta-item date" itemprop="dateUpdated" datetime="2020-10-24T19:56:14+08:00">
   <a class='notlink'>
     <i class="fas fa-edit fa-fw" aria-hidden="true"></i>
-    <p>更新于：2020年9月29日</p>
+    <p>更新于：2020年10月24日</p>
   </a>
 </div>
 
@@ -770,19 +817,19 @@ Kafka_API
         
           <div class="prev-next">
             
-              <a class='prev' href='/2020/09/29/Algorithm/LeetCode/%E5%93%88%E5%B8%8C%E8%A1%A8/'>
-                <p class='title'><i class="fas fa-chevron-left" aria-hidden="true"></i>哈希表</p>
+              <a class='prev' href='/2020/10/05/ProgrammingLanguage/Java/NIO/'>
+                <p class='title'><i class="fas fa-chevron-left" aria-hidden="true"></i>NIO</p>
                 <p class='content'>内容
-哈希表介绍
-方法总结
-LeetCode题集
+NIO简介
+缓冲区(Buffer)
+通道(Channel)
+选择器(Selector)
+其他
 
 
 
-动态规划介绍方法总结LeetCode题集
-41.缺失的第一个正数
-
-</p>
+NIO简介
+NIO简介：Java NIO(New I0)是从Java 1.4版本开始引入...</p>
               </a>
             
             

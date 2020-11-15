@@ -397,8 +397,8 @@
         
           
   <h2 class="title">
-    <a href="/2020/10/17/Spring/SpringSecurity/">
-      SpringSecurity
+    <a href="/2020/10/29/ProgrammingLanguage/Java/Java%E6%97%A5%E5%BF%97/">
+      Java日志
     </a>
   </h2>
 
@@ -421,14 +421,6 @@
           
             
               
-  
-  <div class='new-meta-item category'>
-    <a href='/categories/%E7%BC%96%E7%A8%8B/' rel="nofollow">
-      <i class="fas fa-folder-open fa-fw" aria-hidden="true"></i>
-      <p>编程</p>
-    </a>
-  </div>
-
 
             
           
@@ -436,7 +428,7 @@
               <div class="new-meta-item date">
   <a class='notlink'>
     <i class="fas fa-calendar-alt fa-fw" aria-hidden="true"></i>
-    <p>发布于：2020年10月17日</p>
+    <p>发布于：2020年10月29日</p>
   </a>
 </div>
 
@@ -465,14 +457,17 @@
     <div class="article-entry" itemprop="articleBody">
       
         <h2 id="内容"><a href="#内容" class="headerlink" title="内容"></a>内容</h2><ul>
-<li><a href="#权限管理介绍">权限管理介绍</a></li>
+<li><a href="#日志介绍">日志介绍</a></li>
+<li><a href="#日志实现">日志实现</a></li>
+<li><a href="#日志门面">日志门面</a></li>
+<li><a href="#SpringBoot中的日志">SpringBoot中的日志</a></li>
 </ul>
       
     </div>
     
       
         <div class="button readmore">
-          <a href="/2020/10/17/Spring/SpringSecurity/">
+          <a href="/2020/10/29/ProgrammingLanguage/Java/Java%E6%97%A5%E5%BF%97/">
             阅读全文 <i class="fas fa-chevron-right"></i>
           </a>
         </div>
@@ -573,7 +568,7 @@
 <li><a href="#工厂模式">工厂模式</a></li>
 <li><a href="#原型模式">原型模式</a></li>
 <li><a href="#建造者模式">建造者模式</a></li>
-<li><a href="#适配器模式">适配器模式</a></li>
+<li><a href="#适配器模式(待完善)">适配器模式</a></li>
 <li><a href="#桥接模式">桥接模式</a></li>
 <li><a href="#装饰者模式">装饰者模式</a></li>
 <li><a href="#组合模式">组合模式</a></li>
@@ -582,6 +577,15 @@
 <li><a href="#代理模式">代理模式</a></li>
 <li><a href="#模板方法模式">模板方法模式</a></li>
 <li><a href="#命令模式">命令模式</a></li>
+<li><a href="#访问者模式">访问者模式</a></li>
+<li><a href="#迭代器模式">迭代器模式</a></li>
+<li><a href="#观察者模式">观察者模式</a></li>
+<li><a href="#中介者模式">中介者模式</a></li>
+<li><a href="#备忘录模式">备忘录模式</a></li>
+<li><a href="#解释器模式">解释器模式</a></li>
+<li><a href="#状态模式">状态模式</a></li>
+<li><a href="#策略模式">策略模式</a></li>
+<li><a href="#职责链模式">职责链模式</a></li>
 </ul>
       
     </div>
@@ -789,7 +793,12 @@
   <section class="article typo">
     <div class="article-entry" itemprop="articleBody">
       
-        <h2 id="内容"><a href="#内容" class="headerlink" title="内容"></a>内容</h2>
+        <h2 id="内容"><a href="#内容" class="headerlink" title="内容"></a>内容</h2><ul>
+<li><a href="#Flume概述">Flume概述</a></li>
+<li><a href="#Flume入门">Flume入门</a></li>
+<li><a href="#Flume进阶">Flume进阶</a></li>
+<li><a href="#Flume知识点">Flume知识点</a></li>
+</ul>
       
     </div>
     
@@ -1203,7 +1212,7 @@
           <li><a class="flat-box"
             title="/categories/%E7%BC%96%E7%A8%8B/" href="/categories/%E7%BC%96%E7%A8%8B/"
             id="categoriesE7BC96E7A88B"
-            ><div class='name'>编程</div><div class='badge'>(23)</div></a></li>
+            ><div class='name'>编程</div><div class='badge'>(18)</div></a></li>
         
       </ul>
     </div>
@@ -1227,7 +1236,7 @@
 
 
     <div class='content'>
-      <a href="/tags/Algorithm/" style="font-size: 20.67px; color: #6c6c6c">Algorithm</a> <a href="/tags/BasicSkill/" style="font-size: 17.33px; color: #828282">BasicSkill</a> <a href="/tags/BigData/" style="font-size: 24px; color: #555">BigData</a> <a href="/tags/C-C/" style="font-size: 14px; color: #999">C/C++</a> <a href="/tags/Java/" style="font-size: 14px; color: #999">Java</a> <a href="/tags/Java%E9%AB%98%E7%BA%A7/" style="font-size: 17.33px; color: #828282">Java高级</a> <a href="/tags/LeetCode/" style="font-size: 20.67px; color: #6c6c6c">LeetCode</a> <a href="/tags/Linux/" style="font-size: 14px; color: #999">Linux</a> <a href="/tags/Middleware/" style="font-size: 14px; color: #999">Middleware</a> <a href="/tags/Spring/" style="font-size: 14px; color: #999">Spring</a>
+      <a href="/tags/BasicSkill/" style="font-size: 17.33px; color: #828282">BasicSkill</a> <a href="/tags/BigData/" style="font-size: 24px; color: #555">BigData</a> <a href="/tags/Java/" style="font-size: 14px; color: #999">Java</a> <a href="/tags/Java%E9%AB%98%E7%BA%A7/" style="font-size: 20.67px; color: #6c6c6c">Java高级</a> <a href="/tags/Linux/" style="font-size: 14px; color: #999">Linux</a> <a href="/tags/Middleware/" style="font-size: 14px; color: #999">Middleware</a>
     </div>
   </section>
 
