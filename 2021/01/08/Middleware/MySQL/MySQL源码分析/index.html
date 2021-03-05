@@ -1,0 +1,1208 @@
+<!DOCTYPE html>
+<html>
+<head hexo-theme='https://volantis.js.org/#2.6.6'>
+  <meta charset="utf-8">
+  <!-- SEO相关 -->
+  
+    
+  
+  <!-- 渲染优化 -->
+  <meta name="renderer" content="webkit">
+  <meta name="force-rendering" content="webkit">
+  <meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1">
+  <meta name="HandheldFriendly" content="True" >
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+  <!-- 页面元数据 -->
+  
+    <title>MySQL源码分析 - SOBXiong的博客</title>
+  
+    <meta name="keywords" content="Middleware,MySQL">
+  
+  
+    <meta name="description" content="内容
+环境搭建
+查询分析
+事务
+故障恢复
+">
+  
+
+  <!-- feed -->
+  
+
+  <!-- import meta -->
+  
+
+  <!-- link -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@5.13/css/all.min.css">
+  
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.css">
+
+  
+  
+    
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/node-waves@0.7.6/dist/waves.min.css">
+
+  
+
+  
+  <link rel="shortcut icon" type='image/x-icon' href="https://cdn.jsdelivr.net/gh/SOBXiong/imageBed/favicon.png">
+  
+
+  
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/aplayer@1.10/dist/APlayer.min.css">
+  
+
+  
+
+  <!-- import link -->
+  
+
+  
+  
+    
+<link rel="stylesheet" href="/css/style.css">
+
+  
+
+  <script>
+    function setLoadingBarProgress(num) {
+      document.getElementById('loading-bar').style.width=num+"%";
+    }
+  </script>
+
+  
+  
+</head>
+
+<body>
+  
+  <div id="loading-bar-wrapper">
+  <div id="loading-bar"></div>
+</div>
+<header class="l_header shadow blur">
+  <div class='container'>
+  <div class='wrapper'>
+    <div class='nav-sub'>
+      <p class="title"></p>
+      <ul class='switcher nav-list-h'>
+        <li><a class="s-comment fas fa-comments fa-fw" target="_self" href='javascript:void(0)'></a></li>
+        
+          <li><a class="s-toc fas fa-list fa-fw" target="_self" href='javascript:void(0)'></a></li>
+        
+      </ul>
+    </div>
+		<div class="nav-main">
+      
+        
+        <a class="title flat-box" target="_self" href='/'>
+          
+          
+            <i class='https://cdn.jsdelivr.net/gh/SOBXiong/imageBed/favicon.png'></i>
+          
+          
+            SOBXiong
+          
+          
+        </a>
+      
+
+			<div class='menu navigation'>
+				<ul class='nav-list-h'>
+          
+          
+          
+            
+            
+              <li>
+                <a class="flat-box" href=/
+                  
+                  
+                  
+                    id="home"
+                  >
+                  <i class='fas fa-rss fa-fw'></i>博客
+                </a>
+                
+              </li>
+            
+          
+          
+            
+            
+              <li>
+                <a class="flat-box" href=/categories/
+                  
+                  
+                  
+                    id="categories"
+                  >
+                  <i class='fas fa-folder-open fa-fw'></i>分类
+                </a>
+                
+              </li>
+            
+          
+          
+            
+            
+              <li>
+                <a class="flat-box" href=/tags/
+                  
+                  
+                  
+                    id="tags"
+                  >
+                  <i class='fas fa-tags fa-fw'></i>标签
+                </a>
+                
+              </li>
+            
+          
+          
+            
+            
+              <li>
+                <a class="flat-box" href=/archives/
+                  
+                  
+                  
+                    id="archives"
+                  >
+                  <i class='fas fa-archive fa-fw'></i>归档
+                </a>
+                
+              </li>
+            
+          
+          
+            
+            
+              <li>
+                <a class="flat-box" href=/about/
+                  
+                  
+                  
+                    id="about"
+                  >
+                  <i class='fas fa-info-circle fa-fw'></i>关于
+                </a>
+                
+              </li>
+            
+          
+          
+				</ul>
+			</div>
+
+      <div class="m_search">
+        <form name="searchform" class="form u-search-form">
+          <i class="icon fas fa-search fa-fw"></i>
+          <input type="text" class="input u-search-input" placeholder="Search..." />
+        </form>
+      </div>
+
+			<ul class='switcher nav-list-h'>
+				
+					<li><a class="s-search fas fa-search fa-fw" target="_self" href='javascript:void(0)'></a></li>
+				
+				<li>
+          <a class="s-menu fas fa-bars fa-fw" target="_self" href='javascript:void(0)'></a>
+          <ul class="menu-phone list-v navigation white-box">
+            
+              
+            
+              <li>
+                <a class="flat-box" href=/
+                  
+                  
+                  
+                    id="home"
+                  >
+                  <i class='fas fa-rss fa-fw'></i>博客
+                </a>
+                
+              </li>
+            
+          
+            
+              
+            
+              <li>
+                <a class="flat-box" href=/categories/
+                  
+                  
+                  
+                    id="categories"
+                  >
+                  <i class='fas fa-folder-open fa-fw'></i>分类
+                </a>
+                
+              </li>
+            
+          
+            
+              
+            
+              <li>
+                <a class="flat-box" href=/tags/
+                  
+                  
+                  
+                    id="tags"
+                  >
+                  <i class='fas fa-tags fa-fw'></i>标签
+                </a>
+                
+              </li>
+            
+          
+            
+              
+            
+              <li>
+                <a class="flat-box" href=/archives/
+                  
+                  
+                  
+                    id="archives"
+                  >
+                  <i class='fas fa-archive fa-fw'></i>归档
+                </a>
+                
+              </li>
+            
+          
+            
+              
+            
+              <li>
+                <a class="flat-box" href=/about/
+                  
+                  
+                  
+                    id="about"
+                  >
+                  <i class='fas fa-info-circle fa-fw'></i>关于
+                </a>
+                
+              </li>
+            
+          
+            
+          </ul>
+        </li>
+			</ul>
+		</div>
+	</div>
+  </div>
+</header>
+
+<script>setLoadingBarProgress(40);</script>
+
+
+
+  <div class="l_body nocover">
+    <div class='body-wrapper'>
+      
+
+<div class='l_main'>
+  
+
+  
+    <article id="post" class="post white-box reveal shadow article-type-post" itemscope itemprop="blogPost">
+      
+
+
+  <section class='meta'>
+    
+      
+      
+      <div class="meta" id="header-meta">
+        
+          
+  <h1 class="title">
+    <a href="/2021/01/08/Middleware/MySQL/MySQL%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90/">
+      MySQL源码分析
+    </a>
+  </h1>
+
+
+        
+        <div class='new-meta-box'>
+          
+            
+          
+            
+              
+<div class='new-meta-item author'>
+  <a href="http://xiongjc.top" target="_blank" rel="nofollow noopener">
+    <img src="https://cdn.jsdelivr.net/gh/SOBXiong/imageBed/hdImg_f757fa7e0fd65077ce52d251fc7a01d815860762755.jpg">
+    <p>SOBXiong</p>
+  </a>
+</div>
+
+            
+          
+            
+              
+  
+  <div class='new-meta-item category'>
+    <a href='/categories/%E7%BC%96%E7%A8%8B/' rel="nofollow">
+      <i class="fas fa-folder-open fa-fw" aria-hidden="true"></i>
+      <p>编程</p>
+    </a>
+  </div>
+
+
+            
+          
+            
+              <div class="new-meta-item date">
+  <a class='notlink'>
+    <i class="fas fa-calendar-alt fa-fw" aria-hidden="true"></i>
+    <p>发布于：2021年1月8日</p>
+  </a>
+</div>
+
+            
+          
+            
+              
+
+            
+          
+        </div>
+        
+          <hr>
+        
+      </div>
+    
+  </section>
+
+
+      <section class="article typo">
+        <div class="article-entry" itemprop="articleBody">
+          
+          <h2 id="内容"><a href="#内容" class="headerlink" title="内容"></a>内容</h2><ul>
+<li><a href="#环境搭建">环境搭建</a></li>
+<li><a href="#查询分析">查询分析</a></li>
+<li><a href="#事务">事务</a></li>
+<li><a href="#故障恢复">故障恢复</a></li>
+</ul>
+<a id="more"></a>
+
+<h2 id="环境搭建"><a href="#环境搭建" class="headerlink" title="环境搭建"></a>环境搭建</h2><h2 id="查询分析"><a href="#查询分析" class="headerlink" title="查询分析"></a>查询分析</h2><ul>
+<li><p>源码启动首先从sql/main.cc的main()方法开始</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">(<span class="keyword">int</span> argc, <span class="keyword">char</span> **argv)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">  <span class="keyword">return</span> mysqld_main(argc, argv);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>紧接着调用了sql/mysqld.cc的mysqld_main()方法，最主要调用了sql/conn_handler/connection_acceptor.h中connection_event_loop()方法的<br><code>mysqld_socket_acceptor-&gt;connection_event_loop();</code>语句进行端口监听，等待client客户端的连接</p>
+<p>connection_event_loop()方法主要逻辑如下：</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// Connection acceptor loop to accept connections from clients. 连接接收器循环接收来自客户端的连接</span></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">connection_event_loop</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">  Connection_handler_manager *mgr= Connection_handler_manager::get_instance();</span><br><span class="line">  <span class="keyword">while</span> (!abort_loop)</span><br><span class="line">  &#123;</span><br><span class="line">    Channel_info *channel_info= m_listener-&gt;listen_for_connection_event();</span><br><span class="line">    <span class="keyword">if</span> (channel_info != <span class="literal">NULL</span>)</span><br><span class="line">      mgr-&gt;process_new_connection(channel_info);</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>在监听到客户端的连接后，调用sql/conn_handler/connection_handler_manager.cc中process_new_connection()方法的<code>mgr-&gt;process_new_connection(channel_info);</code>语句添加新的客户端连接并设置信息</p>
+<p>process_new_connection()方法主要逻辑如下：</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">Connection_handler_manager::process_new_connection</span><span class="params">(Channel_info* channel_info)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">  <span class="keyword">if</span> (abort_loop || !check_and_incr_conn_count())</span><br><span class="line">  &#123;</span><br><span class="line">    channel_info-&gt;send_error_and_close_channel(ER_CON_COUNT_ERROR, <span class="number">0</span>, <span class="literal">true</span>);</span><br><span class="line">    <span class="keyword">delete</span> channel_info;</span><br><span class="line">    <span class="keyword">return</span>;</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">if</span> (m_connection_handler-&gt;add_connection(channel_info))</span><br><span class="line">  &#123;</span><br><span class="line">    inc_aborted_connects();</span><br><span class="line">    <span class="keyword">delete</span> channel_info;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>在处理新的连接方法中，主要调用了connection_handler_manager.cc中process_new_connection()方法的<code>m_connection_handler-&gt;add_connection(channel_info)</code>语句新增连接</p>
+<p>add_connection()方法主要逻辑如下：</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">bool</span> <span class="title">Per_thread_connection_handler::add_connection</span><span class="params">(Channel_info* channel_info)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">  <span class="keyword">int</span> error= <span class="number">0</span>;</span><br><span class="line">  my_thread_handle id;</span><br><span class="line"></span><br><span class="line">  <span class="comment">// ...</span></span><br><span class="line"></span><br><span class="line">  <span class="comment">/*</span></span><br><span class="line"><span class="comment">    There are no idle threads avaliable to take up the new</span></span><br><span class="line"><span class="comment">    connection. Create a new thread to handle the connection</span></span><br><span class="line"><span class="comment">    没有空闲线程可以占用新连接</span></span><br><span class="line"><span class="comment">    创建一个新线程来处理连接</span></span><br><span class="line"><span class="comment">  */</span></span><br><span class="line">  channel_info-&gt;set_prior_thr_create_utime();</span><br><span class="line">  error= mysql_thread_create(key_thread_one_connection, &amp;id, &amp;connection_attrib, handle_connection, (<span class="keyword">void</span>*) channel_info);</span><br><span class="line"></span><br><span class="line">handle_error:</span><br><span class="line">  <span class="keyword">if</span> (error)</span><br><span class="line">  &#123;</span><br><span class="line">    connection_errors_internal++;</span><br><span class="line">    <span class="keyword">if</span> (!create_thd_err_log_throttle.<span class="built_in">log</span>())</span><br><span class="line">      sql_print_error(<span class="string">"Can't create thread to handle new connection(errno= %d)"</span>, error);</span><br><span class="line">    channel_info-&gt;send_error_and_close_channel(ER_CANT_CREATE_THREAD, error, <span class="literal">true</span>);</span><br><span class="line">    Connection_handler_manager::dec_connection_count();</span><br><span class="line">  &#125;</span><br><span class="line">  Global_THD_manager::get_instance()-&gt;inc_thread_created();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>在sql/conn_handler/connection_handler_per_thread.cc的add_connection()方法中主要通过<code>mysql_thread_create();</code>语句创建了线程监听连接的事件。在传入的参数中包含一个函数<code>handle_connection</code>，该函数主要处理接收的事件操作</p>
+<p>handle_connection()方法主要逻辑如下：</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment">Thread handler for a connection 一个连接的线程处理器</span></span><br><span class="line"><span class="comment"></span></span><br><span class="line"><span class="comment">@param arg   Connection object (Channel_info)</span></span><br><span class="line"><span class="comment"></span></span><br><span class="line"><span class="comment">This function (normally) does the following:</span></span><br><span class="line"><span class="comment">- Initialize thread 初始化线程</span></span><br><span class="line"><span class="comment">- Initialize THD to be used with this thread 初始化THD信息</span></span><br><span class="line"><span class="comment">- Authenticate user 鉴权用户</span></span><br><span class="line"><span class="comment">- Execute all queries sent on the connection 处理所有连接发送的请求</span></span><br><span class="line"><span class="comment">- Take connection down 断开连接</span></span><br><span class="line"><span class="comment">- End thread  / Handle next connection using thread from thread cache 结束线程 / 从线程缓存中使用线程处理下一个连接</span></span><br><span class="line"><span class="comment">*/</span></span><br><span class="line"><span class="keyword">extern</span> <span class="string">"C"</span> <span class="function"><span class="keyword">void</span> *<span class="title">handle_connection</span><span class="params">(<span class="keyword">void</span> *arg)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">  <span class="comment">// init ...</span></span><br><span class="line">  <span class="keyword">for</span> (;;)</span><br><span class="line">  &#123;</span><br><span class="line">    THD *thd= init_new_thd(channel_info);</span><br><span class="line">    <span class="keyword">if</span> (thd == <span class="literal">NULL</span>)</span><br><span class="line">    &#123;</span><br><span class="line">      connection_errors_internal++;</span><br><span class="line">      handler_manager-&gt;inc_aborted_connects();</span><br><span class="line">      Connection_handler_manager::dec_connection_count();</span><br><span class="line">      <span class="keyword">break</span>; <span class="comment">// We are out of resources, no sense in continuing.</span></span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">if</span> (pthread_reused) <span class="comment">/**/</span></span><br><span class="line">    <span class="keyword">if</span> (thd_prepare_connection(thd)) handler_manager-&gt;inc_aborted_connects();</span><br><span class="line">    <span class="keyword">else</span></span><br><span class="line">    &#123;</span><br><span class="line">      <span class="keyword">while</span> (thd_connection_alive(thd))</span><br><span class="line">      &#123;</span><br><span class="line">        <span class="keyword">if</span> (do_command(thd)) <span class="keyword">break</span>;</span><br><span class="line">      &#125;</span><br><span class="line">      end_connection(thd);</span><br><span class="line">    &#125;</span><br><span class="line">    close_connection(thd, <span class="number">0</span>, <span class="literal">false</span>, <span class="literal">false</span>);</span><br><span class="line">    <span class="comment">// ...</span></span><br><span class="line">  &#125;</span><br><span class="line">  my_thread_end();</span><br><span class="line">  my_thread_exit(<span class="number">0</span>);</span><br><span class="line">  <span class="keyword">return</span> <span class="literal">NULL</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>在sql/conn_handler/connection_handler_per_thread.cc的handle_connection()方法中通过无限的for循环接收连接发送的事件，最主要通过<code>do_command()</code>方法进行事件的回调处理</p>
+<p>do_command()方法主要逻辑如下：</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment">Read one command from connection and execute it (query or simple command).</span></span><br><span class="line"><span class="comment">从连接中读取一条命令并执行</span></span><br><span class="line"><span class="comment">This function is called in loop from thread function. </span></span><br><span class="line"><span class="comment">这个方法被线程方法循环调用</span></span><br><span class="line"><span class="comment"></span></span><br><span class="line"><span class="comment">For profiling to work, it must never be called recursively.</span></span><br><span class="line"><span class="comment"></span></span><br><span class="line"><span class="comment">@retval 0  success 成功</span></span><br><span class="line"><span class="comment">@retval 1  request of thread shutdown (see dispatch_command() description) 线程关闭</span></span><br><span class="line"><span class="comment">*/</span></span><br><span class="line"><span class="function"><span class="keyword">bool</span> <span class="title">do_command</span><span class="params">(THD *thd)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">  <span class="keyword">bool</span> return_value;</span><br><span class="line">  <span class="comment">// ...</span></span><br><span class="line">  return_value= dispatch_command(thd, &amp;com_data, command);</span><br><span class="line">  <span class="comment">// ...</span></span><br><span class="line">  <span class="keyword">return</span> return_value;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>在sql/sql_parse.cc中的do_command()方法读取客户端传递的命令并进行分发，最主要调用了<code>dispatch_command()</code>方法进行命令的分发调用</p>
+<p>dispatch_command()方法主要逻辑如下：</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment">Perform one connection-level (COM_XXXX) command. </span></span><br><span class="line"><span class="comment">执行一条连接级别的命令(以COM_为前缀)</span></span><br><span class="line"><span class="comment"></span></span><br><span class="line"><span class="comment">@param thd             connection handle 连接句柄</span></span><br><span class="line"><span class="comment">@param command         type of command to perform 执行的命令类型</span></span><br><span class="line"><span class="comment">@com_data              com_data union to store the generated command 保存的命令信息</span></span><br><span class="line"><span class="comment"></span></span><br><span class="line"><span class="comment">@retval 0   ok 成功</span></span><br><span class="line"><span class="comment">@retval 1   request of thread shutdown, i. e. if command is </span></span><br><span class="line"><span class="comment">            COM_QUIT/COM_SHUTDOWN 线程关闭,比如命令是quit或shutdown</span></span><br><span class="line"><span class="comment">*/</span></span><br><span class="line"><span class="function"><span class="keyword">bool</span> <span class="title">dispatch_command</span><span class="params">(THD *thd, <span class="keyword">const</span> COM_DATA *com_data, <span class="keyword">enum</span> enum_server_command command)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">  <span class="keyword">switch</span> (command) &#123;</span><br><span class="line">    <span class="keyword">case</span> COM_INIT_DB:</span><br><span class="line">    <span class="keyword">case</span> COM_STMT_EXECUTE:</span><br><span class="line">    <span class="keyword">case</span> COM_STMT_FETCH:</span><br><span class="line">    <span class="keyword">case</span> COM_STMT_SEND_LONG_DATA:</span><br><span class="line">    <span class="keyword">case</span> COM_STMT_PREPARE:</span><br><span class="line">    <span class="keyword">case</span> COM_STMT_CLOSE:</span><br><span class="line">    <span class="keyword">case</span> COM_STMT_RESET:</span><br><span class="line">    <span class="keyword">case</span> COM_QUERY:</span><br><span class="line">    &#123;</span><br><span class="line">      <span class="comment">// 从网络数据包中读取Query并存入thd-&gt;query</span></span><br><span class="line">      <span class="comment">// 如果发生致命错误,返回true</span></span><br><span class="line">      <span class="keyword">if</span> (alloc_query(thd, com_data-&gt;com_query.query, com_data-&gt;com_query.length)) <span class="keyword">break</span>;</span><br><span class="line">      <span class="comment">// 记录原始SQL</span></span><br><span class="line">      <span class="keyword">if</span> (opt_general_log_raw) query_logger.general_log_write(thd, command, thd-&gt;query().str, thd-&gt;query().length);</span><br><span class="line">      <span class="comment">// ...</span></span><br><span class="line">      <span class="comment">// 解析SQL语句</span></span><br><span class="line">      mysql_parse(thd, &amp;parser_state);</span><br><span class="line">      <span class="comment">// ...</span></span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="comment">// ...</span></span><br><span class="line">  <span class="comment">// 从网络返回结果</span></span><br><span class="line">  thd-&gt;send_statement_status();</span><br><span class="line">  thd-&gt;rpl_thd_ctx.session_gtids_ctx().notify_after_response_packet(thd);</span><br><span class="line">  query_cache.end_of_result(thd);</span><br><span class="line">  <span class="comment">// ...</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>在sql/sql_parse.cc中的dispatch_command()方法根据具体的方法类型分别进行处理，在查询操作中首先调用alloc_query()方法从packet数据包中读取query信息并封装到线程数据结构中；接着最主要调用了mysql_parse()方法进行sql语句的解析和执行；在解析完毕后，调用<code>thd-&gt;send_statement_status();</code>语句从网络返回结果，查询调用完成</p>
+<p>mysql_parse()方法主要逻辑如下：</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// Parse a query 解析一个查询语句</span></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">mysql_parse</span><span class="params">(THD *thd, Parser_state *parser_state)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">  <span class="comment">// ...</span></span><br><span class="line">  mysql_reset_thd_for_next_command(thd);</span><br><span class="line">  <span class="comment">// ...</span></span><br><span class="line">  <span class="comment">// 如果不存在查询缓存</span></span><br><span class="line">  <span class="keyword">if</span> (query_cache.send_result_to_client(thd, thd-&gt;query()) &lt;= <span class="number">0</span>)</span><br><span class="line">  &#123;</span><br><span class="line">    <span class="keyword">bool</span> err= thd-&gt;get_stmt_da()-&gt;is_error();</span><br><span class="line">    <span class="keyword">if</span> (!err)</span><br><span class="line">    &#123;</span><br><span class="line">      <span class="comment">// SQL语句词法语法解析</span></span><br><span class="line">      err= parse_sql(thd, parser_state, <span class="literal">NULL</span>);</span><br><span class="line">      <span class="comment">// ...</span></span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">if</span> (!err)</span><br><span class="line">    &#123;</span><br><span class="line">      <span class="comment">// ...</span></span><br><span class="line">      <span class="keyword">if</span> (!thd-&gt;is_error())</span><br><span class="line">      &#123;</span><br><span class="line">        <span class="comment">// ...</span></span><br><span class="line">        <span class="keyword">if</span> (unlikely(thd-&gt;security_context()-&gt;password_expired() &amp;&amp;!lex-&gt;is_set_password_sql &amp;&amp; lex-&gt;sql_command != SQLCOM_SET_OPTION &amp;&amp; lex-&gt;sql_command != SQLCOM_ALTER_USER))</span><br><span class="line">        &#123;</span><br><span class="line">          my_error(ER_MUST_CHANGE_PASSWORD, MYF(<span class="number">0</span>));</span><br><span class="line">          error= <span class="number">1</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="comment">// 查询语句具体执行</span></span><br><span class="line">        <span class="keyword">else</span> error= mysql_execute_command(thd, <span class="literal">true</span>);</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>在sql/sql_parse.cc中的mysql_parse()方法通过<code>query_cache.send_result_to_client(thd, thd-&gt;query()) &lt;= 0</code>语句首先判断当前查询是否已经有缓存结果，如果没有，则首先调用parse_sql()方法进行词法语法的解析工作，随后通过mysql_execute_command()方法进行sql语句的执行</p>
+<p>parse_sql()方法的主要逻辑如下：</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment">This is a wrapper of MYSQLparse(). All the code should call parse_sql()</span></span><br><span class="line"><span class="comment">instead of MYSQLparse(). </span></span><br><span class="line"><span class="comment">这是MYSQLparse()方法的包装器,所有的代码应该调用parse_sql()方法而不是MYSQLparse()方法</span></span><br><span class="line"><span class="comment"></span></span><br><span class="line"><span class="comment">As a by product of parsing, the parser can also generate a query digest. </span></span><br><span class="line"><span class="comment">作为解析的副产品,解析器还可以生成查询摘要.</span></span><br><span class="line"><span class="comment"></span></span><br><span class="line"><span class="comment">@param thd Thread context. 线程上下文</span></span><br><span class="line"><span class="comment">@param parser_state Parser state. 解析器状态</span></span><br><span class="line"><span class="comment">@param creation_ctx Object creation context. 对象创建上下文</span></span><br><span class="line"><span class="comment"></span></span><br><span class="line"><span class="comment">@return Error status.</span></span><br><span class="line"><span class="comment">@retval FALSE on success.</span></span><br><span class="line"><span class="comment">@retval TRUE on parsing error.</span></span><br><span class="line"><span class="comment">*/</span></span><br><span class="line"><span class="function"><span class="keyword">bool</span> <span class="title">parse_sql</span><span class="params">(THD *thd, Parser_state *parser_state, Object_creation_ctx *creation_ctx)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">  <span class="comment">// ...</span></span><br><span class="line">  <span class="comment">// 调用bison进行词法分析</span></span><br><span class="line">  <span class="keyword">bool</span> mysql_parse_status= MYSQLparse(thd) != <span class="number">0</span>;</span><br><span class="line">  <span class="comment">// ...</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// from sql_yacc.cc</span></span><br><span class="line"><span class="function"><span class="keyword">extern</span> <span class="keyword">int</span> <span class="title">MYSQLparse</span><span class="params">(class THD *thd)</span></span>;</span><br></pre></td></tr></table></figure>
+
+<p>mysql_execute_command()方法的主要逻辑如下：</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment">Execute command saved in thd and lex-&gt;sql_command. </span></span><br><span class="line"><span class="comment">执行存储在线程句柄和lex中的sql语句</span></span><br><span class="line"><span class="comment"></span></span><br><span class="line"><span class="comment">@param thd Thread handle 线程句柄</span></span><br><span class="line"><span class="comment"></span></span><br><span class="line"><span class="comment">@retval FALSE OK</span></span><br><span class="line"><span class="comment">@retval TRUE Error</span></span><br><span class="line"><span class="comment">*/</span></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">mysql_execute_command</span><span class="params">(THD *thd, <span class="keyword">bool</span> first_level)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">  <span class="comment">// ...</span></span><br><span class="line">  <span class="comment">// 获取解析后的sql语法树</span></span><br><span class="line">  LEX *<span class="keyword">const</span> lex= thd-&gt;lex;</span><br><span class="line">  <span class="comment">// ...</span></span><br><span class="line">  <span class="comment">// 根据解析后的sql语法树的类型,决定下一步具体执行</span></span><br><span class="line">  <span class="keyword">switch</span> (lex-&gt;sql_command) &#123;</span><br><span class="line">    <span class="keyword">case</span> SQLCOM_SHOW_STATUS:</span><br><span class="line">    <span class="keyword">case</span> SQLCOM_SHOW_DATABASES:</span><br><span class="line">    <span class="keyword">case</span> SQLCOM_SHOW_TABLES:</span><br><span class="line">    <span class="keyword">case</span> SQLCOM_SHOW_TRIGGERS:</span><br><span class="line">    <span class="keyword">case</span> SQLCOM_SHOW_TABLE_STATUS:</span><br><span class="line">    <span class="keyword">case</span> SQLCOM_SHOW_PLUGINS:</span><br><span class="line">    <span class="keyword">case</span> SQLCOM_SHOW_FIELDS:</span><br><span class="line">    <span class="keyword">case</span> SQLCOM_SHOW_KEYS:</span><br><span class="line">    <span class="keyword">case</span> SQLCOM_SHOW_VARIABLES:</span><br><span class="line">    <span class="keyword">case</span> SQLCOM_SHOW_CHARSETS:</span><br><span class="line">    <span class="keyword">case</span> SQLCOM_SHOW_COLLATIONS:</span><br><span class="line">    <span class="keyword">case</span> SQLCOM_SHOW_STORAGE_ENGINES:</span><br><span class="line">    <span class="keyword">case</span> SQLCOM_SHOW_PROFILE:</span><br><span class="line">    <span class="keyword">case</span> SQLCOM_SELECT:</span><br><span class="line">    &#123;</span><br><span class="line">      DBUG_EXECUTE_IF(<span class="string">"use_attachable_trx"</span>, thd-&gt;begin_attachable_ro_transaction(););</span><br><span class="line">      thd-&gt;clear_current_query_costs();</span><br><span class="line">      res= select_precheck(thd, lex, all_tables, first_table);</span><br><span class="line">      <span class="comment">// 具体执行select</span></span><br><span class="line">      <span class="keyword">if</span> (!res) res= execute_sqlcom_select(thd, all_tables);</span><br><span class="line">      <span class="comment">// 保存当前查询花费</span></span><br><span class="line">      thd-&gt;save_current_query_costs();</span><br><span class="line">      DBUG_EXECUTE_IF(<span class="string">"use_attachable_trx"</span>, thd-&gt;end_attachable_transaction(););</span><br><span class="line">      <span class="keyword">break</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">case</span> SQLCOM_PREPARE:</span><br><span class="line">    &#123;</span><br><span class="line">      mysql_sql_stmt_prepare(thd);</span><br><span class="line">      <span class="keyword">break</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">case</span> SQLCOM_EXECUTE:</span><br><span class="line">    &#123;</span><br><span class="line">      mysql_sql_stmt_execute(thd);</span><br><span class="line">      <span class="keyword">break</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">case</span> SQLCOM_CREATE_TABLE:</span><br><span class="line">    <span class="keyword">case</span> SQLCOM_UNLOCK_TABLES:</span><br><span class="line">    <span class="comment">// ...</span></span><br><span class="line">  &#125;</span><br><span class="line">  <span class="comment">// ...</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>在sql/sql_parse.cc中的parse_sql()方法最主要调用了MYSQLparse()方法(具体实现复杂)调用bison(类似yacc)进行词法分析。简单地说，主要通过调用<code>yychar = yylex(&amp;yylval, &amp;yylloc, YYTHD)</code>获取到SQL语句中的一个个token，然后根据事先的规则进行处理<br>在sql/sql_parse.cc中的mysql_execute_command()方法中首先通过<code>LEX *const lex= thd-&gt;lex;</code>语句得到解析后的sql语法树，再根据sql语法树的类型决定下一步操作。在当前为SELECT操作，具体首先通过select_precheck()方法进行查询前的检查，如果通过检查，那么最主要调用<code>res= execute_sqlcom_select(thd, all_tables);</code>语句具体执行SELECT操作</p>
+<p>execute_sqlcom_select()方法具体逻辑如下：</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">static</span> <span class="keyword">bool</span> <span class="title">execute_sqlcom_select</span><span class="params">(THD *thd, TABLE_LIST *all_tables)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">  <span class="comment">// ...</span></span><br><span class="line">  <span class="comment">// 获取解析后的sql语法树</span></span><br><span class="line">  LEX *lex= thd-&gt;lex;</span><br><span class="line">  <span class="comment">// 打开查询或statement所需all_tables中的所有表</span></span><br><span class="line">  <span class="keyword">if</span> (!(res= open_tables_for_query(thd, all_tables, <span class="number">0</span>)))</span><br><span class="line">  &#123;</span><br><span class="line">    MYSQL_SELECT_START(<span class="keyword">const_cast</span>&lt;<span class="keyword">char</span>*&gt;(thd-&gt;query().str));</span><br><span class="line">    <span class="comment">// 判断是否是EXPLAIN语句</span></span><br><span class="line">    <span class="keyword">if</span> (lex-&gt;is_explain())</span><br><span class="line">    &#123;</span><br><span class="line">      <span class="comment">/*</span></span><br><span class="line"><span class="comment">        We always use Query_result_send for EXPLAIN, even if it's an EXPLAIN</span></span><br><span class="line"><span class="comment">        for SELECT ... INTO OUTFILE: a user application should be able</span></span><br><span class="line"><span class="comment">        to prepend EXPLAIN to any query and receive output for it,</span></span><br><span class="line"><span class="comment">        even if the query itself redirects the output.</span></span><br><span class="line"><span class="comment">      */</span></span><br><span class="line">      Query_result *<span class="keyword">const</span> result= <span class="keyword">new</span> Query_result_send;</span><br><span class="line">      <span class="keyword">if</span> (!result)</span><br><span class="line">        <span class="keyword">return</span> <span class="literal">true</span>; <span class="comment">/* purecov: inspected */</span></span><br><span class="line">      res= handle_query(thd, lex, result, <span class="number">0</span>, <span class="number">0</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">else</span></span><br><span class="line">    &#123;</span><br><span class="line">      Query_result *result= lex-&gt;result;</span><br><span class="line">      <span class="keyword">if</span> (!result &amp;&amp; !(result= <span class="keyword">new</span> Query_result_send()))</span><br><span class="line">        <span class="keyword">return</span> <span class="literal">true</span>; <span class="comment">/* purecov: inspected */</span></span><br><span class="line">      Query_result *save_result= result;</span><br><span class="line">      Query_result *analyse_result= <span class="literal">NULL</span>;</span><br><span class="line">      <span class="keyword">if</span> (lex-&gt;proc_analyse)</span><br><span class="line">      &#123;</span><br><span class="line">        <span class="keyword">if</span> ((result = analyse_result= <span class="keyword">new</span> Query_result_analyse(result, lex-&gt;proc_analyse)) == <span class="literal">NULL</span>)</span><br><span class="line">          <span class="keyword">return</span> <span class="literal">true</span>;</span><br><span class="line">      &#125;</span><br><span class="line">      <span class="comment">// 具体处理sql语句</span></span><br><span class="line">      res= handle_query(thd, lex, result, <span class="number">0</span>, <span class="number">0</span>);</span><br><span class="line">      <span class="keyword">delete</span> analyse_result;</span><br><span class="line">      <span class="keyword">if</span> (save_result != lex-&gt;result) <span class="keyword">delete</span> save_result;</span><br><span class="line">    &#125;</span><br><span class="line">    MYSQL_SELECT_DONE((<span class="keyword">int</span>) res, (ulong) thd-&gt;current_found_rows);</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>在sql/sql_parse.cc中的execute_sqlcom_select()方法中首先调用<code>LEX *lex= thd-&gt;lex;</code>获取解析后的sql语法树；接着调用<code>res= open_tables_for_query(thd, all_tables, 0)</code>语句打开查询或者statement所需的表(包括锁的判断、获取等准备操作)；最后主要调用handle_query()方法进行最终sql语句的处理</p>
+<p>handle_query()方法主要逻辑如下：</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment">Handle a data manipulation query, from preparation through cleanup </span></span><br><span class="line"><span class="comment">从准备到清理处理数据操作查询</span></span><br><span class="line"><span class="comment"></span></span><br><span class="line"><span class="comment">@param thd       thread handler 线程句柄</span></span><br><span class="line"><span class="comment">@param lex       query to be processed 解析后的sql语法树</span></span><br><span class="line"><span class="comment">@param result    sink of result of query execution.</span></span><br><span class="line"><span class="comment">                 may be protocol object (for passing result to a client),</span></span><br><span class="line"><span class="comment">                 insert object, update object, delete object, etc.</span></span><br><span class="line"><span class="comment">                 查询执行结果的接收器</span></span><br><span class="line"><span class="comment">                 可能是协议对象(用于将结果传递给客户端),也可能是插入对象、更新对象、删除对象等</span></span><br><span class="line"><span class="comment">@param added_options additional options for detailed control over execution 执行详细控制的附加选项</span></span><br><span class="line"><span class="comment">@param removed_options options that are not applicable for this command 不适用于此命令的选项</span></span><br><span class="line"><span class="comment"></span></span><br><span class="line"><span class="comment">@returns false if success, true if error</span></span><br><span class="line"><span class="comment"></span></span><br><span class="line"><span class="comment">@details</span></span><br><span class="line"><span class="comment">  Processing a query goes through 5 phases (parsing is already done) 处理一个查询需要经历5个阶段(解析已经完成)</span></span><br><span class="line"><span class="comment">   - Preparation 准备</span></span><br><span class="line"><span class="comment">   - Locking of tables 表的锁定</span></span><br><span class="line"><span class="comment">   - Optimization 优化</span></span><br><span class="line"><span class="comment">   - Execution or explain 执行或解释</span></span><br><span class="line"><span class="comment">   - Cleanup 清理</span></span><br><span class="line"><span class="comment">  The queries handled by this function are: 此函数处理的查询有</span></span><br><span class="line"><span class="comment"></span></span><br><span class="line"><span class="comment">  SELECT</span></span><br><span class="line"><span class="comment">  INSERT ... SELECT</span></span><br><span class="line"><span class="comment">  REPLACE ... SELECT</span></span><br><span class="line"><span class="comment">  UPDATE (multi-table)</span></span><br><span class="line"><span class="comment">  DELETE (multi-table)</span></span><br><span class="line"><span class="comment">  </span></span><br><span class="line"><span class="comment">  The function processes simple query expressions without UNION and</span></span><br><span class="line"><span class="comment">  without multi-level ORDER BY/LIMIT separately. </span></span><br><span class="line"><span class="comment">  这个函数处理简单的表达式查询,而不使用并集或分别进行多级排序</span></span><br><span class="line"><span class="comment">  Such queries are executed with a more direct code path. </span></span><br><span class="line"><span class="comment">  这样的查询使用更直接的代码路径执行</span></span><br><span class="line"><span class="comment">*/</span></span><br><span class="line"><span class="function"><span class="keyword">bool</span> <span class="title">handle_query</span><span class="params">(THD *thd, LEX *lex, Query_result *result, ulonglong added_options, ulonglong removed_options)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">  <span class="comment">// ...</span></span><br><span class="line">  SELECT_LEX_UNIT *<span class="keyword">const</span> unit= lex-&gt;unit;</span><br><span class="line">  SELECT_LEX *<span class="keyword">const</span> select= unit-&gt;first_select();</span><br><span class="line">  <span class="comment">// ...</span></span><br><span class="line">  <span class="keyword">const</span> <span class="keyword">bool</span> single_query= unit-&gt;is_simple();</span><br><span class="line">  <span class="comment">// ...</span></span><br><span class="line">  <span class="comment">// 步骤1: Preparation</span></span><br><span class="line">  <span class="keyword">if</span> (single_query)</span><br><span class="line">  &#123;</span><br><span class="line">    unit-&gt;set_limit(unit-&gt;global_parameters());</span><br><span class="line">    select-&gt;context.resolve_in_select_list= <span class="literal">true</span>;</span><br><span class="line">    select-&gt;set_query_result(result);</span><br><span class="line">    select-&gt;make_active_options(added_options, removed_options);</span><br><span class="line">    select-&gt;fields_list= select-&gt;item_list;</span><br><span class="line">    <span class="keyword">if</span> (select-&gt;<span class="built_in">prepare</span>(thd)) <span class="keyword">goto</span> err;</span><br><span class="line">    unit-&gt;set_prepared();</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">else</span></span><br><span class="line">  &#123;</span><br><span class="line">    <span class="keyword">if</span> (unit-&gt;<span class="built_in">prepare</span>(thd, result, SELECT_NO_UNLOCK | added_options, removed_options)) <span class="keyword">goto</span> err;</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="comment">/*</span></span><br><span class="line"><span class="comment">  Locking of tables is done after preparation but before optimization.</span></span><br><span class="line"><span class="comment">  This allows to do better partition pruning and avoid locking unused</span></span><br><span class="line"><span class="comment">  partitions. As a consequence, in such a case, prepare stage can rely only</span></span><br><span class="line"><span class="comment">  on metadata about tables used and not data from them.</span></span><br><span class="line"><span class="comment">  表的锁定在准备之后但在优化之前完成</span></span><br><span class="line"><span class="comment">  这允许更好地进行分区修剪并避免锁定未使用的分区。因此,在这种情况下,准备阶段只能依靠关于所用表的元数据,而不是来自表的数据</span></span><br><span class="line"><span class="comment">  */</span></span><br><span class="line">  <span class="comment">// 步骤2:Locking of tables</span></span><br><span class="line">  <span class="keyword">if</span> (lock_tables(thd, lex-&gt;query_tables, lex-&gt;table_count, <span class="number">0</span>)) <span class="keyword">goto</span> err;</span><br><span class="line">  <span class="comment">/*</span></span><br><span class="line"><span class="comment">  Register query result in cache.</span></span><br><span class="line"><span class="comment">  Tables must be locked before storing the query in the query cache.</span></span><br><span class="line"><span class="comment">  Transactional engines must be signalled that the statement has started,</span></span><br><span class="line"><span class="comment">  by calling external_lock().</span></span><br><span class="line"><span class="comment">  在缓存中注册查询结果</span></span><br><span class="line"><span class="comment">  必须先锁定表,然后才能将查询存储在查询缓存中</span></span><br><span class="line"><span class="comment">  必须通知事务引擎statement已启动,通过调用external_lock()方法</span></span><br><span class="line"><span class="comment">  */</span></span><br><span class="line">  query_cache.store_query(thd, lex-&gt;query_tables);</span><br><span class="line">  <span class="comment">// 步骤3: Optimization</span></span><br><span class="line">  <span class="keyword">if</span> (single_query)</span><br><span class="line">  &#123;</span><br><span class="line">    <span class="keyword">if</span> (select-&gt;optimize(thd)) <span class="keyword">goto</span> err;</span><br><span class="line">    unit-&gt;set_optimized();</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">else</span></span><br><span class="line">  &#123;</span><br><span class="line">    <span class="keyword">if</span> (unit-&gt;optimize(thd)) <span class="keyword">goto</span> err;</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="comment">// 步骤4: Execution or explain</span></span><br><span class="line">  <span class="keyword">if</span> (lex-&gt;is_explain())</span><br><span class="line">  &#123;</span><br><span class="line">    <span class="keyword">if</span> (explain_query(thd, unit)) <span class="keyword">goto</span> err;     <span class="comment">/* purecov: inspected */</span></span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">else</span></span><br><span class="line">  &#123;</span><br><span class="line">    <span class="keyword">if</span> (single_query)</span><br><span class="line">    &#123;</span><br><span class="line">      select-&gt;join-&gt;exec();</span><br><span class="line">      unit-&gt;set_executed();</span><br><span class="line">      <span class="keyword">if</span> (thd-&gt;is_error()) <span class="keyword">goto</span> err;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">else</span></span><br><span class="line">    &#123;</span><br><span class="line">      <span class="keyword">if</span> (unit-&gt;execute(thd)) <span class="keyword">goto</span> err;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="comment">// ...</span></span><br><span class="line">  <span class="comment">// 步骤5: Cleanup</span></span><br><span class="line">  res= unit-&gt;cleanup(<span class="literal">false</span>);</span><br><span class="line">  <span class="comment">// ...</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>在sql/sql_select.cc中的handle_query()方法依次经过五个步骤：Preparation、Locking of tables、Optimization、Execution or explain和Cleanup</p>
+</li>
+</ul>
+<h2 id="事务"><a href="#事务" class="headerlink" title="事务"></a>事务</h2><ul>
+<li><p>事务部分知识：</p>
+<ul>
+<li><p>MySQL采用XA-2PC(two phrase commit————两阶段提交)进行事务的提交</p>
+<blockquote>
+<p>第一阶段(prepare)：TM(事务管理器————Transaction Manager)向RM(资源管理器————Resource Manager)发出prepare指令，RM进行操作，然后返回成功与否的信息给TM<br>第二阶段(commit or rollback)：如果TM收到所有RM的成功消息，则TM向RM发出提交指令；否则发出回滚指令</p>
+</blockquote>
+</li>
+<li><p>MySQL通过两阶段提交很好地解决了binlog和redo log的一致性问题</p>
+<blockquote>
+<p>第一阶段：InnoDB prepare，持有prepare_commit_mutex，并且write/sync redo log；将回滚段设置为Prepared状态，binlog不作任何操作<br>第二阶段：包含两步</p>
+<ol>
+<li>write/sync binlog；</li>
+<li>InnoDB commit(写入commit标记后释放prepare_commit_mutex)</li>
+</ol>
+</blockquote>
+</li>
+<li><p>以binlog的写入与否作为事务提交成功与否的标志：innodb commit标志并不是事务成功与否的标志，因为事务崩溃恢复过程如下：</p>
+<ol>
+<li>崩溃恢复时，扫描最后一个binlog文件，提取其中的xid</li>
+<li>InnoDB维持了状态为prepare的事务链表，将这些事务的xid和binlog中记录的xid做比较，如果在binlog中存在，则提交，否则回滚事务</li>
+</ol>
+<p>通过这种方式，InnoDB和binlog中的事务状态保持一致</p>
+</li>
+<li><p>MySQL5.7中binlog的组提交：</p>
+<blockquote>
+<p>从XA(XA协议,采用两阶段提交方式管理分布式事务)恢复的逻辑可得————只要保证InnoDB prepare的redo日志在写binlog前完成write/sync即可，具体步骤如下：</p>
+<ol>
+<li>InnoDB Prepare，记录当前的LSN(日志序列号————log sequence number)到thd中</li>
+<li>进入Group Commit的flush stage</li>
+<li>Leader搜集队列，同时算出队列中最大的LSN</li>
+<li>将InnoDB的redo log write/fsync到指定的LSN</li>
+<li>写binlog并进行随后的工作(sync binlog, InnoDB commit, etc)</li>
+</ol>
+<p>将redo log的write/sync延迟到了binlog group commit的flush stage之后，sync binlog之前。通过延迟写redo log的方式，显式地为redo log做了一次组写入(redo log group write)，并减少了(redo log)log_sys-&gt;mutex的竞争</p>
+</blockquote>
+</li>
+</ul>
+</li>
+<li><p>以commit命令为例分析事务执行流程，与查询命令一致，最终走到sql/sql_parse.cc中的mysql_execute_command()方法</p>
+<p>mysql_execute_command()方法具体逻辑如下：</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">mysql_execute_command</span><span class="params">(THD *thd, <span class="keyword">bool</span> first_level)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">  <span class="comment">// ...</span></span><br><span class="line">  <span class="keyword">switch</span> (lex-&gt;sql_command) &#123;</span><br><span class="line">    <span class="comment">// ...</span></span><br><span class="line">    <span class="keyword">case</span> SQLCOM_COMMIT:</span><br><span class="line">    &#123;</span><br><span class="line">      DBUG_ASSERT(thd-&gt;lock == <span class="literal">NULL</span> || thd-&gt;locked_tables_mode == LTM_LOCK_TABLES);</span><br><span class="line">      <span class="keyword">bool</span> tx_chain= (lex-&gt;tx_chain == TVL_YES || (thd-&gt;variables.completion_type == <span class="number">1</span> &amp;&amp; lex-&gt;tx_chain != TVL_NO));</span><br><span class="line">      <span class="keyword">bool</span> tx_release= (lex-&gt;tx_release == TVL_YES || (thd-&gt;variables.completion_type == <span class="number">2</span> &amp;&amp; lex-&gt;tx_release != TVL_NO));</span><br><span class="line">      <span class="keyword">if</span> (trans_commit(thd)) <span class="keyword">goto</span> error;</span><br><span class="line">      thd-&gt;mdl_context.release_transactional_locks();</span><br><span class="line">      <span class="comment">/* Begin transaction with the same isolation level. */</span></span><br><span class="line">      <span class="keyword">if</span> (tx_chain)</span><br><span class="line">      &#123;</span><br><span class="line">        <span class="keyword">if</span> (trans_begin(thd)) <span class="keyword">goto</span> error;</span><br><span class="line">      &#125;</span><br><span class="line">      <span class="keyword">else</span></span><br><span class="line">      &#123;</span><br><span class="line">        <span class="comment">/* Reset the isolation level and access mode if no chaining transaction.*/</span></span><br><span class="line">        trans_reset_one_shot_chistics(thd);</span><br><span class="line">      &#125;</span><br><span class="line">      <span class="comment">/* Disconnect the current client connection. */</span></span><br><span class="line">      <span class="keyword">if</span> (tx_release) thd-&gt;killed= THD::KILL_CONNECTION;</span><br><span class="line">      my_ok(thd);</span><br><span class="line">      <span class="keyword">break</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">// ...</span></span><br><span class="line">  &#125;</span><br><span class="line">  <span class="comment">// ...</span></span><br><span class="line">  <span class="keyword">if</span> (!thd-&gt;in_sub_stmt &amp;&amp; thd-&gt;transaction_rollback_request)</span><br><span class="line">  &#123;</span><br><span class="line">    <span class="comment">/*</span></span><br><span class="line"><span class="comment">      We are not in sub-statement and transaction rollback was requested by</span></span><br><span class="line"><span class="comment">      one of storage engines (e.g. due to deadlock). Rollback transaction in</span></span><br><span class="line"><span class="comment">      all storage engines including binary log.</span></span><br><span class="line"><span class="comment">      不在子statement中并且事务回滚是由某个存储引擎请求的(例如: 由于死锁)</span></span><br><span class="line"><span class="comment">      回滚所有存储引擎中的事务,包括binlog</span></span><br><span class="line"><span class="comment">    */</span></span><br><span class="line">    trans_rollback_implicit(thd);</span><br><span class="line">    thd-&gt;mdl_context.release_transactional_locks();</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">else</span> <span class="keyword">if</span> (stmt_causes_implicit_commit(thd, CF_IMPLICIT_COMMIT_END))</span><br><span class="line">  &#123;</span><br><span class="line">    <span class="comment">/* </span></span><br><span class="line"><span class="comment">      No transaction control allowed in sub-statements.</span></span><br><span class="line"><span class="comment">      子statement不允许事务控制</span></span><br><span class="line"><span class="comment">    */</span></span><br><span class="line">    DBUG_ASSERT(!thd-&gt;in_sub_stmt);</span><br><span class="line">    <span class="comment">/*</span></span><br><span class="line"><span class="comment">      If commit fails, we should be able to reset the OK status.</span></span><br><span class="line"><span class="comment">      如果提交失败,应该设置OK状态</span></span><br><span class="line"><span class="comment">    */</span></span><br><span class="line">    thd-&gt;get_stmt_da()-&gt;set_overwrite_status(<span class="literal">true</span>);</span><br><span class="line">    <span class="comment">/*</span></span><br><span class="line"><span class="comment">      Commit the normal transaction if one is active.</span></span><br><span class="line"><span class="comment">      如果处于活动状态,提交正常事务</span></span><br><span class="line"><span class="comment">    */</span></span><br><span class="line">    trans_commit_implicit(thd);</span><br><span class="line">    thd-&gt;get_stmt_da()-&gt;set_overwrite_status(<span class="literal">false</span>);</span><br><span class="line">    thd-&gt;mdl_context.release_transactional_locks();</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="comment">// ...</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>在mysql_execute_command()方法中关于commit命令的case语句标识为SQLCOM_COMMIT，在其中最主要调用了trans_commit()方法<br>同时，在switch-case匹配代码块后，可能会触发事务的隐式提交<code>trans_commit_implicit();</code>或回滚<code>trans_rollback_implicit</code>操作，其中前者最终触发<code>tc_log-&gt;commit();</code>语句；后者最终触发<code>ha_rollback_trans;</code>语句，具体参照后面内容</p>
+<p>trans_commit()方法具体逻辑如下：</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment">Commit the current transaction, making its changes permanent.</span></span><br><span class="line"><span class="comment">提交当前事务,使其更改永久化</span></span><br><span class="line"><span class="comment"></span></span><br><span class="line"><span class="comment">@param thd     Current thread 当前线程</span></span><br><span class="line"><span class="comment"></span></span><br><span class="line"><span class="comment">@retval FALSE  Success</span></span><br><span class="line"><span class="comment">@retval TRUE   Failure</span></span><br><span class="line"><span class="comment">*/</span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">bool</span> <span class="title">trans_commit</span><span class="params">(THD *thd)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">  <span class="comment">// ...</span></span><br><span class="line">  <span class="keyword">if</span> (trans_check_state(thd)) DBUG_RETURN(TRUE);</span><br><span class="line">  <span class="comment">// ...</span></span><br><span class="line">  res= ha_commit_trans(thd, TRUE);</span><br><span class="line">  <span class="comment">// ...</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>在sql/transaction.cc中的trans_commit()方法进行事务的提交操作，其中最主要调用了ha_commit_trans()方法</p>
+<p>ha_commit_trans()方法具体逻辑如下：</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment">@param[in] ignore_global_read_lock   Allow commit to complete even if a</span></span><br><span class="line"><span class="comment">                                     global read lock is active. This can be</span></span><br><span class="line"><span class="comment">                                     used to allow changes to internal tables</span></span><br><span class="line"><span class="comment">                                     (e.g. slave status tables).</span></span><br><span class="line"><span class="comment">                                     允许提交完成,即是全局读锁定处于活动状态</span></span><br><span class="line"><span class="comment">                                     这可能用于允许更改内部表(例如从库状态表)</span></span><br><span class="line"><span class="comment"></span></span><br><span class="line"><span class="comment">@retval 0   ok</span></span><br><span class="line"><span class="comment">@retval 1   transaction was rolled back 事务回滚</span></span><br><span class="line"><span class="comment">@retval 2   error during commit, data may be inconsistent 提交时出错,数据可能不一致</span></span><br><span class="line"><span class="comment">*/</span></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">ha_commit_trans</span><span class="params">(THD *thd, <span class="keyword">bool</span> all, <span class="keyword">bool</span> ignore_global_read_lock)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">  <span class="comment">// ...</span></span><br><span class="line">  <span class="keyword">if</span> (ha_info)</span><br><span class="line">  &#123;</span><br><span class="line">    <span class="comment">// ...</span></span><br><span class="line">    <span class="keyword">if</span> (rw_trans &amp;&amp; !ignore_global_read_lock)</span><br><span class="line">    &#123;</span><br><span class="line">      <span class="comment">/*</span></span><br><span class="line"><span class="comment">        Acquire a metadata lock which will ensure that COMMIT is blocked</span></span><br><span class="line"><span class="comment">        by an active FLUSH TABLES WITH READ LOCK (and vice versa:</span></span><br><span class="line"><span class="comment">        COMMIT in progress blocks FTWRL).</span></span><br><span class="line"><span class="comment">        获取一个元数据锁,这将保证提交被一个FTWRL(MySQL全局锁————整个库处于只读状态)阻止(反之亦然: 正在提交阻塞了FTWRL)</span></span><br><span class="line"><span class="comment"></span></span><br><span class="line"><span class="comment">        We allow the owner of FTWRL to COMMIT; we assume that it knows</span></span><br><span class="line"><span class="comment">        what it does.</span></span><br><span class="line"><span class="comment">        允许FTWRL的所有者提交; 并假设他知道它的作用</span></span><br><span class="line"><span class="comment">      */</span></span><br><span class="line">      <span class="keyword">if</span> (thd-&gt;mdl_context.acquire_lock(&amp;mdl_request, thd-&gt;variables.lock_wait_timeout))</span><br><span class="line">      &#123;</span><br><span class="line">        ha_rollback_trans(thd, all);</span><br><span class="line">        DBUG_RETURN(<span class="number">1</span>);</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">if</span> (rw_trans &amp;&amp; (stmt_has_updated_trans_table(ha_info) || trans_has_noop_dml(ha_info)) &amp;&amp; check_readonly(thd, <span class="literal">true</span>))</span><br><span class="line">    &#123;</span><br><span class="line">      ha_rollback_trans(thd, all);</span><br><span class="line">      error= <span class="number">1</span>;</span><br><span class="line">      <span class="keyword">goto</span> <span class="built_in">end</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">if</span> (!trn_ctx-&gt;no_2pc(trx_scope) &amp;&amp; (trn_ctx-&gt;rw_ha_count(trx_scope) &gt; <span class="number">1</span>)) error= tc_log-&gt;<span class="built_in">prepare</span>(thd, all);</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">if</span> (error || (error= tc_log-&gt;commit(thd, all)))</span><br><span class="line">  &#123;</span><br><span class="line">    ha_rollback_trans(thd, all);</span><br><span class="line">    error= <span class="number">1</span>;</span><br><span class="line">    <span class="keyword">goto</span> <span class="built_in">end</span>;</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="comment">// ...</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>在sql/handler.cc中的ha_commit_trans()方法具体进行事务操作，首先经过一系列判断，如果条件不满足则调用ha_rollback_trans()方法进行回滚，否则先调用<code>tc_log-&gt;prepare(thd, all);</code>进行prepare操作；接着调用<code>tc_log-&gt;commit(thd, all);</code>进行commit操作；如果其中有错误，则调用a_rollback_trans()方法进行回滚</p>
+<blockquote>
+<p>tc_log对象为MYSQL_BIN_LOG</p>
+</blockquote>
+<p>tc_log-&gt;prepare()方法具体逻辑如下：</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/*</span></span><br><span class="line"><span class="comment">Prepare the transaction in the transaction coordinator.</span></span><br><span class="line"><span class="comment">在事务处理协调器中准备事务</span></span><br><span class="line"><span class="comment"></span></span><br><span class="line"><span class="comment">This function will prepare the transaction in the storage engines</span></span><br><span class="line"><span class="comment">(by calling @c ha_prepare_low) what will write a prepare record</span></span><br><span class="line"><span class="comment">to the log buffers.</span></span><br><span class="line"><span class="comment">此方法将在存储引擎中准备事务(通过调用ha_prepare_low()方法),这将写入准备记录到日志缓存区</span></span><br><span class="line"><span class="comment"></span></span><br><span class="line"><span class="comment">@retval 0    success</span></span><br><span class="line"><span class="comment">@retval 1    error</span></span><br><span class="line"><span class="comment">*/</span></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">MYSQL_BIN_LOG::prepare</span><span class="params">(THD *thd, <span class="keyword">bool</span> all)</span></span></span><br></pre></td></tr></table></figure>
+
+<p>tc_log-&gt;commit()方法具体逻辑如下：</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment">Commit the transaction in the transaction coordinator.</span></span><br><span class="line"><span class="comment">在事务协调器中提交事务</span></span><br><span class="line"><span class="comment"></span></span><br><span class="line"><span class="comment">This function will commit the sessions transaction in the binary log</span></span><br><span class="line"><span class="comment">and in the storage engines (by calling @c ha_commit_low). If the</span></span><br><span class="line"><span class="comment">transaction was successfully logged (or not successfully unlogged)</span></span><br><span class="line"><span class="comment">but the commit in the engines did not succed, there is a risk of</span></span><br><span class="line"><span class="comment">inconsistency between the engines and the binary log.</span></span><br><span class="line"><span class="comment">此方法将在binlog和存储引擎(通过调用ha_commit_low()方法)中提交会话事务</span></span><br><span class="line"><span class="comment">如果事务已成功记录(或未成功取消记录),但在引擎中的提交没有成功,这会存在一个binlog和存储引擎不一致的风险</span></span><br><span class="line"><span class="comment"></span></span><br><span class="line"><span class="comment">For binary log group commit, the commit is separated into three</span></span><br><span class="line"><span class="comment">parts:</span></span><br><span class="line"><span class="comment">对于binlog组提交,提交分为三个部分:</span></span><br><span class="line"><span class="comment"></span></span><br><span class="line"><span class="comment">1. First part consists of filling the necessary caches and</span></span><br><span class="line"><span class="comment">   finalizing them (if they need to be finalized). After this,</span></span><br><span class="line"><span class="comment">   nothing is added to any of the caches.</span></span><br><span class="line"><span class="comment">   第一部分包括填充必要的缓存和并清除他们(如果需要清除)</span></span><br><span class="line"><span class="comment">   此后,不会向任何缓存添加任何内容</span></span><br><span class="line"><span class="comment"></span></span><br><span class="line"><span class="comment">2. Second part execute an ordered flush and commit. This will be</span></span><br><span class="line"><span class="comment">   done using the group commit functionality in ordered_commit.</span></span><br><span class="line"><span class="comment">   第二部分执行有序的flush和commit</span></span><br><span class="line"><span class="comment">   这将使用有序提交中的组提交功能完成</span></span><br><span class="line"><span class="comment"></span></span><br><span class="line"><span class="comment">3. Third part checks any errors resulting from the ordered commit</span></span><br><span class="line"><span class="comment">   and handles them appropriately.</span></span><br><span class="line"><span class="comment">   第三部分检查由有序提交导致的任何错误并妥善处理</span></span><br><span class="line"><span class="comment"></span></span><br><span class="line"><span class="comment">@retval RESULT_SUCCESS   success</span></span><br><span class="line"><span class="comment">@retval RESULT_ABORTED   error, transaction was neither logged nor committed</span></span><br><span class="line"><span class="comment">        中止              错误,事务不会被记录或提交</span></span><br><span class="line"><span class="comment">@retval RESULT_INCONSISTENT  error, transaction was logged but not committed</span></span><br><span class="line"><span class="comment">        不一致                错误,事务会被记录但不会被提交</span></span><br><span class="line"><span class="comment">*/</span></span><br><span class="line"><span class="function">TC_LOG::enum_result <span class="title">MYSQL_BIN_LOG::commit</span><span class="params">(THD *thd, <span class="keyword">bool</span> all)</span></span></span><br></pre></td></tr></table></figure>
+
+<p>ha_rollback_trans()方法具体逻辑如下：</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">ha_rollback_trans</span><span class="params">(THD *thd, <span class="keyword">bool</span> all)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">  <span class="comment">// ...</span></span><br><span class="line">  <span class="keyword">if</span> (tc_log) error= tc_log-&gt;rollback(thd, all);</span><br><span class="line">  <span class="comment">// ...</span></span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment">Write a rollback record of the transaction to the binary log.</span></span><br><span class="line"><span class="comment">将事务的回滚记录写入binlog</span></span><br><span class="line"><span class="comment"></span></span><br><span class="line"><span class="comment">For binary log group commit, the rollback is separated into three</span></span><br><span class="line"><span class="comment">parts:</span></span><br><span class="line"><span class="comment">对于binlog组提交,回滚分为三个部分:</span></span><br><span class="line"><span class="comment"></span></span><br><span class="line"><span class="comment">1. First part consists of filling the necessary caches and</span></span><br><span class="line"><span class="comment">   finalizing them (if they need to be finalized). After a cache is</span></span><br><span class="line"><span class="comment">   finalized, nothing can be added to the cache.</span></span><br><span class="line"><span class="comment">   第一部分包括填充必要的缓存和并清除他们(如果需要清除)</span></span><br><span class="line"><span class="comment">   在缓存被清除后,不能向缓存中添加任何内容</span></span><br><span class="line"><span class="comment"></span></span><br><span class="line"><span class="comment">2. Second part execute an ordered flush and commit. This will be</span></span><br><span class="line"><span class="comment">   done using the group commit functionality in @c ordered_commit.</span></span><br><span class="line"><span class="comment">   第二部分执行有序的flush和commit,这将使用组提交完成(在ordered_commit()方法中)</span></span><br><span class="line"><span class="comment"></span></span><br><span class="line"><span class="comment">   Since we roll back the transaction early, we call @c</span></span><br><span class="line"><span class="comment">   ordered_commit with the @c skip_commit flag set. The @c</span></span><br><span class="line"><span class="comment">   ha_commit_low call inside @c ordered_commit will then not be</span></span><br><span class="line"><span class="comment">   called.</span></span><br><span class="line"><span class="comment">   因为提前回滚事务,所以需要调用ordered_commit()方法并设置skip_commit标识</span></span><br><span class="line"><span class="comment">   ha_commit_low()方法内部的ordered_commit()方法将不会被调用</span></span><br><span class="line"><span class="comment"></span></span><br><span class="line"><span class="comment">3. Third part checks any errors resulting from the flush and handles</span></span><br><span class="line"><span class="comment">   them appropriately.</span></span><br><span class="line"><span class="comment">   第三部分检查检查由flush导致的任何错误,并对其进行适当的处理</span></span><br><span class="line"><span class="comment"></span></span><br><span class="line"><span class="comment">@see MYSQL_BIN_LOG::ordered_commit</span></span><br><span class="line"><span class="comment">@see ha_commit_low</span></span><br><span class="line"><span class="comment">@see ha_rollback_low</span></span><br><span class="line"><span class="comment"></span></span><br><span class="line"><span class="comment">@param thd Session to commit 要提交的会话</span></span><br><span class="line"><span class="comment">@param all This is @c true if this is a real transaction rollback, and</span></span><br><span class="line"><span class="comment">           @false otherwise.</span></span><br><span class="line"><span class="comment">           true：一个真正的事务回滚</span></span><br><span class="line"><span class="comment">           false：其他情况</span></span><br><span class="line"><span class="comment"></span></span><br><span class="line"><span class="comment">@return Error code, or zero if there were no error.</span></span><br><span class="line"><span class="comment">*/</span></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">MYSQL_BIN_LOG::rollback</span><span class="params">(THD *thd, <span class="keyword">bool</span> all)</span></span></span><br></pre></td></tr></table></figure>
+
+</li>
+</ul>
+<h2 id="故障恢复"><a href="#故障恢复" class="headerlink" title="故障恢复"></a>故障恢复</h2><ul>
+<li><p>故障恢复部分知识</p>
+<ul>
+<li><p>crash recovery过程中，binlog需保证：</p>
+<ol>
+<li>所有已提交事务的binlog已存在</li>
+<li>所有未提交事务的binlog不存在</li>
+</ol>
+</li>
+<li><p>MySQL使用两阶段提交解决binlog和InnoDB redo log的一致性问题：将普通事务当做内部XA事务处理，为每个事务分配一个XID，binlog作为事务的协调者</p>
+<ol>
+<li>阶段1：InnoDB redo log写盘，InnoDB事务进入prepare状态</li>
+<li>阶段2：binlog写盘，InooDB事务进入commit状态</li>
+</ol>
+<p>每个事务binlog的末尾，会记录一个XID event，标志着事务是否提交成功。也就是说recovery过程中，binlog最后一个XID event之后的内容都应该被purge(清除)。InnoDB日志可能也需要回滚或者提交</p>
+</li>
+</ul>
+</li>
+<li><p>sql/mysqld.cc中的mysqld_main()方法启动mysqld服务端，在其中进行恢复工作</p>
+<p>mysqld_main()方法的主要逻辑如下：</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">mysqld_main</span><span class="params">(<span class="keyword">int</span> argc, <span class="keyword">char</span> **argv)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">  <span class="comment">// ...</span></span><br><span class="line">  <span class="keyword">if</span> (init_server_components()) unireg_abort(MYSQLD_ABORT_EXIT);</span><br><span class="line">  <span class="comment">// ...</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>在mysqld_main()方法中，启动恢复工作的方法为<code>init_server_components()</code>，目的为初始化服务端组件</p>
+<p>init_server_components()方法的主要逻辑如下：</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">static</span> <span class="keyword">int</span> <span class="title">init_server_components</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">  <span class="comment">// ...</span></span><br><span class="line">  <span class="keyword">if</span> (opt_bin_log)</span><br><span class="line">  &#123;</span><br><span class="line">    <span class="comment">// ...</span></span><br><span class="line">    <span class="comment">/*</span></span><br><span class="line"><span class="comment">      Skip opening the index file if we start with --help. This is necessary</span></span><br><span class="line"><span class="comment">      to avoid creating the file in an otherwise empty datadir, which will</span></span><br><span class="line"><span class="comment">      cause a succeeding 'mysqld --initialize' to fail.</span></span><br><span class="line"><span class="comment">    */</span></span><br><span class="line">    <span class="keyword">if</span> (!opt_help &amp;&amp; mysql_bin_log.open_index_file(opt_binlog_index_name, ln, TRUE)) unireg_abort(MYSQLD_ABORT_EXIT);</span><br><span class="line">    <span class="comment">// ...</span></span><br><span class="line">  &#125;</span><br><span class="line">  <span class="comment">// ...</span></span><br><span class="line">  <span class="keyword">if</span> (total_ha_2pc &gt; <span class="number">1</span> || (<span class="number">1</span> == total_ha_2pc &amp;&amp; opt_bin_log))</span><br><span class="line">  &#123;</span><br><span class="line">    <span class="keyword">if</span> (opt_bin_log) tc_log= &amp;mysql_bin_log;</span><br><span class="line">    <span class="keyword">else</span> tc_log= &amp;tc_log_mmap;</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">if</span> (tc_log-&gt;<span class="built_in">open</span>(opt_bin_log ? opt_bin_logname : opt_tc_log_file))</span><br><span class="line">  &#123;</span><br><span class="line">    sql_print_error(<span class="string">"Can't init tc log"</span>);</span><br><span class="line">    unireg_abort(MYSQLD_ABORT_EXIT);</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="comment">// ...</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>在sql/mysqld.cc中的init_server_components()方法中，首先根据参数设置事务协调者(tc,Transaction Coordinator)即代码中的tc_log对象，在MySQL启动时默认初始化为mysql_bin_log对象。之后最主要调用了<code>tc_log-&gt;open()</code>也即binlog的open()方法</p>
+<blockquote>
+<p>在事务提交时会依次执行<code>tc_log-&gt;prepare();tc_log-&gt;commit();</code>————即执行binlog的prepare()和commit()方法</p>
+</blockquote>
+<p>MYSQL_BIN_LOG::open()方法主要逻辑如下：</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">open</span><span class="params">(<span class="keyword">const</span> <span class="keyword">char</span> *opt_name)</span> </span>&#123; <span class="keyword">return</span> open_binlog(opt_name); &#125;</span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">MYSQL_BIN_LOG::open_binlog</span><span class="params">(<span class="keyword">const</span> <span class="keyword">char</span> *opt_name)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">  <span class="comment">// ...</span></span><br><span class="line">  <span class="comment">// 确保index文件初始化成功</span></span><br><span class="line">  <span class="keyword">if</span> (!my_b_inited(&amp;index_file))</span><br><span class="line">  &#123;</span><br><span class="line">    <span class="comment">/* There was a failure to open the index file, can't open the binlog */</span></span><br><span class="line">    cleanup();</span><br><span class="line">    <span class="keyword">return</span> <span class="number">1</span>;</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="comment">// ...</span></span><br><span class="line">  <span class="comment">// 找到index中第一个binlog</span></span><br><span class="line">  <span class="keyword">if</span> ((error= find_log_pos(&amp;log_info, NullS, <span class="literal">true</span><span class="comment">/*need_lock_index=true*/</span>)))</span><br><span class="line">  &#123;</span><br><span class="line">    <span class="keyword">if</span> (error != LOG_INFO_EOF) sql_print_error(<span class="string">"find_log_pos() failed (error: %d)"</span>, error);</span><br><span class="line">    <span class="keyword">else</span> error= <span class="number">0</span>;</span><br><span class="line">    <span class="keyword">goto</span> err;</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="comment">// ...</span></span><br><span class="line">  &#123;</span><br><span class="line">    <span class="comment">// ...</span></span><br><span class="line">    <span class="comment">// 找到index中最后一个binlog</span></span><br><span class="line">    <span class="keyword">do</span>&#123;</span><br><span class="line">      strmake(log_name, log_info.log_file_name, <span class="keyword">sizeof</span>(log_name)<span class="number">-1</span>);</span><br><span class="line">    &#125; <span class="keyword">while</span> (!(error= find_next_log(&amp;log_info, <span class="literal">true</span><span class="comment">/*need_lock_index=true*/</span>)));</span><br><span class="line">    <span class="comment">// ...</span></span><br><span class="line">    <span class="comment">/* </span></span><br><span class="line"><span class="comment">      打开最后一个binlog;校验文件头的Magic Number————\xfe\x62\x69\x6e</span></span><br><span class="line"><span class="comment">      如果Magic Number校验失败,报错退出,无法完成recovery</span></span><br><span class="line"><span class="comment">      如果确定最后一个binlog没有内容,可删除binlog文件再重试</span></span><br><span class="line"><span class="comment">    */</span></span><br><span class="line">    <span class="keyword">if</span> ((file= open_binlog_file(&amp;<span class="built_in">log</span>, log_name, &amp;errmsg)) &lt; <span class="number">0</span>)</span><br><span class="line">    &#123;</span><br><span class="line">      sql_print_error(<span class="string">"%s"</span>, errmsg);</span><br><span class="line">      <span class="keyword">goto</span> err;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">// ...</span></span><br><span class="line">    <span class="comment">/*</span></span><br><span class="line"><span class="comment">    If the binary log was not properly closed it means that the server</span></span><br><span class="line"><span class="comment">    may have crashed. In that case, we need to call MYSQL_BIN_LOG::recover</span></span><br><span class="line"><span class="comment">    to:</span></span><br><span class="line"><span class="comment">    如果binlog没有正常关闭,mysql服务端可能crash</span></span><br><span class="line"><span class="comment">    此时我们需要调用MYSQL_BIN_LOG::recover,为了:</span></span><br><span class="line"><span class="comment"></span></span><br><span class="line"><span class="comment">      a) collect logged XIDs; 找出已记录的XIDs</span></span><br><span class="line"><span class="comment">      b) complete the 2PC of the pending XIDs; 完成待处理的XIDs的两阶段提交(InnoDB commit)</span></span><br><span class="line"><span class="comment">      c) collect the last valid position. 找到最后一个合法位点</span></span><br><span class="line"><span class="comment"></span></span><br><span class="line"><span class="comment">    Therefore, we do need to iterate over the binary log, even if</span></span><br><span class="line"><span class="comment">    total_ha_2pc == 1, to find the last valid group of events written.</span></span><br><span class="line"><span class="comment">    Later we will take this value and truncate the log if need be.</span></span><br><span class="line"><span class="comment">    因此我们需要遍历binlog文件,找出最后写入的一个合法event集合</span></span><br><span class="line"><span class="comment">    稍后截断无效的binlog,如果有必要的话</span></span><br><span class="line"><span class="comment">    */</span></span><br><span class="line">    <span class="keyword">if</span> ((ev= Log_event::read_log_event(&amp;<span class="built_in">log</span>, <span class="number">0</span>, &amp;fdle, opt_master_verify_checksum)) &amp;&amp; ev-&gt;get_type_code() == binary_log::FORMAT_DESCRIPTION_EVENT &amp;&amp; (ev-&gt;common_header-&gt;flags &amp; LOG_EVENT_BINLOG_IN_USE_F || DBUG_EVALUATE_IF(<span class="string">"eval_force_bin_log_recovery"</span>, <span class="literal">true</span>, <span class="literal">false</span>)))</span><br><span class="line">    &#123;</span><br><span class="line">      sql_print_information(<span class="string">"Recovering after a crash using %s"</span>, opt_name);</span><br><span class="line">      <span class="comment">// 初始化合法点位</span></span><br><span class="line">      valid_pos= my_b_tell(&amp;<span class="built_in">log</span>);</span><br><span class="line">      <span class="comment">// 执行recover恢复过程,并计算出合法点位</span></span><br><span class="line">      error= recover(&amp;<span class="built_in">log</span>, (Format_description_log_event *)ev, &amp;valid_pos);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">else</span> error=<span class="number">0</span>;</span><br><span class="line">    <span class="comment">// ...</span></span><br><span class="line">    <span class="comment">/* Trim the crashed binlog file to last valid transaction</span></span><br><span class="line"><span class="comment">    or event (non-transaction) base on valid_pos. */</span></span><br><span class="line">    <span class="comment">// 将崩溃的binlog文件修剪到最后一个有效的事务或基于有效位置的event(非事务)</span></span><br><span class="line">    <span class="keyword">if</span> (valid_pos &gt; <span class="number">0</span>)</span><br><span class="line">    &#123;</span><br><span class="line">      <span class="keyword">if</span> ((file= mysql_file_open(key_file_binlog, log_name, O_RDWR | O_BINARY, MYF(MY_WME))) &lt; <span class="number">0</span>)</span><br><span class="line">      &#123;</span><br><span class="line">        <span class="comment">// ...</span></span><br><span class="line">        <span class="keyword">return</span> <span class="number">-1</span>;</span><br><span class="line">      &#125;</span><br><span class="line">      <span class="comment">/* Change binlog file size to valid_pos */</span></span><br><span class="line">      <span class="comment">// 将binlog文件大小更改为有效位置</span></span><br><span class="line">      <span class="keyword">if</span> (valid_pos &lt; binlog_size)</span><br><span class="line">      &#123;</span><br><span class="line">        <span class="comment">// 将valid_pos后面的binlog截断</span></span><br><span class="line">        <span class="keyword">if</span> (my_chsize(file, valid_pos, <span class="number">0</span>, MYF(MY_WME)))</span><br><span class="line">        &#123;</span><br><span class="line">          <span class="comment">// ...</span></span><br><span class="line">          mysql_file_close(file, MYF(MY_WME));</span><br><span class="line">          <span class="keyword">return</span> <span class="number">-1</span>;</span><br><span class="line">        &#125; <span class="keyword">else</span> <span class="comment">/**/</span></span><br><span class="line">      &#125;</span><br><span class="line">      <span class="comment">/* Clear LOG_EVENT_BINLOG_IN_USE_F */</span></span><br><span class="line">      <span class="keyword">my_off_t</span> offset= BIN_LOG_HEADER_SIZE + FLAGS_OFFSET;</span><br><span class="line">      uchar flags= <span class="number">0</span>;</span><br><span class="line">      <span class="keyword">if</span> (mysql_file_pwrite(file, &amp;flags, <span class="number">1</span>, offset, MYF(<span class="number">0</span>)) != <span class="number">1</span>)</span><br><span class="line">      &#123;</span><br><span class="line">        <span class="comment">// ...</span></span><br><span class="line">        mysql_file_close(file, MYF(MY_WME));</span><br><span class="line">        <span class="keyword">return</span> <span class="number">-1</span>;</span><br><span class="line">      &#125;</span><br><span class="line">      mysql_file_close(file, MYF(MY_WME));</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">// ...</span></span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>在sql/binlog.h中的open()方法直接调用了sql/binlog.cc中的MYSQL_BIN_LOG::open_binlog()方法，其中最主要调用了recover()方法进行恢复操作</p>
+<p>recover()方法主要逻辑如下：</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment">MYSQLD server recovers from last crashed binlog.</span></span><br><span class="line"><span class="comment">MySQL服务端从上次崩溃的binlog中恢复</span></span><br><span class="line"><span class="comment"></span></span><br><span class="line"><span class="comment">@param log           IO_CACHE of the crashed binlog. </span></span><br><span class="line"><span class="comment">                     崩溃binlog的IO缓存</span></span><br><span class="line"><span class="comment">@param fdle          Format_description_log_event of the crashed binlog.</span></span><br><span class="line"><span class="comment">                     崩溃binlog的格式化描述</span></span><br><span class="line"><span class="comment">@param valid_pos     The position of the last valid transaction or</span></span><br><span class="line"><span class="comment">                     event(non-transaction) of the crashed binlog.</span></span><br><span class="line"><span class="comment">                     最后一个有效的事务或崩溃binlog的event(非事务)的位置</span></span><br><span class="line"><span class="comment"></span></span><br><span class="line"><span class="comment">@retval 0 ok</span></span><br><span class="line"><span class="comment">@retval 1 error</span></span><br><span class="line"><span class="comment">*/</span></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">MYSQL_BIN_LOG::recover</span><span class="params">(IO_CACHE *<span class="built_in">log</span>, Format_description_log_event *fdle, <span class="keyword">my_off_t</span> *valid_pos)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">  <span class="comment">// ...</span></span><br><span class="line">  <span class="comment">// 初始化XID hash,用于记录binlog中的xid</span></span><br><span class="line">  <span class="keyword">if</span> (!fdle-&gt;is_valid() || my_hash_init(&amp;xids, &amp;my_charset_bin, memory_page_size / <span class="number">3</span>, <span class="number">0</span>, <span class="keyword">sizeof</span>(my_xid), <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, key_memory_binlog_recover_exec)) <span class="keyword">goto</span> err1;</span><br><span class="line">  <span class="comment">// ...</span></span><br><span class="line">  <span class="comment">// 依次读取binlog</span></span><br><span class="line">  <span class="keyword">while</span> ((ev= Log_event::read_log_event(<span class="built_in">log</span>, <span class="number">0</span>, fdle, TRUE)) &amp;&amp; ev-&gt;is_valid())</span><br><span class="line">  &#123;</span><br><span class="line">    <span class="keyword">if</span> (ev-&gt;get_type_code() == binary_log::QUERY_EVENT &amp;&amp; !<span class="built_in">strcmp</span>(((Query_log_event*)ev)-&gt;query, <span class="string">"BEGIN"</span>)) in_transaction= TRUE; <span class="comment">/* begin表示事务开始 */</span></span><br><span class="line">    <span class="keyword">if</span> (ev-&gt;get_type_code() == binary_log::QUERY_EVENT &amp;&amp; !<span class="built_in">strcmp</span>(((Query_log_event*)ev)-&gt;query, <span class="string">"COMMIT"</span>)) <span class="comment">/* commit表示事务结束 */</span></span><br><span class="line">    &#123;</span><br><span class="line">      DBUG_ASSERT(in_transaction == TRUE);</span><br><span class="line">      in_transaction= FALSE;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">else</span> <span class="keyword">if</span> (ev-&gt;get_type_code() == binary_log::XID_EVENT)</span><br><span class="line">    &#123;</span><br><span class="line">      <span class="comment">// xid event表示事务结束</span></span><br><span class="line">      DBUG_ASSERT(in_transaction == TRUE);</span><br><span class="line">      in_transaction= FALSE;</span><br><span class="line">      Xid_log_event *xev=(Xid_log_event *)ev;</span><br><span class="line">      uchar *x= (uchar *) memdup_root(&amp;mem_root, (uchar*) &amp;xev-&gt;xid, <span class="keyword">sizeof</span>(xev-&gt;xid));</span><br><span class="line">      <span class="comment">// 记录xid</span></span><br><span class="line">      <span class="keyword">if</span> (!x || my_hash_insert(&amp;xids, x)) <span class="keyword">goto</span> err2;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">/*</span></span><br><span class="line"><span class="comment">      Recorded valid position for the crashed binlog file</span></span><br><span class="line"><span class="comment">      which did not contain incorrect events. The following</span></span><br><span class="line"><span class="comment">      positions increase the variable valid_pos:</span></span><br><span class="line"><span class="comment">      为崩溃的binlog文件记录的有效位置,其中不包含不正确的事件</span></span><br><span class="line"><span class="comment">      以下位置增加有效位置变量：</span></span><br><span class="line"><span class="comment"></span></span><br><span class="line"><span class="comment">      1 -</span></span><br><span class="line"><span class="comment">        ...</span></span><br><span class="line"><span class="comment">        &lt;---&gt; HERE IS VALID &lt;---&gt;</span></span><br><span class="line"><span class="comment">        GTID </span></span><br><span class="line"><span class="comment">        BEGIN</span></span><br><span class="line"><span class="comment">        ...</span></span><br><span class="line"><span class="comment">        COMMIT</span></span><br><span class="line"><span class="comment">        ...</span></span><br><span class="line"><span class="comment">        </span></span><br><span class="line"><span class="comment">      2 -</span></span><br><span class="line"><span class="comment">        ...</span></span><br><span class="line"><span class="comment">        &lt;---&gt; HERE IS VALID &lt;---&gt;</span></span><br><span class="line"><span class="comment">        GTID </span></span><br><span class="line"><span class="comment">        DDL/UTILITY</span></span><br><span class="line"><span class="comment">        ...</span></span><br><span class="line"><span class="comment"></span></span><br><span class="line"><span class="comment">      In other words, the following positions do not increase</span></span><br><span class="line"><span class="comment">      the variable valid_pos:</span></span><br><span class="line"><span class="comment">      换句话说,以下位置不会增加有效位置变量</span></span><br><span class="line"><span class="comment"></span></span><br><span class="line"><span class="comment">      1 -</span></span><br><span class="line"><span class="comment">        GTID </span></span><br><span class="line"><span class="comment">        &lt;---&gt; HERE IS VALID &lt;---&gt;</span></span><br><span class="line"><span class="comment">        ...</span></span><br><span class="line"><span class="comment"></span></span><br><span class="line"><span class="comment">      2 -</span></span><br><span class="line"><span class="comment">        GTID </span></span><br><span class="line"><span class="comment">        BEGIN</span></span><br><span class="line"><span class="comment">        &lt;---&gt; HERE IS VALID &lt;---&gt;</span></span><br><span class="line"><span class="comment">        ...</span></span><br><span class="line"><span class="comment">    */</span></span><br><span class="line">    <span class="comment">/* </span></span><br><span class="line"><span class="comment">      如果不在事务中,且不是gtid event,则更新valid_pos</span></span><br><span class="line"><span class="comment">      如果在事务中,且最后一段event不是一个完整事务,pos不合法</span></span><br><span class="line"><span class="comment">    */</span></span><br><span class="line">    <span class="keyword">if</span> (!<span class="built_in">log</span>-&gt;error &amp;&amp; !in_transaction &amp;&amp; !is_gtid_event(ev)) *valid_pos= my_b_tell(<span class="built_in">log</span>);</span><br><span class="line">    <span class="keyword">delete</span> ev;</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="comment">/*</span></span><br><span class="line"><span class="comment">    Call ha_recover if and only if there is a registered engine that</span></span><br><span class="line"><span class="comment">    does 2PC, otherwise in DBUG builds calling ha_recover directly</span></span><br><span class="line"><span class="comment">    will result in an assert. (Production builds would be safe since</span></span><br><span class="line"><span class="comment">    ha_recover returns right away if total_ha_2pc &lt;= opt_log_bin.)</span></span><br><span class="line"><span class="comment">    当且仅当注册的引擎执行两阶段提交调用ha_recover()方法</span></span><br><span class="line"><span class="comment">  */</span></span><br><span class="line">  <span class="keyword">if</span> (total_ha_2pc &gt; <span class="number">1</span> &amp;&amp; ha_recover(&amp;xids)) <span class="keyword">goto</span> err2;</span><br><span class="line">  <span class="comment">// ...</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>在sql/binlog.cc中的recover()方法主要逻辑为————遍历最后一个binlog的所有event，每次事务结尾(或者非事务event结尾)更新valid_pos(gtid event不更新)。并在一个hash中记录所有xid，用于引擎层恢复</p>
+</li>
+<li><p>在<code>tc_log-&gt;open();</code>语句执行恢复操作前，会调用MYSQL_BIN_LOG对象的open_index_file()方法</p>
+<blockquote>
+<p>为了保证binlog index的crash safe，MySQL引入了一个临时文件————crash_safe_index_file<br>新的binlog_file_name写入binlog_index_file，流程如下：</p>
+<ol>
+<li>创建临时文件crash_safe_index_file</li>
+<li>拷贝binlog_index_file中的内容到crash_safe_index_file</li>
+<li>新的binlog_file_name写入crash_safe_index_file</li>
+<li>删除binlog_index_file</li>
+<li>重命名crash_safe_index_file到binlog_index_file<br>这个流程保证了在任何时候崩溃时，binlog_index_file和crash_safe_index_file至少有一个可用这样恢复时只需判断这两个文件是否可用，如果binlog_index_file可用则无需特殊处理，如果binlog_index_file不可用则重命名crash_safe_index_file到binlog_index_file<br>binlog index的恢复过程主要在<code>MYSQL_BIN_LOG::open_index_file()</code>方法中</li>
+</ol>
+</blockquote>
+<p>open_index_file()方法主要逻辑如下：</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">bool</span> <span class="title">MYSQL_BIN_LOG::open_index_file</span><span class="params">(<span class="keyword">const</span> <span class="keyword">char</span> *index_file_name_arg, <span class="keyword">const</span> <span class="keyword">char</span> *log_name, <span class="keyword">bool</span> need_lock_index)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">  <span class="comment">// 拼接index_file_name</span></span><br><span class="line">  fn_format(index_file_name, index_file_name_arg, mysql_data_home, <span class="string">".index"</span>, opt);</span><br><span class="line">  <span class="comment">// 拼接crash_safe_index_file_name</span></span><br><span class="line">  <span class="keyword">if</span> (set_crash_safe_index_file_name(index_file_name_arg))</span><br><span class="line">  &#123;</span><br><span class="line">    sql_print_error(<span class="string">"MYSQL_BIN_LOG::set_crash_safe_index_file_name failed."</span>);</span><br><span class="line">    error= <span class="literal">true</span>;</span><br><span class="line">    <span class="keyword">goto</span> <span class="built_in">end</span>;</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="comment">/*</span></span><br><span class="line"><span class="comment">  We need move crash_safe_index_file to index_file if the index_file</span></span><br><span class="line"><span class="comment">  does not exist and crash_safe_index_file exists when mysqld server</span></span><br><span class="line"><span class="comment">  restarts.</span></span><br><span class="line"><span class="comment">  检查index_file_name和crash_safe_index_file_name是否存在</span></span><br><span class="line"><span class="comment">  如果index_file_name不存在,crash_safe_index_file_name存在</span></span><br><span class="line"><span class="comment">  那么将crash_safe_index_file_name重命名为index_file_name</span></span><br><span class="line"><span class="comment">  */</span></span><br><span class="line">  <span class="keyword">if</span> (my_access(index_file_name, F_OK) &amp;&amp; !my_access(crash_safe_index_file_name, F_OK) &amp;&amp; my_rename(crash_safe_index_file_name, index_file_name, MYF(MY_WME)))</span><br><span class="line">  &#123;</span><br><span class="line">    sql_print_error(<span class="string">"MYSQL_BIN_LOG::open_index_file failed to "</span></span><br><span class="line">                    <span class="string">"move crash_safe_index_file to index file."</span>);</span><br><span class="line">    error= <span class="literal">true</span>;</span><br><span class="line">    <span class="keyword">goto</span> <span class="built_in">end</span>;</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="comment">// ...</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+
+          
+            <div class='article_footer'>
+              
+                
+  
+    
+    
+
+
+
+  
+
+  
+    
+    
+
+
+
+  
+
+  
+    
+    
+
+<section class="widget copyright  desktop mobile">
+  <div class='content'>
+    
+      <blockquote>
+        
+          
+            <p>博客内容遵循 署名-非商业性使用-相同方式共享 4.0 国际 (CC BY-NC-SA 4.0) 协议</p>
+
+          
+        
+          
+            <p>本文永久链接是：<a href=https://sobxiong.github.io/2021/01/08/Middleware/MySQL/MySQL%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90/>https://sobxiong.github.io/2021/01/08/Middleware/MySQL/MySQL%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90/</a></p>
+          
+        
+      </blockquote>
+    
+  </div>
+</section>
+
+  
+
+  
+    
+    
+
+<section class="widget qrcode  desktop mobile">
+  
+
+  <div class='content article-entry'>
+    
+      
+        <div class='fancybox'><img src='https://cdn.jsdelivr.net/gh/xaoxuu/cdn-assets/qrcode/wiki_volantis.png'
+        
+          height='64px'
+        ></div>
+      
+    
+      
+        <div class='fancybox'><img src='https://cdn.jsdelivr.net/gh/xaoxuu/cdn-assets/qrcode/wiki_volantis.png'
+        
+          height='64px'
+        ></div>
+      
+    
+  </div>
+</section>
+
+  
+
+
+              
+            </div>
+          
+        </div>
+        
+          
+
+
+  <section class='meta' id="footer-meta">
+    <div class='new-meta-box'>
+      
+        
+          <div class="new-meta-item date" itemprop="dateUpdated" datetime="2021-01-17T20:53:17+08:00">
+  <a class='notlink'>
+    <i class="fas fa-edit fa-fw" aria-hidden="true"></i>
+    <p>更新于：2021年1月17日</p>
+  </a>
+</div>
+
+        
+      
+        
+          
+  
+  <div class="new-meta-item meta-tags"><a class="tag" href="/tags/Middleware/" rel="nofollow"><i class="fas fa-hashtag fa-fw" aria-hidden="true"></i><p>Middleware</p></a></div> <div class="new-meta-item meta-tags"><a class="tag" href="/tags/MySQL/" rel="nofollow"><i class="fas fa-hashtag fa-fw" aria-hidden="true"></i><p>MySQL</p></a></div>
+
+
+        
+      
+        
+          
+
+        
+      
+        
+          
+  <div class="new-meta-item share -mob-share-list">
+  <div class="-mob-share-list share-body">
+    
+      
+        <a class="-mob-share-qq" title="" rel="external nofollow noopener noreferrer"
+          
+          href="http://connect.qq.com/widget/shareqq/index.html?url=https://sobxiong.github.io/2021/01/08/Middleware/MySQL/MySQL%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90/&title=MySQL源码分析 - SOBXiong的博客&summary=内容
+环境搭建
+查询分析
+事务
+故障恢复
+"
+          
+          >
+          
+            <img src="https://cdn.jsdelivr.net/gh/xaoxuu/cdn-assets/logo/128/qq.png">
+          
+        </a>
+      
+    
+      
+        <a class="-mob-share-qzone" title="" rel="external nofollow noopener noreferrer"
+          
+          href="https://sns.qzone.qq.com/cgi-bin/qzshare/cgi_qzshare_onekey?url=https://sobxiong.github.io/2021/01/08/Middleware/MySQL/MySQL%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90/&title=MySQL源码分析 - SOBXiong的博客&summary=内容
+环境搭建
+查询分析
+事务
+故障恢复
+"
+          
+          >
+          
+            <img src="https://cdn.jsdelivr.net/gh/xaoxuu/cdn-assets/logo/128/qzone.png">
+          
+        </a>
+      
+    
+      
+        <a class="-mob-share-weibo" title="" rel="external nofollow noopener noreferrer"
+          
+          href="http://service.weibo.com/share/share.php?url=https://sobxiong.github.io/2021/01/08/Middleware/MySQL/MySQL%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90/&title=MySQL源码分析 - SOBXiong的博客&summary=内容
+环境搭建
+查询分析
+事务
+故障恢复
+"
+          
+          >
+          
+            <img src="https://cdn.jsdelivr.net/gh/xaoxuu/cdn-assets/logo/128/weibo.png">
+          
+        </a>
+      
+    
+  </div>
+</div>
+
+
+
+        
+      
+    </div>
+  </section>
+
+
+        
+        
+          <div class="prev-next">
+            
+              <a class='prev' href='/2021/01/23/SpringSeries/MyBatis/'>
+                <p class='title'><i class="fas fa-chevron-left" aria-hidden="true"></i>MyBatis</p>
+                <p class='content'>内容
+MyBatis入门
+
+
+
+MyBatis入门
+中文链接：https://mybatis.org/mybatis-3/zh/index.html
+
+</p>
+              </a>
+            
+            
+              <a class='next' href='/2021/01/01/FrontEnd/Basic/H5+CSS3/'>
+                <p class='title'>前端基础<i class="fas fa-chevron-right" aria-hidden="true"></i></p>
+                <p class='content'>内容
+HTML介绍
+CSS介绍
+
+
+
+HTML介绍
+注释
+
+介绍：会被浏览器忽视，不会直接显示；注释不能嵌套
+语法：&lt;!-- --&gt;
+
+
+文档声明(doctype)
+
+介绍：用来告知...</p>
+              </a>
+            
+          </div>
+        
+      </section>
+    </article>
+  
+
+  
+    <!-- 显示推荐文章和评论 -->
+
+
+
+  <article class="post white-box reveal comments shadow">
+    <section class="article typo">
+      <p ct><i class='fas fa-comments'></i> 评论</p>
+      
+      
+      
+      
+      
+      
+        <section id="comments">
+          <div id="valine_container" class="valine_thread">
+            <i class="fas fa-cog fa-spin fa-fw fa-2x"></i>
+          </div>
+        </section>
+      
+      
+    </section>
+  </article>
+
+
+  
+
+
+
+
+<!-- 根据页面mathjax变量决定是否加载MathJax数学公式js -->
+
+
+
+  <script>
+    window.subData = {
+      title: 'MySQL源码分析',
+      tools: true
+    }
+  </script>
+
+
+</div>
+<aside class='l_side'>
+  
+  
+
+  
+    
+    
+
+
+
+  <section class="widget toc-wrapper shadow desktop mobile" id="toc-div" >
+    
+  <header>
+    
+      <i class="fas fa-list fa-fw" aria-hidden="true"></i><span class='name'>本文目录</span>
+    
+  </header>
+
+
+    <div class='content'>
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#内容"><span class="toc-text">内容</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#环境搭建"><span class="toc-text">环境搭建</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#查询分析"><span class="toc-text">查询分析</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#事务"><span class="toc-text">事务</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#故障恢复"><span class="toc-text">故障恢复</span></a></li></ol>
+    </div>
+  </section>
+
+
+  
+
+
+</aside>
+
+
+  
+  <footer class="clearfix">
+    <br><br>
+    
+      
+        <br>
+        <div class="social-wrapper">
+          
+            
+              <a href="mailto:1942991710@qq.com"
+                class="social fas fa-envelope flat-btn"
+                target="_blank"
+                rel="external nofollow noopener noreferrer">
+              </a>
+            
+          
+            
+              <a href="https://github.com/SOBXiong"
+                class="social fab fa-github flat-btn"
+                target="_blank"
+                rel="external nofollow noopener noreferrer">
+              </a>
+            
+          
+        </div>
+      
+    
+      
+        <div><p>博客内容遵循 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh" target="_blank" rel="noopener">署名-非商业性使用-相同方式共享 4.0 国际 (CC BY-NC-SA 4.0) 协议</a></p>
+</div>
+      
+    
+      
+        <div class='copyright'>
+        <p><a href="http://xiongjc.top" target="_blank" rel="noopener">Copyright © 2017-2020 SOBXiong</a></p>
+
+        </div>
+      
+    
+  </footer>
+
+<script>setLoadingBarProgress(80);</script>
+
+
+      <script>setLoadingBarProgress(60);</script>
+    </div>
+    <a class="s-top fas fa-arrow-up fa-fw" href='javascript:void(0)'></a>
+  </div>
+  
+<script src="https://cdn.jsdelivr.net/npm/jquery@3.4/dist/jquery.min.js"></script>
+
+
+  <script>
+    
+    var SEARCH_SERVICE = "hexo" || "hexo";
+    var ROOT = "/" || "/";
+    if (!ROOT.endsWith('/')) ROOT += '/';
+  </script>
+
+
+
+
+
+  <script async src="https://cdn.jsdelivr.net/gh/xaoxuu/cdn-volantis@2/js/instant_page.js" type="module" defer integrity="sha384-OeDn4XE77tdHo8pGtE1apMPmAipjoxUQ++eeJa6EtJCfHlvijigWiJpD7VDPWXV1"></script>
+
+
+  <script src="https://cdn.jsdelivr.net/npm/scrollreveal@4.0.6/dist/scrollreveal.min.js"></script>
+  <script type="text/javascript">
+    $(function() {
+      ScrollReveal().reveal('.l_main .reveal', {
+        distance: '8px',
+        duration: '800',
+        interval: '100',
+        scale: '1'
+      });
+    });
+  </script>
+
+
+  
+<script src="https://cdn.jsdelivr.net/npm/node-waves@0.7.6/dist/waves.min.js"></script>
+
+  <script type="text/javascript">
+    $(function() {
+      Waves.attach('.flat-btn', ['waves-button']);
+      Waves.attach('.float-btn', ['waves-button', 'waves-float']);
+      Waves.attach('.float-btn-light', ['waves-button', 'waves-float', 'waves-light']);
+      Waves.attach('.flat-box', ['waves-block']);
+      Waves.attach('.float-box', ['waves-block', 'waves-float']);
+      Waves.attach('.waves-image');
+      Waves.init();
+    });
+  </script>
+
+
+  <script defer src="https://cdn.jsdelivr.net/gh/xaoxuu/cdn-busuanzi@2.3/js/busuanzi.pure.mini.js"></script>
+
+
+
+  
+  
+  
+    
+<script src="https://cdn.jsdelivr.net/npm/jquery-backstretch@2.1.18/jquery.backstretch.min.js"></script>
+
+    <script type="text/javascript">
+      $(function(){
+        var imgs=["https://cdn.jsdelivr.net/gh/xaoxuu/cdn-wallpaper/abstract/41F215B9-261F-48B4-80B5-4E86E165259E.jpeg"];
+        if ('true' == 'true') {
+          function shuffle(arr){
+            /*From countercurrent-time*/
+            var n = arr.length;
+            while(n--) {
+              var index = Math.floor(Math.random() * n);
+              var temp = arr[index];
+              arr[index] = arr[n];
+              arr[n] = temp;
+            }
+          }
+          shuffle(imgs);
+        }
+        if ('.cover') {
+          $('.cover').backstretch(
+            imgs,
+          {
+            duration: "20000",
+            fade: "1500"
+          });
+        } else {
+          $.backstretch(
+            imgs,
+          {
+            duration: "20000",
+            fade: "1500"
+          });
+        }
+      });
+    </script>
+  
+
+
+
+  
+    
+<script src="https://cdn.jsdelivr.net/npm/aplayer@1.10/dist/APlayer.min.js"></script>
+
+  
+    
+<script src="https://cdn.jsdelivr.net/npm/meting@2.0/dist/Meting.min.js"></script>
+
+  
+
+
+
+
+
+
+
+
+
+  
+    
+<script src="https://cdn.jsdelivr.net/npm/valine@1.4/dist/Valine.min.js"></script>
+
+  
+  <script>
+  var GUEST_INFO = ['nick','mail','link'];
+  var meta = 'nick,mail,link'.split(',').filter(function(item){
+    return GUEST_INFO.indexOf(item) > -1
+  });
+  var REQUIRED_FIELDS = ['nick','mail','link'];
+  var requiredFields = 'nick,mail'.split(',').filter(function(item){
+    return REQUIRED_FIELDS.indexOf(item) > -1
+  });
+  var valine = new Valine();
+  function emoji(path, idx, ext) {
+      return path + "/" + path + "-" + idx + "." + ext;
+  }
+  var emojiMaps = {};
+  for (var i = 1; i <= 54; i++) {
+    emojiMaps['tieba-' + i] = emoji('tieba', i, 'png');
+  }
+  for (var i = 1; i <= 101; i++) {
+    emojiMaps['qq-' + i] = emoji('qq', i, 'gif');
+  }
+  for (var i = 1; i <= 116; i++) {
+    emojiMaps['aru-' + i] = emoji('aru', i, 'gif');
+  }
+  for (var i = 1; i <= 125; i++) {
+    emojiMaps['twemoji-' + i] = emoji('twemoji', i, 'png');
+  }
+  for (var i = 1; i <= 4; i++) {
+    emojiMaps['weibo-' + i] = emoji('weibo', i, 'png');
+  }
+  valine.init({
+    el: '#valine_container',
+    meta: meta,
+    
+    appId: "dogUA2FSKGTo029M1SEwGROT-MdYXbMMI",
+    appKey: "u0NdtQ8nvHoMdJPSYqm1LRxE",
+    placeholder: "快来评论吧~",
+    pageSize:'10',
+    avatar:'robohash',
+    lang:'zh-cn',
+    visitor: 'true',
+    highlight: 'true',
+    mathJax: 'false',
+    enableQQ: 'true',
+    requiredFields: requiredFields,
+    emojiCDN: 'https://cdn.jsdelivr.net/gh/xaoxuu/cdn-assets/emoji/valine/',
+    emojiMaps: emojiMaps
+  })
+  </script>
+
+
+
+
+
+  
+<script src="https://cdn.jsdelivr.net/gh/xaoxuu/cdn-volantis@2.6.5/js/app.js"></script>
+
+
+
+  
+<script src="https://cdn.jsdelivr.net/gh/xaoxuu/cdn-volantis@2.6.5/js/search.js"></script>
+
+
+
+  
+<script src="https://cdn.jsdelivr.net/gh/xaoxuu/cdn-volantis@2/js/comment_typing.js"></script>
+
+
+
+
+
+
+<!-- 复制 -->
+
+  <script src="https://cdn.jsdelivr.net/npm/clipboard@2/dist/clipboard.min.js"></script>
+<script>
+  function wait(callback, seconds) {
+    var timelag = null;
+    timelag = window.setTimeout(callback, seconds);
+  }
+  !function (e, t, a) {
+    var initCopyCode = function(){
+      var copyHtml = '';
+      copyHtml += '<button class="btn-copy" data-clipboard-snippet="">';
+      copyHtml += '<i class="fas fa-copy"></i><span>COPY</span>';
+      copyHtml += '</button>';
+      $(".highlight .code pre").before(copyHtml);
+      $(".article pre code").before(copyHtml);
+      var clipboard = new ClipboardJS('.btn-copy', {
+        target: function(trigger) {
+          return trigger.nextElementSibling;
+        }
+      });
+      clipboard.on('success', function(e) {
+        let $btn = $(e.trigger);
+        $btn.addClass('copied');
+        let $icon = $($btn.find('i'));
+        $icon.removeClass('fa-copy');
+        $icon.addClass('fa-check-circle');
+        let $span = $($btn.find('span'));
+        $span[0].innerText = 'COPIED';
+        
+        wait(function () { // 等待两秒钟后恢复
+          $icon.removeClass('fa-check-circle');
+          $icon.addClass('fa-copy');
+          $span[0].innerText = 'COPY';
+        }, 2000);
+      });
+      clipboard.on('error', function(e) {
+        e.clearSelection();
+        let $btn = $(e.trigger);
+        $btn.addClass('copy-failed');
+        let $icon = $($btn.find('i'));
+        $icon.removeClass('fa-copy');
+        $icon.addClass('fa-times-circle');
+        let $span = $($btn.find('span'));
+        $span[0].innerText = 'COPY FAILED';
+        
+        wait(function () { // 等待两秒钟后恢复
+          $icon.removeClass('fa-times-circle');
+          $icon.addClass('fa-copy');
+          $span[0].innerText = 'COPY';
+        }, 2000);
+      });
+    }
+    initCopyCode();
+  }(window, document);
+</script>
+
+
+
+
+<!-- fancybox -->
+<script src="https://cdn.jsdelivr.net/gh/fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.js"></script>
+<script>
+  function pjax_fancybox() {
+    $(".article-entry").find("img").not('.inline').not('a img').each(function () { //渲染 fancybox
+      var element = document.createElement("a"); // a 标签
+      $(element).attr("pjax-fancybox", "");  // 过滤 pjax
+      $(element).attr("href", $(this).attr("src"));
+      if ($(this).attr("data-original")) {
+        $(element).attr("href", $(this).attr("data-original"));
+      }
+      $(element).attr("data-fancybox", "images");
+      var caption = "";   // 描述信息
+      if ($(this).attr('alt')) {  // 标准 markdown 描述信息
+        $(element).attr('data-caption', $(this).attr('alt'));
+        caption = $(this).attr('alt');
+      }
+      var div = document.createElement("div");
+      $(div).addClass("fancybox");
+      $(this).wrap(div); // 最外层套 div ，其实主要作用还是 class 样式
+      var span = document.createElement("span");
+      $(span).addClass("image-caption");
+      $(span).text(caption); // 加描述
+      $(this).after(span);  // 再套一层描述
+      $(this).wrap(element);  // 最后套 a 标签
+    })
+    $(".article-entry").find("img").fancybox({
+      selector: '[data-fancybox="images"]',
+      hash: false,
+      loop: false,
+      closeClick: true,
+      helpers: {
+        overlay: {closeClick: true}
+      },
+      buttons: [
+        "zoom",
+        "close"
+      ]
+    });
+  };
+  $(function () {
+    pjax_fancybox();
+  });
+</script>
+
+
+
+
+
+  <script>setLoadingBarProgress(100);</script>
+</body>
+</html>

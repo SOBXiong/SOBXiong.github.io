@@ -22,8 +22,8 @@
   
   
     <meta name="description" content="内容
-基础语法
-进阶语法
+基础知识
+进阶知识
 ">
   
 
@@ -385,14 +385,427 @@
         <div class="article-entry" itemprop="articleBody">
           
           <h2 id="内容"><a href="#内容" class="headerlink" title="内容"></a>内容</h2><ul>
-<li><a href="#基础语法">基础语法</a></li>
-<li><a href="#进阶语法">进阶语法</a></li>
+<li><a href="#基础知识">基础知识</a></li>
+<li><a href="#基础知识">进阶知识</a></li>
 </ul>
 <a id="more"></a>
 
-<h2 id="基础语法"><a href="#基础语法" class="headerlink" title="基础语法"></a>基础语法</h2><h2 id="进阶语法"><a href="#进阶语法" class="headerlink" title="进阶语法"></a>进阶语法</h2><ul>
-<li><p>自动资源管理：Java7增加了一个新特性：该特性提供了另外一种管理资源的方式，这种方式能自动关闭文<br>件(或资源)。这个特性有时被称为自动资源管理(Automatic Resource Management,ARM)，该特性以try语句的扩展版为基础。当不再需要文件(或其他资源)时，可以防止无意中忘记释放它们</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/*</span></span><br><span class="line"><span class="comment">自动资源管理基于try语句的扩展形式：</span></span><br><span class="line"><span class="comment">当try代码块结束,自动释放资源。不需要显式调用close()方法。该形式也称为"带资源的try语句"</span></span><br><span class="line"><span class="comment">注意:</span></span><br><span class="line"><span class="comment">1、try语句中声明的资源被隐式声明为final,资源的作用局限于带资源的try语句</span></span><br><span class="line"><span class="comment">2、可以在一条try语句中管理多个资源,每个资源以';'隔开即可</span></span><br><span class="line"><span class="comment">3、需要关闭的资源必须实现AutoCloseable接口或其子接口Closeable</span></span><br><span class="line"><span class="comment">*/</span></span><br><span class="line"><span class="keyword">try</span>(需要关闭的资源声明)&#123;</span><br><span class="line">  <span class="comment">// 可能发生异常的语句</span></span><br><span class="line">&#125; <span class="keyword">catch</span>(异常类型变量名) &#123;</span><br><span class="line">  <span class="comment">// 异常的处理语句</span></span><br><span class="line"><span class="keyword">finally</span>&#123;</span><br><span class="line">  <span class="comment">// 一定执行的语句</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="基础知识"><a href="#基础知识" class="headerlink" title="基础知识"></a>基础知识</h2><ul>
+<li><p>访问修饰符：Java有三个显式关键字来设置类中的访问权限：public(公开)、private(私有)和protected(受保护)。访问修饰符决定了谁能使用它们修饰的方法、变量或类</p>
+<ul>
+<li>四种访问修饰符：<ol>
+<li><code>public</code>(公开)：表示任何人都可以访问和使用该元素</li>
+<li><code>private</code>(私有)：除了类本身和类内部的方法，外界无法直接访问该元素。private是类和调用者之间的屏障。任何试图访问私有成员的行为都会报编译时错误</li>
+<li><code>protected</code>(受保护)：类似于private，区别是子类可以访问protected的成员，但不能访问 private成员</li>
+<li><code>default</code>(默认)：如果不使用前面的三者，默认就是default访问权限。default被称为包访问，因为该权限下的资源可以被同一包(库组件)中其他类的成员访问</li>
+</ol>
+</li>
+<li>每个编译单元(文件)中只能有一个public修饰的类，或者没有</li>
+<li>类不能用private和protected修饰，只能用public或者空(default,包访问权限符)修饰</li>
+</ul>
+</li>
+<li><p>零碎知识点：</p>
+<ol>
+<li>Java是单继承结构</li>
+<li>区别组合和聚合的一种方式是整体和部分的生命周期联系(生命周期同步为组合,否则为聚合)</li>
+<li>尽量使用组合而不是继承，继承要慎重</li>
+<li>final：<ul>
+<li>修饰变量：修饰对象引用时，final使引用恒定不变，但对象本身属性是可以修改的(static只会附加静态的属性)；未定义的final属性必须在构造函数或者初始化块(静态/非静态)中赋值</li>
+<li>修饰方法：明确禁止子类覆写方法(private方法隐式指定为final,因为除类本身外不能访问)</li>
+<li>修饰类：禁止类被继承，类中方法隐式地被指定为final</li>
+</ul>
+</li>
+<li>类的代码在首次使用时加载(Class被加载)</li>
+<li>包含抽象方法的类叫抽象类，如果一个类包含一个或多个抽象方法，那么类本身也必须限定为抽象的；可将一个不包含任何抽象方法的类指明为abstract</li>
+</ol>
+</li>
+<li><p>常用数据类型：</p>
+<ol>
+<li><p>基本数据类型：</p>
+<table>
+<thead>
+<tr>
+<th>基本类型</th>
+<th>大小</th>
+<th>最小值</th>
+<th>最大值</th>
+<th>默认值</th>
+<th>包装类型</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>boolean</td>
+<td>/</td>
+<td>/</td>
+<td>/</td>
+<td>false</td>
+<td>Boolean</td>
+</tr>
+<tr>
+<td>char</td>
+<td>16bits</td>
+<td>Unicode0</td>
+<td>Unicode2^16-1</td>
+<td>\u0000(null)</td>
+<td>Character</td>
+</tr>
+<tr>
+<td>byte</td>
+<td>8bits</td>
+<td>-128</td>
+<td>127</td>
+<td>(byte)0</td>
+<td>Byte</td>
+</tr>
+<tr>
+<td>short</td>
+<td>16bits</td>
+<td>-2^15</td>
+<td>2^15-1</td>
+<td>(short)0</td>
+<td>Short</td>
+</tr>
+<tr>
+<td>int</td>
+<td>32bits</td>
+<td>-2^31</td>
+<td>2^31-1</td>
+<td>0</td>
+<td>Integer</td>
+</tr>
+<tr>
+<td>long</td>
+<td>64bits</td>
+<td>-2^63</td>
+<td>2^63-1</td>
+<td>0L</td>
+<td>Long</td>
+</tr>
+<tr>
+<td>float</td>
+<td>32bits</td>
+<td>IEEE754</td>
+<td>IEEE754</td>
+<td>0.0f</td>
+<td>Float</td>
+</tr>
+<tr>
+<td>double</td>
+<td>64bits</td>
+<td>IEEE754</td>
+<td>IEEE754</td>
+<td>0.0d</td>
+<td>Double</td>
+</tr>
+<tr>
+<td>void</td>
+<td>/</td>
+<td>/</td>
+<td>/</td>
+<td>/</td>
+<td>Void</td>
+</tr>
+</tbody></table>
+<blockquote>
+<p>基本数据类型只有是字段(类的成员变量/数组成员)/静态变量时才会设置为默认值，局部变量定义的基本数据类型没有默认值</p>
+</blockquote>
+</li>
+<li><p>高精度数值：BigInteger、BigDecimal</p>
+</li>
+<li><p>数组：对象数组默认元素初始化为null，基本类型数组默认元素初始化为0</p>
+</li>
+</ol>
+</li>
+<li><p>运算符：</p>
+<ul>
+<li>相等：<ol>
+<li>==和!=：比较对象引用</li>
+<li>equals()：可覆写，默认也是比较对象引用</li>
+</ol>
+</li>
+<li>移位运算符：<ol>
+<li>&lt;&lt;：向左移动指定位数，低位补0</li>
+<li>&gt;&gt;：向右移动指定位数，如果值为正，高位补0；否则高位补1</li>
+<li>&gt;&gt;&gt;：零扩展向右移动指定位数，无论值的正负，高位都补0</li>
+<li>移位匹配位数(short、char、byte虽然位数少会提升为int,但可移动的位数只有本身长度)</li>
+</ol>
+</li>
+<li>截断和舍入：float和double转为整数值时，小数位将被截断(不存在四舍五入)；四舍五入只能通过<code>Math.round()</code>方法</li>
+</ul>
+</li>
+<li><p>label(标签)：唯一用到标签的地方在循环语句之前；当在循环中嵌套循环或者开关时，break、continue关键字可以和标签搭配使用</p>
+</li>
+<li><p>方法：</p>
+<ol>
+<li><p>如果两个方法命名相同，Java通过参数列表进行区分(无返回值信息,顺序可以不同)————方法签名包括方法名和参数</p>
+</li>
+<li><p>如果类未显式声明构造器，编译器自动创建一个无参构造器</p>
+</li>
+<li><p><code>finalize()</code>方法：当垃圾回收器准备回收对象的内存时，首先会调用其finalize()方法(不保证一定会发生)，并在下一轮的垃圾回收动作发生时，才会真正回收对象占用的内存。注意该方法不等同于C++中的析构函数。该函数在本地方法情况下存在较大的作用</p>
+</li>
+<li><p>创建对象的过程(以类Test为例)</p>
+<ol>
+<li>即使没有显式地使用static关键字，构造器实际上也近似静态方法。所以当首次创建Test类型的对象或是首次访问Test类的静态方法或属性时，Java解释器必须在类路径中查找以定位Test.class</li>
+<li>当加载完Test.class后(将创建一个Class对象)，有关静态初始化的所有动作都会执行。因此静态初始化只会在首次加载Class对象时初始化一次</li>
+<li>当调用<code>new Test()</code>创建对象时，首先会在堆上为Test对象分配足够的存储空间</li>
+<li>分配的存储空间首先会被清零，接着会将Test对象中的所有基本类型数据设置为默认值，引用被置为null</li>
+<li>执行所有出现在字段定义处的初始化动作</li>
+<li>执行构造器</li>
+</ol>
+</li>
+<li><p>显式的非静态与静态实例初始化：</p>
+ <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 静态初始化</span></span><br><span class="line"><span class="keyword">static</span> &#123;</span><br><span class="line">  <span class="comment">// ...</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 非静态初始化,构造器之前执行</span></span><br><span class="line">&#123;</span><br><span class="line">  <span class="comment">// ...</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>Java5中重写方法添加了对协变返回类型的支持，重写方法的返回值类型可以是被重写方法返回值类型的子类</p>
+</li>
+<li><p>不能重写基类的private方法，这样只会屏蔽，而在派生类中生成一个新的方法</p>
+</li>
+<li><p>初始化的过程：</p>
+<ol>
+<li>分配给对象的存储空间初始化为二进制0</li>
+<li>调用基类构造器；如果此时在基类构造器中调用多态方法将会调用到派生类的方法，但派生类的属性目前全为二进制0(可能导致隐蔽的错误)</li>
+<li>按声明顺序初始化成员</li>
+<li>调用派生类的构造器</li>
+</ol>
+</li>
+</ol>
+</li>
+<li><p>多态</p>
+<ol>
+<li>绑定：将一个方法调用和一个方法主体关联起来</li>
+<li>前期绑定：若绑定发生在程序运行前(如果有的话,由编译器和链接器实现)；它是面向过程语言默认绑定方式，C语言只有这一种前期绑定这种方法调用</li>
+<li>后期绑定(动态绑定/运行时绑定)：后期绑定意味着在运行时根据对象的类型进行绑定。当一种语言实现了后期绑定，就必须具有某种机制在运行时能判断对象的类型，从而调用恰当的方法。即编译器仍然不知道对象的类型，但方法调用机制能找到正确的方法体并调用。每种语言的后期绑定机制都不同，但是可以想到对象中一定存在某种类型信息</li>
+<li>Java中除了static和final方法(private方法也是隐式的final)外，其他所有方法都是后期绑定。这意味着通常情况下不需要判断后期绑定是否会发生————它自动发生</li>
+<li>基类和派生类声明同名的变量会被分配到不同的存储空间，任何属性访问都被编译器解析，因此不存在多态</li>
+<li>静态方法没有多态特性，只与类关联</li>
+</ol>
+</li>
+<li><p>抽象类和接口的区别：</p>
+<table>
+<thead>
+<tr>
+<th>特性</th>
+<th>接口</th>
+<th>抽象类</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>组合</td>
+<td>新类可以组合多个接口</td>
+<td>只能继承单一抽象类</td>
+</tr>
+<tr>
+<td>状态</td>
+<td>不能包含属性(除了静态属性,不支持对象状态)</td>
+<td>可以包含属性,非抽象方法可能引用这些属性</td>
+</tr>
+<tr>
+<td>默认方法和抽象方法</td>
+<td>不需要在子类中实现默认方法。默认方法可以引用其他接口的方法</td>
+<td>必须在子类中实现抽象方法</td>
+</tr>
+<tr>
+<td>构造器</td>
+<td>没有构造器</td>
+<td>可以有构造器</td>
+</tr>
+<tr>
+<td>可见性</td>
+<td>隐式public</td>
+<td>可以是protected或public</td>
+</tr>
+</tbody></table>
+</li>
+<li><p>内部类：定义在另一个类中的类</p>
+<ol>
+<li>内部类自动拥有对其外部类所有成员的访问权(当某个外部类的对象创建了一个内部类对象时,此内部类对象必定会秘密地捕获一个指向那个外部类对象的引用。然后在访问此外部类的成员时用那个引用来选择外部类的成员)</li>
+<li>在拥有外部类对象之前是不可能创建内部类对象的。这是因为内部类对象会暗自地连接到建它的外部类对象上。但是如果创建的是嵌套类(静态内部类)，那么它就不需要对外部类对象的引用</li>
+<li>private内部类可以完全隐藏实现的细节，但通过对外暴露接口的方式提供服务(只能得到接口的引用,内部类的引用得不到,因为不可见)</li>
+<li>可以在一个方法或者任意的作用域内定义内部类</li>
+<li>定义一个匿名内部类时，如果内部要使用一个外部环境对象，那么需要参数引用是final的(传给基类构造器无需final)</li>
+<li>匿名类中不能有命名构造器，但通过实例初始化能达到构造器的效果</li>
+<li>匿名内部类与正规的继承相比有些受限————因为匿名内部类要么继承类，要么实现接口(也只能实现一个接口)，但不能两者兼备</li>
+<li>嵌套类是声明为static的内部类，它无需内部类对象与其外部类对象之间有联系</li>
+<li>创建嵌套类的对象时不需要其外部类的对象；不能从嵌套类的对象中访问非静态的外部类对象</li>
+<li>普通内部类的字段与方法，只能放在类的外部层次上，所以普通的内部类不能有static数据和static字段，也不能包含嵌套类。但是嵌套类可以包含所有这些东西</li>
+<li>嵌套类可作为接口的一部分，接口中的任何类都自动是public和static的；甚至可以在接口的内部类中实现外部接口</li>
+<li>一个内部类被嵌套多少层并不重要————它能透明地访问所有它所嵌入的外部类的所有成员</li>
+<li>内部类可以近似提供继承多个具体或抽象的类的能力</li>
+<li>闭包(closure)是一个可调用的对象，它记录了一些信息，这些信息来自于创建它的作用域。内部类是面向对象的闭包，因为它不仅包含外部类对象(创建内部类的作用域)的信息，还自动拥有一个指向此外部类对象的引用。在此作用域内，内部类有权操作所有的成员，包括private成员(Java8及以后还可以使用lambda表达式实现闭包)</li>
+<li>因为内部类的构造器必须连接到指向其外部类对象的引用，所以在继承内部类的时候————那个指向外部类对象的”秘密的”引用必须被初始化，因此继承内部类的构造器必须显式定义含有外部类引用的参数并调用<code>outerClass.super()</code></li>
+</ol>
+</li>
+<li><p>集合</p>
+<ol>
+<li>Java5引入Iterable接口，任何实现了该接口的类都可以使用增强for循环遍历(Collection接口满足,例外的是数组)</li>
+</ol>
+</li>
+</ul>
+<h2 id="进阶知识"><a href="#进阶知识" class="headerlink" title="进阶知识"></a>进阶知识</h2><ul>
+<li><p>自动资源管理：Java7增加了一个新特性：该特性提供了另外一种管理资源的方式，这种方式能自动关闭文件(或资源)。这个特性有时被称为自动资源管理(Automatic Resource Management, ARM)，该特性以try语句的扩展版为基础。当不再需要文件(或其他资源)时，可以防止无意中忘记释放它们</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/*</span></span><br><span class="line"><span class="comment">自动资源管理基于try语句的扩展形式：</span></span><br><span class="line"><span class="comment">当try代码块结束,自动释放资源。不需要显式调用close()方法。该形式也称为"带资源的try语句"</span></span><br><span class="line"><span class="comment">注意:</span></span><br><span class="line"><span class="comment">1、try语句中声明的资源被隐式声明为final,资源的作用局限于带资源的try语句</span></span><br><span class="line"><span class="comment">2、可以在一条try语句中管理多个资源,每个资源以';'隔开即可</span></span><br><span class="line"><span class="comment">3、需要关闭的资源必须实现AutoCloseable接口或其子接口Closeable</span></span><br><span class="line"><span class="comment">*/</span></span><br><span class="line"><span class="keyword">try</span>(需要关闭的资源声明)&#123;</span><br><span class="line">  <span class="comment">// 可能发生异常的语句</span></span><br><span class="line">&#125; <span class="keyword">catch</span>(异常类型变量名) &#123;</span><br><span class="line">  <span class="comment">// 异常的处理语句</span></span><br><span class="line">&#125; <span class="keyword">finally</span>&#123;</span><br><span class="line">  <span class="comment">// 一定执行的语句</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>switch字符串：Java7增加了在字符串上switch的用法，这其实时一个逻辑扩展的语法糖(通过字符串的hashCode()等条件转换成整数的switch-case语句)</p>
+</li>
+<li><p>封装：将数据和方法包装进类中并把具体实现隐藏，结果是一个同时带有特征和行为的数据类型</p>
+</li>
+<li><p>接口：</p>
+<ol>
+<li>Java8允许接口包含默认方法和静态方法</li>
+<li>接口中的属性被隐式指明为static和final</li>
+</ol>
+</li>
+<li><p>函数式编程：</p>
+<ol>
+<li><p>Lambda表达式与单独定义类和采用匿名内部类是等价的</p>
+</li>
+<li><p>Lambda表达式是最小可能语法编写的函数定义，它产生函数，但表现为类</p>
+</li>
+<li><p>Lambda基本语法：</p>
+<ol>
+<li>参数，接着箭头”-&gt;”，接着方法体</li>
+<li>如果只有一个参数时不需要括号”()”，如果没有参数必须使用”()”表示空参数列表，如果又多个参数将参数列表放在”()”中</li>
+<li>如果方法体是单行，无需花括号”{}”，结果自动成为返回值，使用return非法；如果多行，需要”{}”和显式的return</li>
+</ol>
+</li>
+<li><p>可以编写递归Lambda表达式，但递归方法必须是实例变量或静态变量</p>
+</li>
+<li><p>方法引用以”::”为特征，左侧是类或对象的名称，右侧是方法名，但没有参数列表(隐式输入传入对象,普通方法隐含需要this,静态方法无需this)；构造器的方法引用是new</p>
+</li>
+<li><p>可以将方法引用传递给函数式接口(名称无关紧要,只要参数类型和返回类型相同)</p>
+</li>
+<li><p>高阶函数：消费或者生产函数的函数</p>
+</li>
+<li><p>被Lambda表达式引用的局部变量必须是final或者等同final效果的(对象引用可以改变改变属性)；但Lambda可以没限制地引用实例变量和静态变量</p>
+</li>
+<li><p>函数组合：多个函数组合成新函数，java.util.function接口中包含支持函数组合的方法</p>
+<table>
+<thead>
+<tr>
+<th>组合方法</th>
+<th>具体操作</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>andThen(argument)</td>
+<td>执行原操作,再执行参数操作</td>
+</tr>
+<tr>
+<td>compose(argument)</td>
+<td>执行参数操作,再执行原操作</td>
+</tr>
+<tr>
+<td>and(argument)</td>
+<td>原谓词(Predicate)和参数谓词的短路逻辑与</td>
+</tr>
+<tr>
+<td>or(argument)</td>
+<td>原谓词和参数谓词的短路逻辑或</td>
+</tr>
+<tr>
+<td>negate()</td>
+<td>该谓词的逻辑非</td>
+</tr>
+</tbody></table>
+</li>
+<li><p>柯里化：将一个多参数的函数转换为一系列单参数函数</p>
+</li>
+</ol>
+</li>
+<li><p>流式编程：</p>
+<ol>
+<li>流(Streams)是与任何特定存储机制无关的元素序列————流是”没有存储”的</li>
+<li>流的核心好处：程序短小且更易理解</li>
+<li>流式编程的核心特征：内部迭代(看不到迭代的过程,使代码可读性更强,能更简单使用多核处理器)</li>
+<li>流是懒加载的，它只在绝对必要时才计算</li>
+<li>流操作的类型有三种：创建流、修改流元素(中间操作)以及消费流元素(终端操作,通常意味着收集流元素)</li>
+<li>命令式编程指明了每一步如何做，而声明式编程声明了要做什么而不指明每一步如何做；声明式编程是函数式编程的风格</li>
+<li>流创建：<ol>
+<li><code>Stream.of()</code>方法</li>
+<li><code>集合.stream()</code>方法</li>
+<li>随机数流：<code>random对象.ints(from, to)</code>方法(long、double同,可使用boxed()方法装箱)</li>
+<li><code>Stream.generate()</code>方法：把任意Supplier&lt;T&gt;用于生成T的流</li>
+<li><code>IntStream.range()</code>方法(long、double类似)</li>
+<li><code>Stream.iterate(x, y)</code>：x是第一个元素(种子)；y是一个函数用于迭代生成元素，会存储每次生成的元素，第一次传入种子</li>
+<li>Stream.Builder：用于接收信息并创建流</li>
+<li><code>Arrays.stream()</code>方法</li>
+</ol>
+</li>
+<li>中间操作：<ol>
+<li><code>peek()</code>：帮助调试，无修改查看流中元素</li>
+<li><code>sorted()</code>：排序，传入一个Comparator参数</li>
+<li><code>distinct()</code>：消除流中重复元素(相比创建set集合消除重复工作量来的少)</li>
+<li><code>filter()</code>：过滤操作，若为true则保留</li>
+<li><code>map()</code>：改变流元素(mapToInt、mapToLong和mapToDouble同理)</li>
+<li><code>flatMap()</code>：扁平化元素————将产生流的函数应用于每个元素上，然后每个流扁平化为元素(floatMapToInt、floatMapToLong和floatMapToDouble同理)</li>
+</ol>
+</li>
+<li>终端操作：<ol>
+<li>转为数组<ul>
+<li><code>toArray()</code>：将流转换成适当类型的数组</li>
+<li><code>toArray(generator)</code>：在特殊情况下，生成自定义类型的数组</li>
+</ul>
+</li>
+<li>循环(遍历)<ul>
+<li><code>forEach(Consumer)</code>：普通循环(并行下不保证顺序)</li>
+<li><code>forEachOrdered(Consumer)</code>：保证forEach按照原始流顺序操作(并行下也保证顺序)</li>
+</ul>
+</li>
+<li>转为集合<ul>
+<li><code>collect(Collector)</code>：使用Collector收集流元素到结果集合中(<code>Collectors.toCollection(xxx::new)</code>可用于构建任何类型集合,toMap同理)</li>
+<li><code>collect(Supplier, BiConsumer, BiConsumer)</code>：同上；参数1用于创建新的结果集合，参数2用于添加一个元素(逻辑)，参数3用于添加一个集合(逻辑)</li>
+</ul>
+</li>
+<li>组合<ul>
+<li><code>reduce(BinaryOperator)</code>：使用BinaryOperator来组合所有流中的元素。因为流可能为空，其返回值为Optional</li>
+<li><code>reduce(identity, BinaryOperator)</code>：功能同上，但使用identity作为其组合的初始值。因此如果流为空，identity就是结果</li>
+<li><code>reduce(identity, BiFunction, BinaryOperator)</code>：更复杂的使用形式，它可以提高效率。通常可以显式地组合map和reduce来更简单地表达它</li>
+</ul>
+</li>
+<li>匹配<ul>
+<li><code>allMatch(Predicate)</code>：所有都满足Predicate则返回为true；在第一个不满足处停止执行</li>
+<li><code>anyMatch(Predicate)</code>：任一满足Predicate则返回true；在第一个满足时停止执行</li>
+<li><code>noneMatch(Predicate)</code>：所有都不满足Predicate则返回true；在第一个满足时停止执行</li>
+</ul>
+</li>
+<li>查找<ul>
+<li><code>findFirst()</code>：返回第一个流元素的Optional，如果流为空则返回Optional.empty</li>
+<li><code>findAny()</code>：返回含有任意流元素的Optional，如果流为空则返回Optional.empty(非并行流会选择第一个元素)</li>
+</ul>
+</li>
+<li>信息<ul>
+<li><code>count()</code>：返回流中的元素个数</li>
+<li><code>max(Comparator)</code>：返回根据传入的Comparator所决定的最大元素(数值流无需Comparator)</li>
+<li><code>min(Comparator)</code>：返回根据传入的Comparator所决定的最小元素(数值流无需Comparator)</li>
+<li><code>average()</code>：求取流元素平均值(数值流专有)</li>
+<li><code>sum()</code>：对所有流元素进行求和(数值流专有)</li>
+</ul>
+</li>
+</ol>
+</li>
+<li>Optional：防止从空流中获取元素的中断(用于包装成统一的对象,包括null)<ul>
+<li>便利的解包函数(简化包含对象的检查和执行操作)：<ol>
+<li><code>ifPresent(Consumer)</code>：当值存在时调用Consumer，否则什么也不做</li>
+<li><code>orElse(otherObject)</code>：如果值存在则直接返回，否则生成otherObject</li>
+<li><code>orElseGet(Supplier)</code>：如果值存在则直接返回，否则使用Supplier函数生成一个可替代对象</li>
+<li><code>orElseThrow(Supplier)</code>：如果值存在直接返回，否则使用Supplier函数生成一个异常</li>
+</ol>
+</li>
+<li>创建(通过Optional静态方法)<ol>
+<li><code>Optional.empty()</code>：生成一个空Optional</li>
+<li><code>Optional.of(value)</code>：将一个非空值包装到Optional里</li>
+<li><code>Optional.ofNullable(value)</code>：针对一个可能为空的值————为空时自动生成Optional.empty，否则将值包装在Optional中</li>
+</ol>
+</li>
+<li>Optional对象操作(流中)<ol>
+<li><code>filter(Predicate)</code>：对Optional中的内容应用Predicate并将结果返回(如果不满足或者本身已为空则返回Optional.empty)</li>
+<li><code>map(Function)</code>：应用Function于Optional中的内容并返回结果(Optional为空返回Optional.empty)</li>
+<li><code>flatMap(Function)</code>：同map；应用于已生成Optional的映射函数，所以不会将结果封装在Optional中(除非显式封装)</li>
+</ol>
+</li>
+</ul>
+</li>
+</ol>
 </li>
 </ul>
 
@@ -482,10 +895,10 @@
     <div class='new-meta-box'>
       
         
-          <div class="new-meta-item date" itemprop="dateUpdated" datetime="2020-11-15T16:33:25+08:00">
+          <div class="new-meta-item date" itemprop="dateUpdated" datetime="2021-03-04T20:10:45+08:00">
   <a class='notlink'>
     <i class="fas fa-edit fa-fw" aria-hidden="true"></i>
-    <p>更新于：2020年11月15日</p>
+    <p>更新于：2021年3月4日</p>
   </a>
 </div>
 
@@ -513,8 +926,8 @@
         <a class="-mob-share-qq" title="" rel="external nofollow noopener noreferrer"
           
           href="http://connect.qq.com/widget/shareqq/index.html?url=https://sobxiong.github.io/2020/10/08/ProgrammingLanguage/Java/Java%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86/&title=Java基础知识 - SOBXiong的博客&summary=内容
-基础语法
-进阶语法
+基础知识
+进阶知识
 "
           
           >
@@ -528,8 +941,8 @@
         <a class="-mob-share-qzone" title="" rel="external nofollow noopener noreferrer"
           
           href="https://sns.qzone.qq.com/cgi-bin/qzshare/cgi_qzshare_onekey?url=https://sobxiong.github.io/2020/10/08/ProgrammingLanguage/Java/Java%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86/&title=Java基础知识 - SOBXiong的博客&summary=内容
-基础语法
-进阶语法
+基础知识
+进阶知识
 "
           
           >
@@ -543,8 +956,8 @@
         <a class="-mob-share-weibo" title="" rel="external nofollow noopener noreferrer"
           
           href="http://service.weibo.com/share/share.php?url=https://sobxiong.github.io/2020/10/08/ProgrammingLanguage/Java/Java%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86/&title=Java基础知识 - SOBXiong的博客&summary=内容
-基础语法
-进阶语法
+基础知识
+进阶知识
 "
           
           >
@@ -672,7 +1085,7 @@ NIO简介：Java NIO(New I0)是从Java 1.4版本开始引入...</p>
 
 
     <div class='content'>
-        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#内容"><span class="toc-text">内容</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#基础语法"><span class="toc-text">基础语法</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#进阶语法"><span class="toc-text">进阶语法</span></a></li></ol>
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#内容"><span class="toc-text">内容</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#基础知识"><span class="toc-text">基础知识</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#进阶知识"><span class="toc-text">进阶知识</span></a></li></ol>
     </div>
   </section>
 

@@ -1,0 +1,1274 @@
+<!DOCTYPE html>
+<html>
+<head hexo-theme='https://volantis.js.org/#2.6.6'>
+  <meta charset="utf-8">
+  <!-- SEO相关 -->
+  
+    
+  
+  <!-- 渲染优化 -->
+  <meta name="renderer" content="webkit">
+  <meta name="force-rendering" content="webkit">
+  <meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1">
+  <meta name="HandheldFriendly" content="True" >
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+  <!-- 页面元数据 -->
+  
+    <title>Redis基础 - SOBXiong的博客</title>
+  
+    <meta name="keywords" content="Middleware,Redis">
+  
+  
+    <meta name="description" content="内容
+Redis介绍
+Redis持久化
+Redis事务
+Redis消息发布订阅
+Redis主从复制
+Redis常用配置
+">
+  
+
+  <!-- feed -->
+  
+
+  <!-- import meta -->
+  
+
+  <!-- link -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@5.13/css/all.min.css">
+  
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.css">
+
+  
+  
+    
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/node-waves@0.7.6/dist/waves.min.css">
+
+  
+
+  
+  <link rel="shortcut icon" type='image/x-icon' href="https://cdn.jsdelivr.net/gh/SOBXiong/imageBed/favicon.png">
+  
+
+  
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/aplayer@1.10/dist/APlayer.min.css">
+  
+
+  
+
+  <!-- import link -->
+  
+
+  
+  
+    
+<link rel="stylesheet" href="/css/style.css">
+
+  
+
+  <script>
+    function setLoadingBarProgress(num) {
+      document.getElementById('loading-bar').style.width=num+"%";
+    }
+  </script>
+
+  
+  
+</head>
+
+<body>
+  
+  <div id="loading-bar-wrapper">
+  <div id="loading-bar"></div>
+</div>
+<header class="l_header shadow blur">
+  <div class='container'>
+  <div class='wrapper'>
+    <div class='nav-sub'>
+      <p class="title"></p>
+      <ul class='switcher nav-list-h'>
+        <li><a class="s-comment fas fa-comments fa-fw" target="_self" href='javascript:void(0)'></a></li>
+        
+          <li><a class="s-toc fas fa-list fa-fw" target="_self" href='javascript:void(0)'></a></li>
+        
+      </ul>
+    </div>
+		<div class="nav-main">
+      
+        
+        <a class="title flat-box" target="_self" href='/'>
+          
+          
+            <i class='https://cdn.jsdelivr.net/gh/SOBXiong/imageBed/favicon.png'></i>
+          
+          
+            SOBXiong
+          
+          
+        </a>
+      
+
+			<div class='menu navigation'>
+				<ul class='nav-list-h'>
+          
+          
+          
+            
+            
+              <li>
+                <a class="flat-box" href=/
+                  
+                  
+                  
+                    id="home"
+                  >
+                  <i class='fas fa-rss fa-fw'></i>博客
+                </a>
+                
+              </li>
+            
+          
+          
+            
+            
+              <li>
+                <a class="flat-box" href=/categories/
+                  
+                  
+                  
+                    id="categories"
+                  >
+                  <i class='fas fa-folder-open fa-fw'></i>分类
+                </a>
+                
+              </li>
+            
+          
+          
+            
+            
+              <li>
+                <a class="flat-box" href=/tags/
+                  
+                  
+                  
+                    id="tags"
+                  >
+                  <i class='fas fa-tags fa-fw'></i>标签
+                </a>
+                
+              </li>
+            
+          
+          
+            
+            
+              <li>
+                <a class="flat-box" href=/archives/
+                  
+                  
+                  
+                    id="archives"
+                  >
+                  <i class='fas fa-archive fa-fw'></i>归档
+                </a>
+                
+              </li>
+            
+          
+          
+            
+            
+              <li>
+                <a class="flat-box" href=/about/
+                  
+                  
+                  
+                    id="about"
+                  >
+                  <i class='fas fa-info-circle fa-fw'></i>关于
+                </a>
+                
+              </li>
+            
+          
+          
+				</ul>
+			</div>
+
+      <div class="m_search">
+        <form name="searchform" class="form u-search-form">
+          <i class="icon fas fa-search fa-fw"></i>
+          <input type="text" class="input u-search-input" placeholder="Search..." />
+        </form>
+      </div>
+
+			<ul class='switcher nav-list-h'>
+				
+					<li><a class="s-search fas fa-search fa-fw" target="_self" href='javascript:void(0)'></a></li>
+				
+				<li>
+          <a class="s-menu fas fa-bars fa-fw" target="_self" href='javascript:void(0)'></a>
+          <ul class="menu-phone list-v navigation white-box">
+            
+              
+            
+              <li>
+                <a class="flat-box" href=/
+                  
+                  
+                  
+                    id="home"
+                  >
+                  <i class='fas fa-rss fa-fw'></i>博客
+                </a>
+                
+              </li>
+            
+          
+            
+              
+            
+              <li>
+                <a class="flat-box" href=/categories/
+                  
+                  
+                  
+                    id="categories"
+                  >
+                  <i class='fas fa-folder-open fa-fw'></i>分类
+                </a>
+                
+              </li>
+            
+          
+            
+              
+            
+              <li>
+                <a class="flat-box" href=/tags/
+                  
+                  
+                  
+                    id="tags"
+                  >
+                  <i class='fas fa-tags fa-fw'></i>标签
+                </a>
+                
+              </li>
+            
+          
+            
+              
+            
+              <li>
+                <a class="flat-box" href=/archives/
+                  
+                  
+                  
+                    id="archives"
+                  >
+                  <i class='fas fa-archive fa-fw'></i>归档
+                </a>
+                
+              </li>
+            
+          
+            
+              
+            
+              <li>
+                <a class="flat-box" href=/about/
+                  
+                  
+                  
+                    id="about"
+                  >
+                  <i class='fas fa-info-circle fa-fw'></i>关于
+                </a>
+                
+              </li>
+            
+          
+            
+          </ul>
+        </li>
+			</ul>
+		</div>
+	</div>
+  </div>
+</header>
+
+<script>setLoadingBarProgress(40);</script>
+
+
+
+  <div class="l_body nocover">
+    <div class='body-wrapper'>
+      
+
+<div class='l_main'>
+  
+
+  
+    <article id="post" class="post white-box reveal shadow article-type-post" itemscope itemprop="blogPost">
+      
+
+
+  <section class='meta'>
+    
+      
+      
+      <div class="meta" id="header-meta">
+        
+          
+  <h1 class="title">
+    <a href="/2020/12/12/Middleware/Redis/Redis%E5%9F%BA%E7%A1%80/">
+      Redis基础
+    </a>
+  </h1>
+
+
+        
+        <div class='new-meta-box'>
+          
+            
+          
+            
+              
+<div class='new-meta-item author'>
+  <a href="http://xiongjc.top" target="_blank" rel="nofollow noopener">
+    <img src="https://cdn.jsdelivr.net/gh/SOBXiong/imageBed/hdImg_f757fa7e0fd65077ce52d251fc7a01d815860762755.jpg">
+    <p>SOBXiong</p>
+  </a>
+</div>
+
+            
+          
+            
+              
+  
+  <div class='new-meta-item category'>
+    <a href='/categories/%E7%BC%96%E7%A8%8B/' rel="nofollow">
+      <i class="fas fa-folder-open fa-fw" aria-hidden="true"></i>
+      <p>编程</p>
+    </a>
+  </div>
+
+
+            
+          
+            
+              <div class="new-meta-item date">
+  <a class='notlink'>
+    <i class="fas fa-calendar-alt fa-fw" aria-hidden="true"></i>
+    <p>发布于：2020年12月12日</p>
+  </a>
+</div>
+
+            
+          
+            
+              
+
+            
+          
+        </div>
+        
+          <hr>
+        
+      </div>
+    
+  </section>
+
+
+      <section class="article typo">
+        <div class="article-entry" itemprop="articleBody">
+          
+          <h2 id="内容"><a href="#内容" class="headerlink" title="内容"></a>内容</h2><ul>
+<li><a href="#Redis介绍">Redis介绍</a></li>
+<li><a href="#Redis持久化">Redis持久化</a></li>
+<li><a href="#Redis事务">Redis事务</a></li>
+<li><a href="#Redis消息发布订阅">Redis消息发布订阅</a></li>
+<li><a href="#Redis主从复制">Redis主从复制</a></li>
+<li><a href="#Redis常用配置">Redis常用配置</a></li>
+</ul>
+<a id="more"></a>
+
+<h2 id="Redis介绍"><a href="#Redis介绍" class="headerlink" title="Redis介绍"></a>Redis介绍</h2><ul>
+<li>NoSQL简介：NoSQL(Not Only SQL)泛指non-relational(非关系型数据库)。NoSQL数据库是为了解决大规模数据集合多重数据种类带来的挑战，特别是超大规模数据的存储。NoSQL数据库的一个显著特点就是去掉了关系数据库的关系型特性，数据之间一旦没有关系，使得扩展性、读写性能都大大提高</li>
+<li>Redis简介：Redis(Remote Dictionary Server：远程字典服务器)是一个用C语言编写的、开源的、基于内存运行并支持持久化的、高性能的NoSQL数据库。也是当前热门的NoSQL数据库之一</li>
+<li>Redis特性：<ol>
+<li>支持数据持久化：Redis支持数据的持久化，可以将内存中的数据保持在磁盘中，重启时可以再次加载进行使用</li>
+<li>支持多种数据结构：Redis不仅仅支持简单的key-value类型的数据，同时还提供list，set，zset，hash等数据结构的存储</li>
+<li>支持数据备份：Redis支持数据的备份(即master-slave模式的数据备份)</li>
+</ol>
+</li>
+<li>Redis安装(6.0.9版本)：<a href="https://blog.csdn.net/qq_26030541/article/details/109448545" target="_blank" rel="noopener">https://blog.csdn.net/qq_26030541/article/details/109448545</a></li>
+<li>Redis应用：<ol>
+<li>为热点数据加速查询(主要场景)：热点商品、热点新闻、热点资讯、推广类等高访问量信息等</li>
+<li>任务队列，如秒杀、抢购、购票排队等</li>
+<li>即时信息查询：各类排行榜、各类网站访问统计、公交到站信息、在线人数信息(聊天室、网站)、设备信号等</li>
+<li>时效性信息控制：验证码控制、投票控制等</li>
+<li>分布式数据共享：分布式集群架构中的session分离等</li>
+<li>消息队列</li>
+<li>分布式锁</li>
+</ol>
+</li>
+<li>Redis客户端(Redis-cli)命令简介：<ol>
+<li>连接redis(本机可省去-h参数)：<code>redis-cli -p 6379 -h 127.0.0.1</code></li>
+<li>退出客户端：<code>exit</code>、<code>quit</code></li>
+<li>查看redis服务器统计信息：<code>info [section]</code><blockquote>
+<p>以一种易于解释且易于阅读的格式返回关于Redis服务器的各种信息和统计数值。section用来指定统计信息的部分，值为server、clients、memory等。不加section则返回全部统计信息</p>
+</blockquote>
+</li>
+<li>切换库命令：select [index]<blockquote>
+<p>index默认从0~15，redis默认有16个库</p>
+</blockquote>
+</li>
+<li>查看当前数据库中key的数目：dbsize</li>
+<li>查看当前数据库中有哪些key：keys *</li>
+<li>清空当前库：flushdb</li>
+<li>清空所有库：flushall</li>
+<li>获取redis的配置信息：config get [parameter/*]<blockquote>
+<p>获取运行中Redis服务器的配置参数，获取全部配置可以使用*。参数信息来自redis.conf文件的内容</p>
+</blockquote>
+</li>
+<li>认证：<code>auth &#39;password&#39;</code></li>
+</ol>
+</li>
+<li>Redis的数据结构：<ol>
+<li>string(字符串类型)：字符串类型是Redis中最基本的数据结构，它能存储任何类型的数据，包括二进制数据、序列化后的数据、JSON化的对象甚至是一张图片。最大512M</li>
+<li>list(列表类型)：Redis列表是简单的字符串列表，按照插入顺序排序，元素可以重复。可以添加一个元素到列表的头部(左边)或者尾部(右边)，底层为链表结构</li>
+<li>set(集合类型)：Redis的set是string类型的无序无重复集合</li>
+<li>hash(哈希类型)：Redis的hash是一个string类型的field和value的映射表，hash特别适合用于存储对象</li>
+<li>zset(sorted set,有序集合类型)：Redis有序集合zset和集合set一样也是string类型元素的集合，且不允许重复的成员。不同的是zset的每个元素都会关联一个分数(分数可以重复)，redis通过分数来为集合中的成员进行从小到大的排序</li>
+</ol>
+</li>
+<li>Redis常用的操作命令：<a href="http://redisdoc.com/" target="_blank" rel="noopener">http://redisdoc.com/</a></li>
+</ul>
+<h2 id="Redis持久化"><a href="#Redis持久化" class="headerlink" title="Redis持久化"></a>Redis持久化</h2><ul>
+<li>介绍：redis是内存数据库，它把数据存储在内存中。在加快读取速度的同时也对数据安全性产生了新的问题————当redis所在服务器宕机后，数据库里的所有数据将会全部丢失。为了解决这个问题，redis提供了持久化功能————RDB和AOF(Append Only File)</li>
+<li>RDB：<ul>
+<li>介绍：RDB(Redis DataBase)是Redis的默认持久化方案。在指定的时间间隔内执行指定次数的写操作，则会将内存中的数据写入到磁盘中(即在指定目录下生成一个dump.rdb文件,每次同步)。Redis重启时会通过加载dump.rdb文件来恢复数据。适合大规模的数据恢复，但它的数据一致性和完整性较差</li>
+<li>原理：<br>Redis会复制一个与当前进程一样的进程。新进程的所有数据(变量、环境变量、程序计数器等)数值都和原进程一致，但是一个全新的进程，并作为原进程的子进程来进行持久化<br>整个过程中，主进程是不进行任何IO操作的，这就确保了极高的性能<br>如果需要进行大规模的数据恢复，且对于数据恢复的完整性不是非常敏感，那RDB方式要比AOF方式更加高效。RDB的缺点是最后一次持久化后的数据可能丢失</li>
+<li>保存文件介绍：RDB保存的文件是默认为dump.rdb，位置位于Redis的启动目录。Redis每次同步数据到磁盘都会生成一个dump.rdb文件，新的dump.rdb会覆盖旧的dump.rdb文件</li>
+<li>手动保存rdb快照：save命令可用于执行一个同步保存操作————将当前Redis实例的所有数据快照(snapshot)以RDB文件的形式保存到硬盘。由于save指令会阻塞所有客户端，因此保存数据库的任务通常由BGSAVE命令异步地执行，而save作为保存数据的最后手段来使用(当负责保存数据的后台子进程不幸出现问题时使用)</li>
+</ul>
+</li>
+<li>AOF：<ul>
+<li>介绍：AOF(Append Only File)，Redis默认不开启。它的出现是为了弥补RDB的不足(数据的不一致性)，它采用日志的形式来记录每个写操作并追加到文件中。Redis重启后会根据日志文件的内容将写指令从前往后执行一次以完成数据的恢复工作</li>
+<li>原理：Redis以日志的形式来记录每个写操作，将执行过的所有写指令记录下来(读操作不记录)，只许追加文件(不可以改写文件)，redis启动之初会读取该文件重新构建数据(根据日志文件的内容将写指令从前往后执行一次以完成数据的恢复工作)</li>
+<li>保存文件介绍：AOF默认保存的文件是appendonly.aof文件，位置位于Redis的启动目录。如果开启了AOF，Redis每次记录写操作都会往appendonly.aof文件追加新的日志内容</li>
+<li>重写机制：<br>AOF采用文件追加方式，那么文件会越来越大。为避免出现该情况，新增了重写机制————当AOF文件的大小超过所设定的阈值时，Redis就会启动AOF文件的内容压缩，只保留可以恢复数据的最小指令集<br>AOF文件持续增长而过大时，会fork出一条新进程来将文件重写(先写临时文件最后再rename)————遍历新进程内存中的数据，每条记录有一条Set语句。重写aof文件的操作并没有读取旧的aof文件，而是将整个内存中的数据库内容用命令的方式重写了一个新的aof文件，这点和快照有点类似<br>Redis会记录上次重写时的AOF大小，默认配置是当AOF文件大小是上次rewrite后大小的一倍且文件大于64M时触发。也可在配置文件中进行配置</li>
+</ul>
+</li>
+<li>总结：<br>Redis需要手动开启AOF持久化方式，AOF的数据完整性比RDB高，但记录内容多了会影响数据恢复的效率<br>关于Redis持久化的使用：若只打算用Redis做缓存可以关闭持久化。若打算使用Redis的持久化，建议RDB和AOF都开启<br>AOF与RDB模式可同时启用，并不冲突。如果AOF是可用的，那Redis启动时将自动加载AOF，这个文件能够提供更好的持久性保障。同时启用时，RDB作为AOF出问题的后备方案</li>
+</ul>
+<h2 id="Redis事务"><a href="#Redis事务" class="headerlink" title="Redis事务"></a>Redis事务</h2><ul>
+<li><p>介绍：Redis的事务允许在一次单独的步骤中执行一组命令，并且能够保证将一个事务中的所有命令序列化，然后按顺序执行；在一个Redis事务中，要么执行其中的所有命令，要么什么都不执行。即Redis的事务要能够保证序列化和原子性</p>
+</li>
+<li><p>事务的常用命令：</p>
+<ol>
+<li>mutli：<ul>
+<li>功能：用于标记事务块的开始————Redis会将后续的命令逐个放入队列中，然后才能使用EXEC命令原子化地执行这个命令序列</li>
+<li>返回值：开启成功返回OK</li>
+</ul>
+</li>
+<li>exec：<ul>
+<li>功能：在一个事务中执行所有先前放入队列的命令，然后恢复正常的连接状态<blockquote>
+<p>如果在把命令压入队列的过程中报错，则整个队列中的命令都不会执行，执行结果报错<br>如果在压入队列的过程中正常且在执行队列中某一个命令报错，则只会影响该条命令的执行结果，其它命令正常运行<br>当使用WATCH命令时，只有当受监控的键没有被修改时，EXEC命令才会执行事务中的命令；一旦执行了exec命令，之前加的所有watch监控全部取消</p>
+</blockquote>
+</li>
+<li>返回值：一个数组，其中的每个元素分别是原子化事务中的每个命令的返回值<blockquote>
+<p>当使用WATCH命令时，如果事务执行中止，那么EXEC命令就会返回一个Null值</p>
+</blockquote>
+</li>
+</ul>
+</li>
+<li>discard<ul>
+<li>功能：清除所有先前在一个事务中放入队列的命令，并且结束事务<blockquote>
+<p>如果使用了WATCH命令，那么DISCARD命令就会将当前连接监控的所有键取消监控</p>
+</blockquote>
+</li>
+<li>返回值：清除成功返回OK</li>
+</ul>
+</li>
+<li>watch<ul>
+<li>语法：watch key1 [key2、key3、…]</li>
+<li>功能：当某个事务需要按条件执行时，可使用该命令将给定的键设置为受监控的。如果被监控的key值在本事务外被修改时，则本事务所有指令都不会被执行。Watch命令相当于关系型数据库中的乐观锁</li>
+<li>返回值：监控成功返回OK</li>
+</ul>
+</li>
+<li>unwatch<ul>
+<li>功能：清除所有先前为一个事务监控的键<blockquote>
+<p>如果在watch命令之后调用了EXEC或DISCARD命令，那么就无须手动调用UNWATCH命令</p>
+</blockquote>
+</li>
+<li>返回值：清除成功返回OK</li>
+</ul>
+</li>
+</ol>
+</li>
+<li><p>总结：</p>
+<ol>
+<li>单独的隔离操作：事务中的所有命令都会序列化、顺序地执行。事务在执行过程中不会被其它客户端发来的命令请求打断(除非使用watch命令监控某些键)</li>
+<li>不保证事务的原子性：<strong>redis同一个事务中如果一条命令执行失败，其后的命令仍然可能会被执行，redis的事务没有回滚</strong>。Redis已经在系统内部进行功能简化，如此可确保更快的运行速度，因为Redis不需要事务回滚的能力</li>
+</ol>
+</li>
+</ul>
+<h2 id="Redis消息发布订阅"><a href="#Redis消息发布订阅" class="headerlink" title="Redis消息发布订阅"></a>Redis消息发布订阅</h2><ul>
+<li>介绍：Redis发布订阅(pub/sub)是一种消息通信模式————发送者(pub)发送消息，订阅者(sub)接收消息。Redis客户端可以订阅任意数量的频道</li>
+<li>示意图：<br><img src="%E8%AE%A2%E9%98%85%E9%A2%91%E9%81%93%E7%A4%BA%E6%84%8F%E5%9B%BE.png" alt="订阅频道示意图"><br><img src="%E6%B6%88%E6%81%AF%E5%8F%91%E5%B8%83%E7%A4%BA%E6%84%8F%E5%9B%BE.png" alt="消息发布示意图"></li>
+<li>订阅相关的常用命令：<ul>
+<li>subscribe：<ul>
+<li>语法：subscribe channel [channel…]</li>
+<li>功能：订阅一个或多个频道的消息</li>
+<li>返回值：订阅的消息</li>
+</ul>
+</li>
+<li>publish：<ul>
+<li>语法：publish channel message</li>
+<li>功能：将信息发送到指定的频道</li>
+<li>返回值：数字————接收到消息订阅者的数量</li>
+</ul>
+</li>
+<li>psubsribe<ul>
+<li>语法：psubscribe pattern [pattern]</li>
+<li>功能：订阅一个或多个符合给定模式的频道，模式可以’*‘作为通配符。例如：news.*匹配所有以news.开头的频道</li>
+<li>返回值：订阅的信息</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<h2 id="Redis主从复制"><a href="#Redis主从复制" class="headerlink" title="Redis主从复制"></a>Redis主从复制</h2><ul>
+<li>介绍：主机数据更新后根据配置和策略，自动同步到从机的master/slave机制。Master以写为主，Slave以读为主</li>
+<li>一主二从：<ul>
+<li>原理：<ol>
+<li>配从(库)不配主(库)</li>
+<li>配从(库)：slaveof masterIP masterPort</li>
+<li>主写从读、读写分离</li>
+<li>主断从待命、从断重新连</li>
+</ol>
+</li>
+<li>搭建：<ol>
+<li>将redis.conf拷贝三份，修改其中的port、pid日志文件和rdb文件名(启动三个redis-server进程)</li>
+<li>分别使用命令启动redis三个服务：<code>./redis-server redis6381.conf &amp;</code></li>
+<li>查看主从信息：<code>info replication</code></li>
+<li>设置主从关系：<code>slaveof 127.0.0.1 6379</code><blockquote>
+<p>另一种方式是修改从库的配置文件，在最后加入<code>slaveof masterIp masterPort</code>；如果主redis设置了密码，从库配置还需设置<code>masteruath masterPassword</code></p>
+</blockquote>
+</li>
+</ol>
+</li>
+<li>特点：<ol>
+<li>全量/增量复制：全量指主redis之前累计的数据在从库上线时会同步过来，增量是主redis新添加的数据</li>
+<li>主写从读、读写分离：从机执行写操作报错</li>
+<li>主机宕机：主机shutdown后，从机保持不变原地待命</li>
+<li>主机宕机后恢复：执行写命令，从机会收到</li>
+<li>从机宕机：主机连接数减少</li>
+<li>从机宕机后恢复：宕机的从机与主机无关，无法获取增量数据，其他从机不受影响<blockquote>
+<p>通过配置文件方式配置会重新与主机建立关系</p>
+</blockquote>
+</li>
+</ol>
+</li>
+</ul>
+</li>
+<li>复制原理：<ul>
+<li>全量复制：<br>slave启动成功连接到master后会发送一个sync命令，master接到命令启动后台的存盘进程，同时收集所有接收到的用于修改数据集命令。在后台进程执行完毕之后，master将传送整个数据文件到slave以完成一次完全同步。slave服务在接收到数据库文件数据后将其存盘并加载到内存中<br>只要是重新连接master，一次完全同步(全量复制)将被自动执行</li>
+<li>增量复制：master将新的所有收集到的修改命令依次传给slave，完成同步</li>
+</ul>
+</li>
+<li>哨兵模式：<ul>
+<li>介绍：从机上位的自动版。Redis提供了哨兵的命令————哨兵命令是一个独立的进程，通过发送命令来监控主从服务器的运行状态，如果检测到master故障了则根据投票数自动将某个slave替换为master。然后通过消息订阅模式通知其它slave，让它们切换主机。然而一个哨兵进程对Redis服务器进行监控可能会出现问题，因此可使用多哨兵进行监控</li>
+</ul>
+</li>
+</ul>
+<h2 id="Redis常用配置"><a href="#Redis常用配置" class="headerlink" title="Redis常用配置"></a>Redis常用配置</h2><ul>
+<li>网络相关：<ol>
+<li>bind：绑定IP地址，其它机器可以通过此IP访问Redis，默认绑定127.0.0.1，也可以修改为本机的IP地址</li>
+<li>port：配置Redis占用的端口，默认是6379</li>
+<li>tcp-keepalive：TCP连接保活策略，可以通过tcp-keepalive配置项来进行设置，单位为秒，假如设置为60秒，则server端会每60秒向连接空闲的客户端发起一次ACK请求以检查客户端是否已经挂掉，对于无响应的客户端则会关闭其连接。如果设置为0，则不会进行保活检测</li>
+</ol>
+</li>
+<li>常规配置：<ol>
+<li>loglevel：日志级别，开发阶段可以设置成debug，生产阶段通常设置为notice或者warning</li>
+<li>logfile：指定日志文件名，如果不指定，Redis只进行标准输出。要保证日志文件所在的目录必须存在，文件可以不存在。还要在redis启动时指定所使用的配置文件，否则配置不起作用</li>
+<li>databases：配置Redis数据库的个数，默认是16个</li>
+</ol>
+</li>
+<li>安全配置：<br>requirepass：配置Redis的访问密码。默认不配置密码，即访问不需要密码验证。此配置项需要在protected-mode=yes时起作用。使用密码登录客户端：redis-cli -h ip -p 6379 -a pwd</li>
+<li>RDB配置：<ol>
+<li>save &lt;seconds&gt; &lt;changes&gt;：配置复合的快照触发的条件，即Redis在seconds秒内key改变changes次，Redis把快照内的数据保存到磁盘中一次<blockquote>
+<p>默认的策略是：<br> 1分钟内改变了1万次<br> 或者5分钟内改变了10次<br> 或者15分钟内改变了1次<br> 如果要禁用Redis的持久化功能，则需要把所有的save配置都注释掉</p>
+</blockquote>
+</li>
+<li>stop-writes-on-bgsave-error：当bgsave快照操作出错时停止写数据到磁盘，这样能保证内存数据和磁盘数据的一致性。但如果不在乎这种一致性，要在bgsave快照操作出错时继续写操作，可以配置为no</li>
+<li>rdbcompression：设置存储在磁盘中的快照是否进行压缩————设置为yes时，Redis会采用LZF算法进行压缩；如果不想消耗CPU进行压缩的话，可设置为no来关闭此功能</li>
+<li>rdbchecksum：在存储快照以后，还可使用CRC64算法来进行数据校验，但这样会消耗一定的性能。如果系统比较在意性能的提升，可设置为no来关闭此功能</li>
+<li>dbfilename：Redis持久化数据生成的文件名，默认是dump.rdb，也可以自己配置</li>
+<li>dir：Redis持久化数据生成文件保存的目录，默认是./(即redis的启动目录)，也可以自己配置</li>
+</ol>
+</li>
+<li>AOF配置：<ol>
+<li>appendonly：配置是否开启AOF(yes/no)。默认是no</li>
+<li>appendfilename：AOF保存文件名</li>
+<li>appendfsync：AOF异步持久化策略<blockquote>
+<p>always：同步持久化，每次发生数据变化会立刻写入到磁盘中。性能较差但数据完整性比较好(慢但安全)<br> everysec：出厂默认推荐，每秒异步记录一次(默认值)<br> no：不即时同步，由操作系统决定何时同步</p>
+</blockquote>
+</li>
+<li>no-appendfsync-on-rewrite：重写时是否可以运用appendsync(默认no)，可以保证数据的安全性</li>
+<li>auto-aof-rewrite-percentage：设置重写的基准百分比</li>
+<li>auto-aof-rewrite-min-size：设置重写的基准值</li>
+</ol>
+</li>
+</ul>
+
+          
+            <div class='article_footer'>
+              
+                
+  
+    
+    
+
+
+
+  
+
+  
+    
+    
+
+
+
+  
+
+  
+    
+    
+
+<section class="widget copyright  desktop mobile">
+  <div class='content'>
+    
+      <blockquote>
+        
+          
+            <p>博客内容遵循 署名-非商业性使用-相同方式共享 4.0 国际 (CC BY-NC-SA 4.0) 协议</p>
+
+          
+        
+          
+            <p>本文永久链接是：<a href=https://sobxiong.github.io/2020/12/12/Middleware/Redis/Redis%E5%9F%BA%E7%A1%80/>https://sobxiong.github.io/2020/12/12/Middleware/Redis/Redis%E5%9F%BA%E7%A1%80/</a></p>
+          
+        
+      </blockquote>
+    
+  </div>
+</section>
+
+  
+
+  
+    
+    
+
+<section class="widget qrcode  desktop mobile">
+  
+
+  <div class='content article-entry'>
+    
+      
+        <div class='fancybox'><img src='https://cdn.jsdelivr.net/gh/xaoxuu/cdn-assets/qrcode/wiki_volantis.png'
+        
+          height='64px'
+        ></div>
+      
+    
+      
+        <div class='fancybox'><img src='https://cdn.jsdelivr.net/gh/xaoxuu/cdn-assets/qrcode/wiki_volantis.png'
+        
+          height='64px'
+        ></div>
+      
+    
+  </div>
+</section>
+
+  
+
+
+              
+            </div>
+          
+        </div>
+        
+          
+
+
+  <section class='meta' id="footer-meta">
+    <div class='new-meta-box'>
+      
+        
+          <div class="new-meta-item date" itemprop="dateUpdated" datetime="2020-12-19T19:24:02+08:00">
+  <a class='notlink'>
+    <i class="fas fa-edit fa-fw" aria-hidden="true"></i>
+    <p>更新于：2020年12月19日</p>
+  </a>
+</div>
+
+        
+      
+        
+          
+  
+  <div class="new-meta-item meta-tags"><a class="tag" href="/tags/Middleware/" rel="nofollow"><i class="fas fa-hashtag fa-fw" aria-hidden="true"></i><p>Middleware</p></a></div> <div class="new-meta-item meta-tags"><a class="tag" href="/tags/Redis/" rel="nofollow"><i class="fas fa-hashtag fa-fw" aria-hidden="true"></i><p>Redis</p></a></div>
+
+
+        
+      
+        
+          
+
+        
+      
+        
+          
+  <div class="new-meta-item share -mob-share-list">
+  <div class="-mob-share-list share-body">
+    
+      
+        <a class="-mob-share-qq" title="" rel="external nofollow noopener noreferrer"
+          
+          href="http://connect.qq.com/widget/shareqq/index.html?url=https://sobxiong.github.io/2020/12/12/Middleware/Redis/Redis%E5%9F%BA%E7%A1%80/&title=Redis基础 - SOBXiong的博客&summary=内容
+Redis介绍
+Redis持久化
+Redis事务
+Redis消息发布订阅
+Redis主从复制
+Redis常用配置
+"
+          
+          >
+          
+            <img src="https://cdn.jsdelivr.net/gh/xaoxuu/cdn-assets/logo/128/qq.png">
+          
+        </a>
+      
+    
+      
+        <a class="-mob-share-qzone" title="" rel="external nofollow noopener noreferrer"
+          
+          href="https://sns.qzone.qq.com/cgi-bin/qzshare/cgi_qzshare_onekey?url=https://sobxiong.github.io/2020/12/12/Middleware/Redis/Redis%E5%9F%BA%E7%A1%80/&title=Redis基础 - SOBXiong的博客&summary=内容
+Redis介绍
+Redis持久化
+Redis事务
+Redis消息发布订阅
+Redis主从复制
+Redis常用配置
+"
+          
+          >
+          
+            <img src="https://cdn.jsdelivr.net/gh/xaoxuu/cdn-assets/logo/128/qzone.png">
+          
+        </a>
+      
+    
+      
+        <a class="-mob-share-weibo" title="" rel="external nofollow noopener noreferrer"
+          
+          href="http://service.weibo.com/share/share.php?url=https://sobxiong.github.io/2020/12/12/Middleware/Redis/Redis%E5%9F%BA%E7%A1%80/&title=Redis基础 - SOBXiong的博客&summary=内容
+Redis介绍
+Redis持久化
+Redis事务
+Redis消息发布订阅
+Redis主从复制
+Redis常用配置
+"
+          
+          >
+          
+            <img src="https://cdn.jsdelivr.net/gh/xaoxuu/cdn-assets/logo/128/weibo.png">
+          
+        </a>
+      
+    
+  </div>
+</div>
+
+
+
+        
+      
+    </div>
+  </section>
+
+
+        
+        
+          <div class="prev-next">
+            
+              <a class='prev' href='/2020/12/24/SpringSeries/SpringBoot/SpringBoot%E5%9F%BA%E7%A1%80/'>
+                <p class='title'><i class="fas fa-chevron-left" aria-hidden="true"></i>SpringBoot基础</p>
+                <p class='content'>内容
+SpringBoot概述
+SpringBoot入门
+自动配置原理介绍
+Web场景
+杂项
+
+
+
+SpringBoot概述
+SpringBoot是什么：整合Spring技术栈的一站式框架，简化...</p>
+              </a>
+            
+            
+              <a class='next' href='/2020/12/11/BasicSkill/Algorithm/ProblemRecord/'>
+                <p class='title'>刷题记录<i class="fas fa-chevron-right" aria-hidden="true"></i></p>
+                <p class='content'>内容
+10正则表达式匹配
+218天际线问题
+220存在重复元素III
+239滑动窗口最大值
+241为运算表达式设计优先级
+264丑数II
+279完全平方数
+282给表达式添加运算符
+316去除重...</p>
+              </a>
+            
+          </div>
+        
+      </section>
+    </article>
+  
+
+  
+    <!-- 显示推荐文章和评论 -->
+
+
+
+  <article class="post white-box reveal comments shadow">
+    <section class="article typo">
+      <p ct><i class='fas fa-comments'></i> 评论</p>
+      
+      
+      
+      
+      
+      
+        <section id="comments">
+          <div id="valine_container" class="valine_thread">
+            <i class="fas fa-cog fa-spin fa-fw fa-2x"></i>
+          </div>
+        </section>
+      
+      
+    </section>
+  </article>
+
+
+  
+
+
+
+
+<!-- 根据页面mathjax变量决定是否加载MathJax数学公式js -->
+
+
+
+  <script>
+    window.subData = {
+      title: 'Redis基础',
+      tools: true
+    }
+  </script>
+
+
+</div>
+<aside class='l_side'>
+  
+  
+
+  
+    
+    
+
+
+
+  <section class="widget toc-wrapper shadow desktop mobile" id="toc-div" >
+    
+  <header>
+    
+      <i class="fas fa-list fa-fw" aria-hidden="true"></i><span class='name'>本文目录</span>
+    
+  </header>
+
+
+    <div class='content'>
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#内容"><span class="toc-text">内容</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Redis介绍"><span class="toc-text">Redis介绍</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Redis持久化"><span class="toc-text">Redis持久化</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Redis事务"><span class="toc-text">Redis事务</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Redis消息发布订阅"><span class="toc-text">Redis消息发布订阅</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Redis主从复制"><span class="toc-text">Redis主从复制</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Redis常用配置"><span class="toc-text">Redis常用配置</span></a></li></ol>
+    </div>
+  </section>
+
+
+  
+
+
+</aside>
+
+
+  
+  <footer class="clearfix">
+    <br><br>
+    
+      
+        <br>
+        <div class="social-wrapper">
+          
+            
+              <a href="mailto:1942991710@qq.com"
+                class="social fas fa-envelope flat-btn"
+                target="_blank"
+                rel="external nofollow noopener noreferrer">
+              </a>
+            
+          
+            
+              <a href="https://github.com/SOBXiong"
+                class="social fab fa-github flat-btn"
+                target="_blank"
+                rel="external nofollow noopener noreferrer">
+              </a>
+            
+          
+        </div>
+      
+    
+      
+        <div><p>博客内容遵循 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh" target="_blank" rel="noopener">署名-非商业性使用-相同方式共享 4.0 国际 (CC BY-NC-SA 4.0) 协议</a></p>
+</div>
+      
+    
+      
+        <div class='copyright'>
+        <p><a href="http://xiongjc.top" target="_blank" rel="noopener">Copyright © 2017-2020 SOBXiong</a></p>
+
+        </div>
+      
+    
+  </footer>
+
+<script>setLoadingBarProgress(80);</script>
+
+
+      <script>setLoadingBarProgress(60);</script>
+    </div>
+    <a class="s-top fas fa-arrow-up fa-fw" href='javascript:void(0)'></a>
+  </div>
+  
+<script src="https://cdn.jsdelivr.net/npm/jquery@3.4/dist/jquery.min.js"></script>
+
+
+  <script>
+    
+    var SEARCH_SERVICE = "hexo" || "hexo";
+    var ROOT = "/" || "/";
+    if (!ROOT.endsWith('/')) ROOT += '/';
+  </script>
+
+
+
+
+
+  <script async src="https://cdn.jsdelivr.net/gh/xaoxuu/cdn-volantis@2/js/instant_page.js" type="module" defer integrity="sha384-OeDn4XE77tdHo8pGtE1apMPmAipjoxUQ++eeJa6EtJCfHlvijigWiJpD7VDPWXV1"></script>
+
+
+  <script src="https://cdn.jsdelivr.net/npm/scrollreveal@4.0.6/dist/scrollreveal.min.js"></script>
+  <script type="text/javascript">
+    $(function() {
+      ScrollReveal().reveal('.l_main .reveal', {
+        distance: '8px',
+        duration: '800',
+        interval: '100',
+        scale: '1'
+      });
+    });
+  </script>
+
+
+  
+<script src="https://cdn.jsdelivr.net/npm/node-waves@0.7.6/dist/waves.min.js"></script>
+
+  <script type="text/javascript">
+    $(function() {
+      Waves.attach('.flat-btn', ['waves-button']);
+      Waves.attach('.float-btn', ['waves-button', 'waves-float']);
+      Waves.attach('.float-btn-light', ['waves-button', 'waves-float', 'waves-light']);
+      Waves.attach('.flat-box', ['waves-block']);
+      Waves.attach('.float-box', ['waves-block', 'waves-float']);
+      Waves.attach('.waves-image');
+      Waves.init();
+    });
+  </script>
+
+
+  <script defer src="https://cdn.jsdelivr.net/gh/xaoxuu/cdn-busuanzi@2.3/js/busuanzi.pure.mini.js"></script>
+
+
+
+  
+  
+  
+    
+<script src="https://cdn.jsdelivr.net/npm/jquery-backstretch@2.1.18/jquery.backstretch.min.js"></script>
+
+    <script type="text/javascript">
+      $(function(){
+        var imgs=["https://cdn.jsdelivr.net/gh/xaoxuu/cdn-wallpaper/abstract/41F215B9-261F-48B4-80B5-4E86E165259E.jpeg"];
+        if ('true' == 'true') {
+          function shuffle(arr){
+            /*From countercurrent-time*/
+            var n = arr.length;
+            while(n--) {
+              var index = Math.floor(Math.random() * n);
+              var temp = arr[index];
+              arr[index] = arr[n];
+              arr[n] = temp;
+            }
+          }
+          shuffle(imgs);
+        }
+        if ('.cover') {
+          $('.cover').backstretch(
+            imgs,
+          {
+            duration: "20000",
+            fade: "1500"
+          });
+        } else {
+          $.backstretch(
+            imgs,
+          {
+            duration: "20000",
+            fade: "1500"
+          });
+        }
+      });
+    </script>
+  
+
+
+
+  
+    
+<script src="https://cdn.jsdelivr.net/npm/aplayer@1.10/dist/APlayer.min.js"></script>
+
+  
+    
+<script src="https://cdn.jsdelivr.net/npm/meting@2.0/dist/Meting.min.js"></script>
+
+  
+
+
+
+
+
+
+
+
+
+  
+    
+<script src="https://cdn.jsdelivr.net/npm/valine@1.4/dist/Valine.min.js"></script>
+
+  
+  <script>
+  var GUEST_INFO = ['nick','mail','link'];
+  var meta = 'nick,mail,link'.split(',').filter(function(item){
+    return GUEST_INFO.indexOf(item) > -1
+  });
+  var REQUIRED_FIELDS = ['nick','mail','link'];
+  var requiredFields = 'nick,mail'.split(',').filter(function(item){
+    return REQUIRED_FIELDS.indexOf(item) > -1
+  });
+  var valine = new Valine();
+  function emoji(path, idx, ext) {
+      return path + "/" + path + "-" + idx + "." + ext;
+  }
+  var emojiMaps = {};
+  for (var i = 1; i <= 54; i++) {
+    emojiMaps['tieba-' + i] = emoji('tieba', i, 'png');
+  }
+  for (var i = 1; i <= 101; i++) {
+    emojiMaps['qq-' + i] = emoji('qq', i, 'gif');
+  }
+  for (var i = 1; i <= 116; i++) {
+    emojiMaps['aru-' + i] = emoji('aru', i, 'gif');
+  }
+  for (var i = 1; i <= 125; i++) {
+    emojiMaps['twemoji-' + i] = emoji('twemoji', i, 'png');
+  }
+  for (var i = 1; i <= 4; i++) {
+    emojiMaps['weibo-' + i] = emoji('weibo', i, 'png');
+  }
+  valine.init({
+    el: '#valine_container',
+    meta: meta,
+    
+    appId: "dogUA2FSKGTo029M1SEwGROT-MdYXbMMI",
+    appKey: "u0NdtQ8nvHoMdJPSYqm1LRxE",
+    placeholder: "快来评论吧~",
+    pageSize:'10',
+    avatar:'robohash',
+    lang:'zh-cn',
+    visitor: 'true',
+    highlight: 'true',
+    mathJax: 'false',
+    enableQQ: 'true',
+    requiredFields: requiredFields,
+    emojiCDN: 'https://cdn.jsdelivr.net/gh/xaoxuu/cdn-assets/emoji/valine/',
+    emojiMaps: emojiMaps
+  })
+  </script>
+
+
+
+
+
+  
+<script src="https://cdn.jsdelivr.net/gh/xaoxuu/cdn-volantis@2.6.5/js/app.js"></script>
+
+
+
+  
+<script src="https://cdn.jsdelivr.net/gh/xaoxuu/cdn-volantis@2.6.5/js/search.js"></script>
+
+
+
+  
+<script src="https://cdn.jsdelivr.net/gh/xaoxuu/cdn-volantis@2/js/comment_typing.js"></script>
+
+
+
+
+
+
+<!-- 复制 -->
+
+  <script src="https://cdn.jsdelivr.net/npm/clipboard@2/dist/clipboard.min.js"></script>
+<script>
+  function wait(callback, seconds) {
+    var timelag = null;
+    timelag = window.setTimeout(callback, seconds);
+  }
+  !function (e, t, a) {
+    var initCopyCode = function(){
+      var copyHtml = '';
+      copyHtml += '<button class="btn-copy" data-clipboard-snippet="">';
+      copyHtml += '<i class="fas fa-copy"></i><span>COPY</span>';
+      copyHtml += '</button>';
+      $(".highlight .code pre").before(copyHtml);
+      $(".article pre code").before(copyHtml);
+      var clipboard = new ClipboardJS('.btn-copy', {
+        target: function(trigger) {
+          return trigger.nextElementSibling;
+        }
+      });
+      clipboard.on('success', function(e) {
+        let $btn = $(e.trigger);
+        $btn.addClass('copied');
+        let $icon = $($btn.find('i'));
+        $icon.removeClass('fa-copy');
+        $icon.addClass('fa-check-circle');
+        let $span = $($btn.find('span'));
+        $span[0].innerText = 'COPIED';
+        
+        wait(function () { // 等待两秒钟后恢复
+          $icon.removeClass('fa-check-circle');
+          $icon.addClass('fa-copy');
+          $span[0].innerText = 'COPY';
+        }, 2000);
+      });
+      clipboard.on('error', function(e) {
+        e.clearSelection();
+        let $btn = $(e.trigger);
+        $btn.addClass('copy-failed');
+        let $icon = $($btn.find('i'));
+        $icon.removeClass('fa-copy');
+        $icon.addClass('fa-times-circle');
+        let $span = $($btn.find('span'));
+        $span[0].innerText = 'COPY FAILED';
+        
+        wait(function () { // 等待两秒钟后恢复
+          $icon.removeClass('fa-times-circle');
+          $icon.addClass('fa-copy');
+          $span[0].innerText = 'COPY';
+        }, 2000);
+      });
+    }
+    initCopyCode();
+  }(window, document);
+</script>
+
+
+
+
+<!-- fancybox -->
+<script src="https://cdn.jsdelivr.net/gh/fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.js"></script>
+<script>
+  function pjax_fancybox() {
+    $(".article-entry").find("img").not('.inline').not('a img').each(function () { //渲染 fancybox
+      var element = document.createElement("a"); // a 标签
+      $(element).attr("pjax-fancybox", "");  // 过滤 pjax
+      $(element).attr("href", $(this).attr("src"));
+      if ($(this).attr("data-original")) {
+        $(element).attr("href", $(this).attr("data-original"));
+      }
+      $(element).attr("data-fancybox", "images");
+      var caption = "";   // 描述信息
+      if ($(this).attr('alt')) {  // 标准 markdown 描述信息
+        $(element).attr('data-caption', $(this).attr('alt'));
+        caption = $(this).attr('alt');
+      }
+      var div = document.createElement("div");
+      $(div).addClass("fancybox");
+      $(this).wrap(div); // 最外层套 div ，其实主要作用还是 class 样式
+      var span = document.createElement("span");
+      $(span).addClass("image-caption");
+      $(span).text(caption); // 加描述
+      $(this).after(span);  // 再套一层描述
+      $(this).wrap(element);  // 最后套 a 标签
+    })
+    $(".article-entry").find("img").fancybox({
+      selector: '[data-fancybox="images"]',
+      hash: false,
+      loop: false,
+      closeClick: true,
+      helpers: {
+        overlay: {closeClick: true}
+      },
+      buttons: [
+        "zoom",
+        "close"
+      ]
+    });
+  };
+  $(function () {
+    pjax_fancybox();
+  });
+</script>
+
+
+
+
+
+  <script>setLoadingBarProgress(100);</script>
+</body>
+</html>

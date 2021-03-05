@@ -26,6 +26,7 @@ SQL语句
 表约束和范式
 多表查询和子查询
 事务
+存储引擎
 其他
 ">
   
@@ -391,7 +392,8 @@ SQL语句
 <li><a href="#SQL语句">SQL语句</a></li>
 <li><a href="#表约束和范式">表约束和范式</a></li>
 <li><a href="#多表查询和子查询">多表查询和子查询</a></li>
-<li><a href="">事务</a></li>
+<li><a href="#事务">事务</a></li>
+<li><a href="#存储引擎">存储引擎</a></li>
 <li><a href="#其他">其他</a></li>
 </ul>
 <a id="more"></a>
@@ -439,7 +441,10 @@ SQL语句
 </ul>
 </li>
 <li>操作表结构：<ul>
-<li>创建表：<code>CREATE TABLE tableName(field1 fieldType1, field2 fieldType2)</code></li>
+<li>创建表：<code>CREATE TABLE tableName(field1 fieldType1, field2 fieldType2)</code><blockquote>
+<p>MySQL表名是以文件的形式保存在磁盘上的，因此表名的字符可以使用任何文件允许的字符</p>
+</blockquote>
+</li>
 <li>查看某个数据库的所有表：<code>SHOW TABLES</code><ul>
 <li>查看表结构：<code>DESC tableName</code></li>
 <li>查看建表语句：<code>SHOW CREATE TABLE tableName</code></li>
@@ -454,10 +459,17 @@ SQL语句
 <li>修改表结构：<ol>
 <li>添加列：<code>ALTER TABLE tableName ADD fieldName fieldType</code></li>
 <li>修改列：<code>ALTER TABLE tableName MODIFY fieldName fieldType</code></li>
-<li>修改列名：<code>ALTER TABLE tableName CHANGE oldFieldName newFieldName fieldType</code></li>
+<li>修改列名(同时可修改字段类型)：<code>ALTER TABLE tableName CHANGE oldFieldName newFieldName fieldType</code><blockquote>
+<p>change和modify都可以修改表的定义，change后面需要写两次列名，change可以修改列名称但modify不能</p>
+</blockquote>
+</li>
 <li>删除列：<code>ALTER TABLE tableName DROP fieldName</code></li>
 <li>修改表名：<code>RENAME TABLE oldTableName TO newTableName</code></li>
 <li>修改表字符集：<code>ALTER TABLE tableName CHARACTER SET charsetName</code></li>
+<li>修改字段位置(ADD/CHANGE/MODIFY后)：<code>[first | after columnName]</code><blockquote>
+<p>CHANGE和修改字段位置关键字属于扩展</p>
+</blockquote>
+</li>
 </ol>
 </li>
 </ul>
@@ -477,6 +489,7 @@ SQL语句
 <li>在VALUES中列出的数据位置必须与被加入的列的排列位置相对应</li>
 <li>字符和日期型数据应包含在单引号中。MySQL中也可以使用双引号做为分隔符</li>
 <li>不指定列或使用NULL，表示插入空值</li>
+<li>可以插入多条记录，之间用’,’隔开</li>
 </ol>
 </blockquote>
 </li>
@@ -489,13 +502,19 @@ SQL语句
 <li><p>更新记录：</p>
 <ol>
 <li>不带条件修改(修改所有行)：<code>UPDATE tableName SET field1=v1, field2=v2, ...</code></li>
-<li>带条件修改：<code>UPDATE tableName SET field1=v1,field2=v2, ... WHERE ...</code></li>
+<li>带条件修改：<code>UPDATE tableName SET field1=v1,field2=v2, ... WHERE ...</code><blockquote>
+<p>更新记录也可更新多张表的字段</p>
+</blockquote>
+</li>
 </ol>
 </li>
 <li><p>删除记录：</p>
 <ol>
 <li>不带条件删除(删除所有行)：<code>DELETE FROM tableName</code></li>
-<li>带条件删除：<code>DELETE FROM tableName WHERE ...</code></li>
+<li>带条件删除：<code>DELETE FROM tableName WHERE ...</code><blockquote>
+<p>删除记录也可删除多张表的字段</p>
+</blockquote>
+</li>
 <li>使用truncate删除：<code>TRUNCATE TABLE tableName</code></li>
 </ol>
 <blockquote>
@@ -593,12 +612,32 @@ SQL语句
 </tr>
 </thead>
 <tbody><tr>
-<td>&gt;、&lt;、&lt;=、&gt;=、=、&lt;&gt;</td>
-<td>&lt;&gt;表示不等于,MySQL中也可以使用!=代替</td>
+<td>&gt;、&lt;、&lt;=、&gt;=</td>
+<td></td>
 </tr>
 <tr>
-<td>IS NULL</td>
-<td>查询某一列为NULL的值,不能使用=NULL</td>
+<td>=、&lt;&gt; / !=、&lt;=&gt;</td>
+<td>&lt;=&gt;为NULL安全的等于,其余不能用于NULL比较</td>
+</tr>
+<tr>
+<td>BETWEEN</td>
+<td>存在于指定范围</td>
+</tr>
+<tr>
+<td>IN</td>
+<td>存在于指定集合</td>
+</tr>
+<tr>
+<td>IS [NOT] NULL</td>
+<td></td>
+</tr>
+<tr>
+<td>LIKE</td>
+<td>通配符匹配</td>
+</tr>
+<tr>
+<td>REGEXP / RLIKE</td>
+<td>正则表达式匹配</td>
 </tr>
 </tbody></table>
 </li>
@@ -611,22 +650,24 @@ SQL语句
 </tr>
 </thead>
 <tbody><tr>
-<td>and/&amp;&amp;</td>
-<td>与,and更通用</td>
+<td>AND / &amp;&amp;</td>
+<td>与,AND更通用；操作数任一为NULL返回NULL</td>
 </tr>
 <tr>
-<td>or/||</td>
-<td>或</td>
+<td>OR / ||</td>
+<td>或；一操作数为NULL另一操作为0(非零)时返回NULL(1),两操作数均为NULL时返回NULL</td>
 </tr>
 <tr>
-<td>not/!</td>
-<td>非</td>
+<td>NOT / !</td>
+<td>非,NOT NULL返回指为NULL</td>
+</tr>
+<tr>
+<td>XOR</td>
+<td>异或；操作数任一为NULL返回NULL</td>
 </tr>
 </tbody></table>
 </li>
-<li><p>IN关键字：IN中每个数据都会作为一次条件，只要满足条件就会被查询出<br><code>SELECT field FROM tableName WHERE field in (value1, value2, ...)</code></p>
-</li>
-<li><p>BETWEEN v1 AND v2：范围查询，包括v1和v2</p>
+<li><p>位运算符：&amp;、|、^、~、&gt;&gt;、&lt;&lt;</p>
 </li>
 <li><p>LIKE关键字：模糊查询</p>
 <table>
@@ -732,6 +773,15 @@ SQL语句
 <li>介绍：限制查询记录的条数，用于语句的末尾</li>
 <li>语法：<code>LIMIT offset, length</code><blockquote>
 <p>offset：起始行数，从0开始计数。省略默认就是0<br>length：返回的行数</p>
+</blockquote>
+</li>
+</ul>
+</li>
+<li><p>记录联合：</p>
+<ul>
+<li>介绍：用于将结果合并显示</li>
+<li>语法：<code>select1 UNION | UNION ALL select2 ...</code><blockquote>
+<p>UNION ALL是把结果集直接合并，UNION在UNION ALL结果的基础上进行了一此DISTINCT，去除了重复记录</p>
 </blockquote>
 </li>
 </ul>
@@ -1066,6 +1116,228 @@ SQL语句
 </ul>
 </li>
 </ul>
+<h2 id="存储引擎"><a href="#存储引擎" class="headerlink" title="存储引擎"></a>存储引擎</h2><ul>
+<li><p>介绍：插件式存储引擎是MySQL数据库最重要的特性之一，用户可以根据应用的需要选择如何存储和索引数据、是否使用事务等</p>
+</li>
+<li><p>支持的存储引擎(MySQL5.7)：InnoDB、MyISAM、MEMORY、CSV、BLACKHOLE、ARCHIVE、MERGE(MRG_MyISAM)、FEDERATED、EXAMPLE、NDB等。其中InnoDB和NDB提供事务安全表</p>
+</li>
+<li><p>指定存储引擎：</p>
+<ul>
+<li>建表：创建新表时如果不指定存储引擎，那么就会使用默认存储引擎，MySQL 5.5之前默认为MyISAM，5.5之后默认为InnoDB。如果要修改默认的存储引擎，可在参数文件中设置default_storage_engine属性。可通过增加ENGINE关键字设置新建表的存储引擎：<code>ENGINE=xxx</code><blockquote>
+<p>查看当前的默认存储引擎：<code>SHOW VARIABLES LIKE &#39;default_storage_engine&#39;</code><br>  查询当前数据库支持的存储引擎：<code>SHOW engines \G</code><br>  其中Support不同值的含义分别为：</p>
+<table>
+<thead>
+<tr>
+<th>Support值</th>
+<th>含义</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>DEFAULT</td>
+<td>支持并启用,并且作为默认引擎</td>
+</tr>
+<tr>
+<td>YES</td>
+<td>支持并启用</td>
+</tr>
+<tr>
+<td>NO</td>
+<td>不支持</td>
+</tr>
+<tr>
+<td>DISABLED</td>
+<td>支持,但数据库启动时被禁用</td>
+</tr>
+</tbody></table>
+</blockquote>
+</li>
+<li>修改表：使用ALTER TABLE语句将一个已经存在的表修改存储引擎：<code>ALTER TABLE t engine = xxx</code><blockquote>
+<p>修改表的存储引擎需要锁表并复制数据，对于线上环境的表进行这个操作非常危险</p>
+</blockquote>
+</li>
+</ul>
+</li>
+<li><p>常用存储引擎介绍</p>
+<ul>
+<li><p>特点对比：</p>
+<table>
+<thead>
+<tr>
+<th>特点</th>
+<th>MyISAM</th>
+<th>Memory</th>
+<th>InnoDB</th>
+<th>Archive</th>
+<th>NDB</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>B树索引</td>
+<td>支持</td>
+<td>支持</td>
+<td>支持</td>
+<td>/</td>
+<td>/</td>
+</tr>
+<tr>
+<td>备份/时间点恢复</td>
+<td>支持</td>
+<td>支持</td>
+<td>支持</td>
+<td>支持</td>
+<td>支持</td>
+</tr>
+<tr>
+<td>支持集群</td>
+<td>/</td>
+<td>/</td>
+<td>/</td>
+<td>/</td>
+<td>支持</td>
+</tr>
+<tr>
+<td>聚簇索引</td>
+<td>/</td>
+<td>/</td>
+<td>支持</td>
+<td>/</td>
+<td>/</td>
+</tr>
+<tr>
+<td>数据压缩</td>
+<td>支持</td>
+<td>/</td>
+<td>支持</td>
+<td>支持</td>
+<td>/</td>
+</tr>
+<tr>
+<td>数据缓存</td>
+<td>/</td>
+<td>N/A</td>
+<td>支持</td>
+<td>/</td>
+<td>支持</td>
+</tr>
+<tr>
+<td>数据加密</td>
+<td>支持</td>
+<td>支持</td>
+<td>支持</td>
+<td>支持</td>
+<td>支持</td>
+</tr>
+<tr>
+<td>支持外键</td>
+<td>/</td>
+<td>/</td>
+<td>支持</td>
+<td>/</td>
+<td>支持</td>
+</tr>
+<tr>
+<td>全文索引</td>
+<td>支持</td>
+<td>/</td>
+<td>支持</td>
+<td>/</td>
+<td>/</td>
+</tr>
+<tr>
+<td>地理坐标数据类型</td>
+<td>支持</td>
+<td>/</td>
+<td>支持</td>
+<td>支持</td>
+<td>支持</td>
+</tr>
+<tr>
+<td>地理坐标索引</td>
+<td>支持</td>
+<td>/</td>
+<td>支持</td>
+<td>/</td>
+<td>/</td>
+</tr>
+<tr>
+<td>哈希索引</td>
+<td>/</td>
+<td>支持</td>
+<td>/</td>
+<td>/</td>
+<td>支持</td>
+</tr>
+<tr>
+<td>索引缓存</td>
+<td>支持</td>
+<td>N/A</td>
+<td>支持</td>
+<td>/</td>
+<td>支持</td>
+</tr>
+<tr>
+<td>锁粒度</td>
+<td>表级</td>
+<td>表级</td>
+<td>行级</td>
+<td>行级</td>
+<td>行级</td>
+</tr>
+<tr>
+<td>MVCC多版本控制</td>
+<td>/</td>
+<td>/</td>
+<td>支持</td>
+<td>/</td>
+<td>/</td>
+</tr>
+<tr>
+<td>支持复制</td>
+<td>支持</td>
+<td>有限支持</td>
+<td>支持</td>
+<td>支持</td>
+<td>支持</td>
+</tr>
+<tr>
+<td>存储限制</td>
+<td>256TB</td>
+<td>RAM</td>
+<td>64TB</td>
+<td>None</td>
+<td>384EB</td>
+</tr>
+<tr>
+<td>T树索引</td>
+<td>/</td>
+<td>/</td>
+<td>/</td>
+<td>/</td>
+<td>支持</td>
+</tr>
+<tr>
+<td>支持事务</td>
+<td>/</td>
+<td>/</td>
+<td>支持</td>
+<td>/</td>
+<td>支持</td>
+</tr>
+<tr>
+<td>统计信息</td>
+<td>支持</td>
+<td>支持</td>
+<td>支持</td>
+<td>支持</td>
+<td>支持</td>
+</tr>
+</tbody></table>
+</li>
+<li><p>MyISAM</p>
+</li>
+</ul>
+</li>
+</ul>
 <h2 id="其他"><a href="#其他" class="headerlink" title="其他"></a>其他</h2><ul>
 <li><p>mysqld是MySQL的主程序(服务器端)；mysql是MySQL的命令行工具(客户端)</p>
 </li>
@@ -1078,6 +1350,17 @@ SQL语句
 </li>
 <li><p>还原语句：</p>
 <figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">USE</span> <span class="keyword">database</span>;</span><br><span class="line">SOURCE filePath;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>查看帮助(MySQL CLI中)：</p>
+<ol>
+<li>显示所有可供查看的命令：? contents</li>
+<li>显示具体信息：? xx</li>
+</ol>
+</li>
+<li><p>查询元数据信息：information_schema系统数据库，是一个虚拟数据库，物理上并不存在相关的目录和文件；存储的全部是视图</p>
+<blockquote>
+<p>SCHEMA：提供当前MySQL实例中所有数据库的信息；show databaes的结果来源于该视图<br>  TABLES：提供了关于数据库中表的信息(包括视图)，详细表述了某个表属于哪个SCHEMA、表类型、表引擎、创建时间等信息；show tables from schemaName的结果来源于该视图<br>  COLUMNS：提供了表中的列信息，详细表述了某张表的所有列以及每个列的信息。show columns from schemaName.tableName的结果来源于该视图<br>  STATISTIC：提供了关于表索引的信息。show index from schemaName.tableName的结果来源于该视图</p>
+</blockquote>
 </li>
 </ul>
 
@@ -1167,10 +1450,10 @@ SQL语句
     <div class='new-meta-box'>
       
         
-          <div class="new-meta-item date" itemprop="dateUpdated" datetime="2020-12-11T15:55:25+08:00">
+          <div class="new-meta-item date" itemprop="dateUpdated" datetime="2020-12-21T19:19:05+08:00">
   <a class='notlink'>
     <i class="fas fa-edit fa-fw" aria-hidden="true"></i>
-    <p>更新于：2020年12月11日</p>
+    <p>更新于：2020年12月21日</p>
   </a>
 </div>
 
@@ -1202,6 +1485,7 @@ SQL语句
 表约束和范式
 多表查询和子查询
 事务
+存储引擎
 其他
 "
           
@@ -1220,6 +1504,7 @@ SQL语句
 表约束和范式
 多表查询和子查询
 事务
+存储引擎
 其他
 "
           
@@ -1238,6 +1523,7 @@ SQL语句
 表约束和范式
 多表查询和子查询
 事务
+存储引擎
 其他
 "
           
@@ -1266,15 +1552,15 @@ SQL语句
               <a class='prev' href='/2020/12/11/BasicSkill/Algorithm/ProblemRecord/'>
                 <p class='title'><i class="fas fa-chevron-left" aria-hidden="true"></i>刷题记录</p>
                 <p class='content'>内容
+10正则表达式匹配
 218天际线问题
-514自由之路
-
-
-
-218天际线问题
-问题描述：
-
-解法1：分治法(归并的思想)每次将问题划分成更小的子问题，当问题分解到单个建筑时进行解决。如果单个建筑的输入信息为[...</p>
+220存在重复元素III
+239滑动窗口最大值
+241为运算表达式设计优先级
+264丑数II
+279完全平方数
+282给表达式添加运算符
+316去除重...</p>
               </a>
             
             
@@ -1364,7 +1650,7 @@ MVC是模型(Model)、视图(Vie...</p>
 
 
     <div class='content'>
-        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#内容"><span class="toc-text">内容</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#SQL语句"><span class="toc-text">SQL语句</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#表约束和范式"><span class="toc-text">表约束和范式</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#多表查询和子查询"><span class="toc-text">多表查询和子查询</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#事务"><span class="toc-text">事务</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#其他"><span class="toc-text">其他</span></a></li></ol>
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#内容"><span class="toc-text">内容</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#SQL语句"><span class="toc-text">SQL语句</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#表约束和范式"><span class="toc-text">表约束和范式</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#多表查询和子查询"><span class="toc-text">多表查询和子查询</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#事务"><span class="toc-text">事务</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#存储引擎"><span class="toc-text">存储引擎</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#其他"><span class="toc-text">其他</span></a></li></ol>
     </div>
   </section>
 

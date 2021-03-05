@@ -1,0 +1,1229 @@
+<!DOCTYPE html>
+<html>
+<head hexo-theme='https://volantis.js.org/#2.6.6'>
+  <meta charset="utf-8">
+  <!-- SEO相关 -->
+  
+    
+  
+  <!-- 渲染优化 -->
+  <meta name="renderer" content="webkit">
+  <meta name="force-rendering" content="webkit">
+  <meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1">
+  <meta name="HandheldFriendly" content="True" >
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+  <!-- 页面元数据 -->
+  
+    <title>前端基础 - SOBXiong的博客</title>
+  
+    <meta name="keywords" content="FrontEnd">
+  
+  
+    <meta name="description" content="内容
+HTML介绍
+CSS介绍
+">
+  
+
+  <!-- feed -->
+  
+
+  <!-- import meta -->
+  
+
+  <!-- link -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@5.13/css/all.min.css">
+  
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.css">
+
+  
+  
+    
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/node-waves@0.7.6/dist/waves.min.css">
+
+  
+
+  
+  <link rel="shortcut icon" type='image/x-icon' href="https://cdn.jsdelivr.net/gh/SOBXiong/imageBed/favicon.png">
+  
+
+  
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/aplayer@1.10/dist/APlayer.min.css">
+  
+
+  
+
+  <!-- import link -->
+  
+
+  
+  
+    
+<link rel="stylesheet" href="/css/style.css">
+
+  
+
+  <script>
+    function setLoadingBarProgress(num) {
+      document.getElementById('loading-bar').style.width=num+"%";
+    }
+  </script>
+
+  
+  
+</head>
+
+<body>
+  
+  <div id="loading-bar-wrapper">
+  <div id="loading-bar"></div>
+</div>
+<header class="l_header shadow blur">
+  <div class='container'>
+  <div class='wrapper'>
+    <div class='nav-sub'>
+      <p class="title"></p>
+      <ul class='switcher nav-list-h'>
+        <li><a class="s-comment fas fa-comments fa-fw" target="_self" href='javascript:void(0)'></a></li>
+        
+          <li><a class="s-toc fas fa-list fa-fw" target="_self" href='javascript:void(0)'></a></li>
+        
+      </ul>
+    </div>
+		<div class="nav-main">
+      
+        
+        <a class="title flat-box" target="_self" href='/'>
+          
+          
+            <i class='https://cdn.jsdelivr.net/gh/SOBXiong/imageBed/favicon.png'></i>
+          
+          
+            SOBXiong
+          
+          
+        </a>
+      
+
+			<div class='menu navigation'>
+				<ul class='nav-list-h'>
+          
+          
+          
+            
+            
+              <li>
+                <a class="flat-box" href=/
+                  
+                  
+                  
+                    id="home"
+                  >
+                  <i class='fas fa-rss fa-fw'></i>博客
+                </a>
+                
+              </li>
+            
+          
+          
+            
+            
+              <li>
+                <a class="flat-box" href=/categories/
+                  
+                  
+                  
+                    id="categories"
+                  >
+                  <i class='fas fa-folder-open fa-fw'></i>分类
+                </a>
+                
+              </li>
+            
+          
+          
+            
+            
+              <li>
+                <a class="flat-box" href=/tags/
+                  
+                  
+                  
+                    id="tags"
+                  >
+                  <i class='fas fa-tags fa-fw'></i>标签
+                </a>
+                
+              </li>
+            
+          
+          
+            
+            
+              <li>
+                <a class="flat-box" href=/archives/
+                  
+                  
+                  
+                    id="archives"
+                  >
+                  <i class='fas fa-archive fa-fw'></i>归档
+                </a>
+                
+              </li>
+            
+          
+          
+            
+            
+              <li>
+                <a class="flat-box" href=/about/
+                  
+                  
+                  
+                    id="about"
+                  >
+                  <i class='fas fa-info-circle fa-fw'></i>关于
+                </a>
+                
+              </li>
+            
+          
+          
+				</ul>
+			</div>
+
+      <div class="m_search">
+        <form name="searchform" class="form u-search-form">
+          <i class="icon fas fa-search fa-fw"></i>
+          <input type="text" class="input u-search-input" placeholder="Search..." />
+        </form>
+      </div>
+
+			<ul class='switcher nav-list-h'>
+				
+					<li><a class="s-search fas fa-search fa-fw" target="_self" href='javascript:void(0)'></a></li>
+				
+				<li>
+          <a class="s-menu fas fa-bars fa-fw" target="_self" href='javascript:void(0)'></a>
+          <ul class="menu-phone list-v navigation white-box">
+            
+              
+            
+              <li>
+                <a class="flat-box" href=/
+                  
+                  
+                  
+                    id="home"
+                  >
+                  <i class='fas fa-rss fa-fw'></i>博客
+                </a>
+                
+              </li>
+            
+          
+            
+              
+            
+              <li>
+                <a class="flat-box" href=/categories/
+                  
+                  
+                  
+                    id="categories"
+                  >
+                  <i class='fas fa-folder-open fa-fw'></i>分类
+                </a>
+                
+              </li>
+            
+          
+            
+              
+            
+              <li>
+                <a class="flat-box" href=/tags/
+                  
+                  
+                  
+                    id="tags"
+                  >
+                  <i class='fas fa-tags fa-fw'></i>标签
+                </a>
+                
+              </li>
+            
+          
+            
+              
+            
+              <li>
+                <a class="flat-box" href=/archives/
+                  
+                  
+                  
+                    id="archives"
+                  >
+                  <i class='fas fa-archive fa-fw'></i>归档
+                </a>
+                
+              </li>
+            
+          
+            
+              
+            
+              <li>
+                <a class="flat-box" href=/about/
+                  
+                  
+                  
+                    id="about"
+                  >
+                  <i class='fas fa-info-circle fa-fw'></i>关于
+                </a>
+                
+              </li>
+            
+          
+            
+          </ul>
+        </li>
+			</ul>
+		</div>
+	</div>
+  </div>
+</header>
+
+<script>setLoadingBarProgress(40);</script>
+
+
+
+  <div class="l_body nocover">
+    <div class='body-wrapper'>
+      
+
+<div class='l_main'>
+  
+
+  
+    <article id="post" class="post white-box reveal shadow article-type-post" itemscope itemprop="blogPost">
+      
+
+
+  <section class='meta'>
+    
+      
+      
+      <div class="meta" id="header-meta">
+        
+          
+  <h1 class="title">
+    <a href="/2021/01/01/FrontEnd/Basic/H5+CSS3/">
+      前端基础
+    </a>
+  </h1>
+
+
+        
+        <div class='new-meta-box'>
+          
+            
+          
+            
+              
+<div class='new-meta-item author'>
+  <a href="http://xiongjc.top" target="_blank" rel="nofollow noopener">
+    <img src="https://cdn.jsdelivr.net/gh/SOBXiong/imageBed/hdImg_f757fa7e0fd65077ce52d251fc7a01d815860762755.jpg">
+    <p>SOBXiong</p>
+  </a>
+</div>
+
+            
+          
+            
+              
+  
+  <div class='new-meta-item category'>
+    <a href='/categories/%E7%BC%96%E7%A8%8B/' rel="nofollow">
+      <i class="fas fa-folder-open fa-fw" aria-hidden="true"></i>
+      <p>编程</p>
+    </a>
+  </div>
+
+
+            
+          
+            
+              <div class="new-meta-item date">
+  <a class='notlink'>
+    <i class="fas fa-calendar-alt fa-fw" aria-hidden="true"></i>
+    <p>发布于：2021年1月1日</p>
+  </a>
+</div>
+
+            
+          
+            
+              
+
+            
+          
+        </div>
+        
+          <hr>
+        
+      </div>
+    
+  </section>
+
+
+      <section class="article typo">
+        <div class="article-entry" itemprop="articleBody">
+          
+          <h2 id="内容"><a href="#内容" class="headerlink" title="内容"></a>内容</h2><ul>
+<li><a href="#HTML介绍">HTML介绍</a></li>
+<li><a href="#CSS介绍">CSS介绍</a></li>
+</ul>
+<a id="more"></a>
+
+<h2 id="HTML介绍"><a href="#HTML介绍" class="headerlink" title="HTML介绍"></a>HTML介绍</h2><ul>
+<li><p>注释</p>
+<ul>
+<li>介绍：会被浏览器忽视，不会直接显示；注释不能嵌套</li>
+<li>语法：<code>&lt;!-- --&gt;</code></li>
+</ul>
+</li>
+<li><p>文档声明(doctype)</p>
+<ul>
+<li>介绍：用来告知浏览器当前网页的版本</li>
+<li>HTML5的文档声明：<code>&lt;!doctype html&gt;</code>或<code>&lt;!Doctype HTML&gt;</code></li>
+</ul>
+</li>
+<li><p>HTML网页的基本构成</p>
+<ol>
+<li><code>&lt;!doctype html&gt;</code>：文档声明，声明当前网页的版本</li>
+<li><code>&lt;html&gt;</code>：html的根标签(元素)，网页中所有内容都要写在根标签中</li>
+<li><code>&lt;head&gt;</code>：网页头部，head中的内容不会直接出现，主要用来帮助浏览器或搜索引擎来解析网页</li>
+<li><code>&lt;meta&gt;</code>：设置网页的元数据，可用来设置字符集避免乱码问题</li>
+<li><code>&lt;title&gt;</code>：title中的内容会显示在浏览器的标题栏，搜索引擎主要根据title中的内容来判断网页的主要内容</li>
+<li><code>&lt;body&gt;</code>：body是html的子元素，表示网页的主体，网页中所有的可见内容都应该写在body中</li>
+</ol>
+</li>
+<li><p>实体：</p>
+<ul>
+<li>介绍：在网页中编写的多个空格默认情况会自动被浏览器解析为一个空格。在HTML中有些时候不能直接书写一些特殊符号————比如多个连续的空格、字母两侧的大于和小于。如果需要在网页中书写这些特殊的符号，则需要使用html中的实体(转义字符)</li>
+<li>实体的语法：&amp;实体的名字;</li>
+<li>示例：<ol>
+<li>&amp;nbsp; 空格(&nbsp;)</li>
+<li>&amp;gt; 大于号(&gt;)</li>
+<li>&amp;lt; 小于号(&lt;)</li>
+<li>&amp;copy; 版权符号(&copy;)</li>
+<li>...</li>
+</ol>
+</li>
+</ul>
+</li>
+<li><p>meta标签</p>
+<ul>
+<li>介绍：meta主要用于设置网页中的一些元数据(不是给用户使用,而是给浏览器和搜索引擎使用)</li>
+<li>主要属性：<ol>
+<li>charset：指定网页的字符集<br> <code>&lt;meta charset=&quot;UTF-8&quot;&gt;</code></li>
+<li>name：指定数据的名称；content：指定数据的内容<br> <code>&lt;meta name=&quot;keywords&quot; content=&quot;SOBXiong&quot;&gt;</code><br> <code>&lt;meta name=&quot;description&quot; content=&quot;SOBXiong&quot;&gt;</code><blockquote>
+<p>keywords：表示网站的关键词，可同时指定多个(使用’,’隔开)<br> description：用于指定网站的描述，网站的描述会显示在搜索引擎的搜索结果中<br> title：标签的内容会作为搜索结果的超链接上的文字显示</p>
+</blockquote>
+</li>
+<li>http-equiv以及content可用于重定向到其他页面：<br> <code>&lt;meta http-equiv=&quot;refresh&quot; content=&quot;3;url=https://www.baidu.com&quot;&gt;</code><blockquote>
+<p>默认3秒后重定向到百度</p>
+</blockquote>
+</li>
+</ol>
+</li>
+</ul>
+</li>
+<li><p>语义化标签</p>
+<ul>
+<li><p>介绍：在网页中HTML专门用来负责网页的结构，因此在使用html标签时应关注标签的语义，而不是样式</p>
+<blockquote>
+<p>浏览器在解析网页时，会自动对网页中不符合规范的内容进行修正。比如：</p>
+<ol>
+<li>标签写在了根元素的外部</li>
+<li>p元素中嵌套了块元素</li>
+<li>根元素中出现了除head和body以外的子元素</li>
+<li>...</li>
+</ol>
+</blockquote>
+</li>
+<li><p>标签总体分类：</p>
+<ol>
+<li><p>块元素(Block Element)：在页面中独占一行的元素</p>
+<blockquote>
+<p>在网页中一般通过块元素来对页面进行布局</p>
+</blockquote>
+</li>
+<li><p>行内元素(Inline Element)：在页面中不会独占一行的元素</p>
+<blockquote>
+<ol>
+<li>行内元素主要用来包裹文字</li>
+<li>一般情况下会在块元素中放行内元素，而不会在行内元素中放块元素</li>
+<li>块元素中基本上什么都能放</li>
+<li>p元素中不能放任何的块元素</li>
+</ol>
+</blockquote>
+</li>
+</ol>
+</li>
+<li><p>标签具体分类：</p>
+<ul>
+<li>标题标签：<ol>
+<li>介绍：分为h1～h6(一共有六级标题)，h1～h6重要性依次递减，h1最重要，h6最不重要。h1在网页中的重要性仅次于title标签。一般情况下一个页面中只会有一个h1，且标题标签一般只会使用到h1～h3，h4～h6很少用。块元素</li>
+<li>hgroup：为标题分组，可将一组相关的标题同时放入hgroup</li>
+</ol>
+</li>
+<li>p标签：页面中的一个段落；块元素</li>
+<li>em标签：表示语音语调的一个加重；行内元素</li>
+<li>strong标签：表示强调，属于重要内容；行内元素</li>
+<li>blockquote标签：表示一个长引用；块元素</li>
+<li>q标签：短引用；行内元素</li>
+<li>br标签：页面中的换行；行内元素</li>
+<li>布局标签(结构化语义标签)<ol>
+<li>header：网页的头部</li>
+<li>main：网页的主体部分(一个页面中只会有一个main)</li>
+<li>footer：网页的底部</li>
+<li>nav：网页中的导航</li>
+<li>aside：和主体相关的其他内容(侧边栏)</li>
+<li>article：一个独立的文章</li>
+<li>section：一个独立的区块，以上标签都不能表示时可使用section</li>
+<li>div：无语义，用来表示一个区块；目前div是主要的布局元素</li>
+<li>span：行内元素，无语义，一般用于在网页中选中文字</li>
+</ol>
+</li>
+<li>列表：<ul>
+<li>介绍：列表之间可以相互嵌套，共有三种列表</li>
+<li>分类：<ol>
+<li>无序列表：使用&lt;ol&gt;标签创建，用&lt;li&gt;表示列表项</li>
+<li>有序列表：使用&lt;ul&gt;标签创建，用&lt;li&gt;表示列表项</li>
+<li>定义列表：使用&lt;dl&gt;标签创建，用&lt;dt&gt;表示定义的内容，使用&lt;dd&gt;表示对内容的解释说明</li>
+</ol>
+</li>
+</ul>
+</li>
+<li>超链接：<ul>
+<li>介绍：超链接可使从一个页面跳转到其他页面，或者是当前页面的其他的位置。超链接是也是一个行内元素，在a标签中可以嵌套除它自身外的任何元素</li>
+<li>标签：&lt;a&gt;</li>
+<li>属性：<ul>
+<li>href：用于指定跳转的目标路径(一个外部网站或内部页面)<blockquote>
+<p>使用’#’作为占位符，会跳转到页面顶部<br>可设置为’javascript:;’作为占位符，点击无效果<br>如需跳转到指定位置，可设置为’#x’(目标元素的id值)</p>
+</blockquote>
+</li>
+<li>target：用来指定超链接打开的位置<blockquote>
+<p>_self：默认值，在当前页面中打开超链接<br>_blank：在一个新的页面中打开超链接</p>
+</blockquote>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>图片标签：<ul>
+<li>介绍：用于向当前页面中引入一个外部图片，是一个自结束标签，属于替换元素(块和行内元素之间,具有两种元素的特点)</li>
+<li>标签：&lt;img&gt;</li>
+<li>属性：<ul>
+<li>src：指定外部图片的路径(路径规则和超链接一样)</li>
+<li>alt：图片的描述，该描述默认情况下不会显示，有些浏览器图片无法加载时会显示。搜索引擎会根据alt中的内容来识别图片，如果不写alt属性则图片不会被搜索引擎收录</li>
+<li>width、height：图片的高度和宽度(单位为px,像素)。如果只修改其中一个，另一个默认会等比例缩放。一般在pc端不建议修改图片的大小，需要多大的图片就裁多大；但在移动端经常需要对图片进行缩放(大图缩小)</li>
+</ul>
+</li>
+<li>图片格式(效果一样用小的,不一样用好的)：<ul>
+<li>jpeg(jpg)：<ol>
+<li>支持的颜色比较丰富，不支持透明效果和动图</li>
+<li>一般用来显示照片</li>
+</ol>
+</li>
+<li>gif：<ol>
+<li>支持的颜色比较少，支持简单透明效果和动图</li>
+<li>颜色单一的图片，动图</li>
+</ol>
+</li>
+<li>png：<ol>
+<li>支持的颜色丰富，支持复杂透明但不支持动图</li>
+<li>颜色丰富，复杂透明(专为网页而生)</li>
+</ol>
+</li>
+<li>webp：<ol>
+<li>谷歌新推出的专门用来表示网页中的图片的一种格式</li>
+<li>具备其他图片格式的所有优点，而且文件还特别小</li>
+<li>缺点：兼容性不好</li>
+</ol>
+</li>
+</ul>
+</li>
+<li>base64编码：将图片使用base64编码，可将图片转换为字符。通过字符的形式来引入图片，一般都是一些需要和网页一起加载的图片才会使用base64</li>
+</ul>
+</li>
+<li>内联框架：<ul>
+<li>介绍：用于向当前页面中引入其他页面</li>
+<li>属性：<ul>
+<li>src：指定要引入的网页路径</li>
+<li>frameborder：指定内联框架的边框</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>音视频标签：<ul>
+<li>audio标签：<ul>
+<li>介绍：用来向页面中引入一个外部的音频文件；引入时默认情况下不允许用户自己控制播放停止</li>
+<li>属性：<ul>
+<li>src：指定文件路径</li>
+<li>controls：是否允许用户控制播放</li>
+<li>autoplay：音频文件是否自动播放(如果设置了则打开页面时会自动播放,但目前大部分浏览器都不支持)</li>
+<li>loop：音乐是否循环播放</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>video标签：用来向页面中引入一个视频，属性和audio基本一致</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<h2 id="CSS介绍"><a href="#CSS介绍" class="headerlink" title="CSS介绍"></a>CSS介绍</h2><ul>
+<li>网页组成：</li>
+</ul>
+
+          
+            <div class='article_footer'>
+              
+                
+  
+    
+    
+
+
+
+  
+
+  
+    
+    
+
+
+
+  
+
+  
+    
+    
+
+<section class="widget copyright  desktop mobile">
+  <div class='content'>
+    
+      <blockquote>
+        
+          
+            <p>博客内容遵循 署名-非商业性使用-相同方式共享 4.0 国际 (CC BY-NC-SA 4.0) 协议</p>
+
+          
+        
+          
+            <p>本文永久链接是：<a href=https://sobxiong.github.io/2021/01/01/FrontEnd/Basic/H5+CSS3/>https://sobxiong.github.io/2021/01/01/FrontEnd/Basic/H5+CSS3/</a></p>
+          
+        
+      </blockquote>
+    
+  </div>
+</section>
+
+  
+
+  
+    
+    
+
+<section class="widget qrcode  desktop mobile">
+  
+
+  <div class='content article-entry'>
+    
+      
+        <div class='fancybox'><img src='https://cdn.jsdelivr.net/gh/xaoxuu/cdn-assets/qrcode/wiki_volantis.png'
+        
+          height='64px'
+        ></div>
+      
+    
+      
+        <div class='fancybox'><img src='https://cdn.jsdelivr.net/gh/xaoxuu/cdn-assets/qrcode/wiki_volantis.png'
+        
+          height='64px'
+        ></div>
+      
+    
+  </div>
+</section>
+
+  
+
+
+              
+            </div>
+          
+        </div>
+        
+          
+
+
+  <section class='meta' id="footer-meta">
+    <div class='new-meta-box'>
+      
+        
+          <div class="new-meta-item date" itemprop="dateUpdated" datetime="2021-02-17T19:07:07+08:00">
+  <a class='notlink'>
+    <i class="fas fa-edit fa-fw" aria-hidden="true"></i>
+    <p>更新于：2021年2月17日</p>
+  </a>
+</div>
+
+        
+      
+        
+          
+  
+  <div class="new-meta-item meta-tags"><a class="tag" href="/tags/FrontEnd/" rel="nofollow"><i class="fas fa-hashtag fa-fw" aria-hidden="true"></i><p>FrontEnd</p></a></div>
+
+
+        
+      
+        
+          
+
+        
+      
+        
+          
+  <div class="new-meta-item share -mob-share-list">
+  <div class="-mob-share-list share-body">
+    
+      
+        <a class="-mob-share-qq" title="" rel="external nofollow noopener noreferrer"
+          
+          href="http://connect.qq.com/widget/shareqq/index.html?url=https://sobxiong.github.io/2021/01/01/FrontEnd/Basic/H5+CSS3/&title=前端基础 - SOBXiong的博客&summary=内容
+HTML介绍
+CSS介绍
+"
+          
+          >
+          
+            <img src="https://cdn.jsdelivr.net/gh/xaoxuu/cdn-assets/logo/128/qq.png">
+          
+        </a>
+      
+    
+      
+        <a class="-mob-share-qzone" title="" rel="external nofollow noopener noreferrer"
+          
+          href="https://sns.qzone.qq.com/cgi-bin/qzshare/cgi_qzshare_onekey?url=https://sobxiong.github.io/2021/01/01/FrontEnd/Basic/H5+CSS3/&title=前端基础 - SOBXiong的博客&summary=内容
+HTML介绍
+CSS介绍
+"
+          
+          >
+          
+            <img src="https://cdn.jsdelivr.net/gh/xaoxuu/cdn-assets/logo/128/qzone.png">
+          
+        </a>
+      
+    
+      
+        <a class="-mob-share-weibo" title="" rel="external nofollow noopener noreferrer"
+          
+          href="http://service.weibo.com/share/share.php?url=https://sobxiong.github.io/2021/01/01/FrontEnd/Basic/H5+CSS3/&title=前端基础 - SOBXiong的博客&summary=内容
+HTML介绍
+CSS介绍
+"
+          
+          >
+          
+            <img src="https://cdn.jsdelivr.net/gh/xaoxuu/cdn-assets/logo/128/weibo.png">
+          
+        </a>
+      
+    
+  </div>
+</div>
+
+
+
+        
+      
+    </div>
+  </section>
+
+
+        
+        
+          <div class="prev-next">
+            
+              <a class='prev' href='/2021/01/08/Middleware/MySQL/MySQL%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90/'>
+                <p class='title'><i class="fas fa-chevron-left" aria-hidden="true"></i>MySQL源码分析</p>
+                <p class='content'>内容
+环境搭建
+查询分析
+事务
+故障恢复
+
+
+
+环境搭建查询分析
+源码启动首先从sql/main.cc的main()方法开始
+1234int main(int argc, char **argv...</p>
+              </a>
+            
+            
+              <a class='next' href='/2020/12/31/BasicSkill/Others/'>
+                <p class='title'>杂项<i class="fas fa-chevron-right" aria-hidden="true"></i></p>
+                <p class='content'>内容
+Idea常用快捷键
+
+
+
+Idea常用快捷键
+查找相关：
+Command + O：查询任意存在Class，并跳转到源码
+Command + F12：查看当前类的方法
+Option + H：...</p>
+              </a>
+            
+          </div>
+        
+      </section>
+    </article>
+  
+
+  
+    <!-- 显示推荐文章和评论 -->
+
+
+
+  <article class="post white-box reveal comments shadow">
+    <section class="article typo">
+      <p ct><i class='fas fa-comments'></i> 评论</p>
+      
+      
+      
+      
+      
+      
+        <section id="comments">
+          <div id="valine_container" class="valine_thread">
+            <i class="fas fa-cog fa-spin fa-fw fa-2x"></i>
+          </div>
+        </section>
+      
+      
+    </section>
+  </article>
+
+
+  
+
+
+
+
+<!-- 根据页面mathjax变量决定是否加载MathJax数学公式js -->
+
+
+
+  <script>
+    window.subData = {
+      title: '前端基础',
+      tools: true
+    }
+  </script>
+
+
+</div>
+<aside class='l_side'>
+  
+  
+
+  
+    
+    
+
+
+
+  <section class="widget toc-wrapper shadow desktop mobile" id="toc-div" >
+    
+  <header>
+    
+      <i class="fas fa-list fa-fw" aria-hidden="true"></i><span class='name'>本文目录</span>
+    
+  </header>
+
+
+    <div class='content'>
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#内容"><span class="toc-text">内容</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#HTML介绍"><span class="toc-text">HTML介绍</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#CSS介绍"><span class="toc-text">CSS介绍</span></a></li></ol>
+    </div>
+  </section>
+
+
+  
+
+
+</aside>
+
+
+  
+  <footer class="clearfix">
+    <br><br>
+    
+      
+        <br>
+        <div class="social-wrapper">
+          
+            
+              <a href="mailto:1942991710@qq.com"
+                class="social fas fa-envelope flat-btn"
+                target="_blank"
+                rel="external nofollow noopener noreferrer">
+              </a>
+            
+          
+            
+              <a href="https://github.com/SOBXiong"
+                class="social fab fa-github flat-btn"
+                target="_blank"
+                rel="external nofollow noopener noreferrer">
+              </a>
+            
+          
+        </div>
+      
+    
+      
+        <div><p>博客内容遵循 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh" target="_blank" rel="noopener">署名-非商业性使用-相同方式共享 4.0 国际 (CC BY-NC-SA 4.0) 协议</a></p>
+</div>
+      
+    
+      
+        <div class='copyright'>
+        <p><a href="http://xiongjc.top" target="_blank" rel="noopener">Copyright © 2017-2020 SOBXiong</a></p>
+
+        </div>
+      
+    
+  </footer>
+
+<script>setLoadingBarProgress(80);</script>
+
+
+      <script>setLoadingBarProgress(60);</script>
+    </div>
+    <a class="s-top fas fa-arrow-up fa-fw" href='javascript:void(0)'></a>
+  </div>
+  
+<script src="https://cdn.jsdelivr.net/npm/jquery@3.4/dist/jquery.min.js"></script>
+
+
+  <script>
+    
+    var SEARCH_SERVICE = "hexo" || "hexo";
+    var ROOT = "/" || "/";
+    if (!ROOT.endsWith('/')) ROOT += '/';
+  </script>
+
+
+
+
+
+  <script async src="https://cdn.jsdelivr.net/gh/xaoxuu/cdn-volantis@2/js/instant_page.js" type="module" defer integrity="sha384-OeDn4XE77tdHo8pGtE1apMPmAipjoxUQ++eeJa6EtJCfHlvijigWiJpD7VDPWXV1"></script>
+
+
+  <script src="https://cdn.jsdelivr.net/npm/scrollreveal@4.0.6/dist/scrollreveal.min.js"></script>
+  <script type="text/javascript">
+    $(function() {
+      ScrollReveal().reveal('.l_main .reveal', {
+        distance: '8px',
+        duration: '800',
+        interval: '100',
+        scale: '1'
+      });
+    });
+  </script>
+
+
+  
+<script src="https://cdn.jsdelivr.net/npm/node-waves@0.7.6/dist/waves.min.js"></script>
+
+  <script type="text/javascript">
+    $(function() {
+      Waves.attach('.flat-btn', ['waves-button']);
+      Waves.attach('.float-btn', ['waves-button', 'waves-float']);
+      Waves.attach('.float-btn-light', ['waves-button', 'waves-float', 'waves-light']);
+      Waves.attach('.flat-box', ['waves-block']);
+      Waves.attach('.float-box', ['waves-block', 'waves-float']);
+      Waves.attach('.waves-image');
+      Waves.init();
+    });
+  </script>
+
+
+  <script defer src="https://cdn.jsdelivr.net/gh/xaoxuu/cdn-busuanzi@2.3/js/busuanzi.pure.mini.js"></script>
+
+
+
+  
+  
+  
+    
+<script src="https://cdn.jsdelivr.net/npm/jquery-backstretch@2.1.18/jquery.backstretch.min.js"></script>
+
+    <script type="text/javascript">
+      $(function(){
+        var imgs=["https://cdn.jsdelivr.net/gh/xaoxuu/cdn-wallpaper/abstract/41F215B9-261F-48B4-80B5-4E86E165259E.jpeg"];
+        if ('true' == 'true') {
+          function shuffle(arr){
+            /*From countercurrent-time*/
+            var n = arr.length;
+            while(n--) {
+              var index = Math.floor(Math.random() * n);
+              var temp = arr[index];
+              arr[index] = arr[n];
+              arr[n] = temp;
+            }
+          }
+          shuffle(imgs);
+        }
+        if ('.cover') {
+          $('.cover').backstretch(
+            imgs,
+          {
+            duration: "20000",
+            fade: "1500"
+          });
+        } else {
+          $.backstretch(
+            imgs,
+          {
+            duration: "20000",
+            fade: "1500"
+          });
+        }
+      });
+    </script>
+  
+
+
+
+  
+    
+<script src="https://cdn.jsdelivr.net/npm/aplayer@1.10/dist/APlayer.min.js"></script>
+
+  
+    
+<script src="https://cdn.jsdelivr.net/npm/meting@2.0/dist/Meting.min.js"></script>
+
+  
+
+
+
+
+
+
+
+
+
+  
+    
+<script src="https://cdn.jsdelivr.net/npm/valine@1.4/dist/Valine.min.js"></script>
+
+  
+  <script>
+  var GUEST_INFO = ['nick','mail','link'];
+  var meta = 'nick,mail,link'.split(',').filter(function(item){
+    return GUEST_INFO.indexOf(item) > -1
+  });
+  var REQUIRED_FIELDS = ['nick','mail','link'];
+  var requiredFields = 'nick,mail'.split(',').filter(function(item){
+    return REQUIRED_FIELDS.indexOf(item) > -1
+  });
+  var valine = new Valine();
+  function emoji(path, idx, ext) {
+      return path + "/" + path + "-" + idx + "." + ext;
+  }
+  var emojiMaps = {};
+  for (var i = 1; i <= 54; i++) {
+    emojiMaps['tieba-' + i] = emoji('tieba', i, 'png');
+  }
+  for (var i = 1; i <= 101; i++) {
+    emojiMaps['qq-' + i] = emoji('qq', i, 'gif');
+  }
+  for (var i = 1; i <= 116; i++) {
+    emojiMaps['aru-' + i] = emoji('aru', i, 'gif');
+  }
+  for (var i = 1; i <= 125; i++) {
+    emojiMaps['twemoji-' + i] = emoji('twemoji', i, 'png');
+  }
+  for (var i = 1; i <= 4; i++) {
+    emojiMaps['weibo-' + i] = emoji('weibo', i, 'png');
+  }
+  valine.init({
+    el: '#valine_container',
+    meta: meta,
+    
+    appId: "dogUA2FSKGTo029M1SEwGROT-MdYXbMMI",
+    appKey: "u0NdtQ8nvHoMdJPSYqm1LRxE",
+    placeholder: "快来评论吧~",
+    pageSize:'10',
+    avatar:'robohash',
+    lang:'zh-cn',
+    visitor: 'true',
+    highlight: 'true',
+    mathJax: 'false',
+    enableQQ: 'true',
+    requiredFields: requiredFields,
+    emojiCDN: 'https://cdn.jsdelivr.net/gh/xaoxuu/cdn-assets/emoji/valine/',
+    emojiMaps: emojiMaps
+  })
+  </script>
+
+
+
+
+
+  
+<script src="https://cdn.jsdelivr.net/gh/xaoxuu/cdn-volantis@2.6.5/js/app.js"></script>
+
+
+
+  
+<script src="https://cdn.jsdelivr.net/gh/xaoxuu/cdn-volantis@2.6.5/js/search.js"></script>
+
+
+
+  
+<script src="https://cdn.jsdelivr.net/gh/xaoxuu/cdn-volantis@2/js/comment_typing.js"></script>
+
+
+
+
+
+
+<!-- 复制 -->
+
+  <script src="https://cdn.jsdelivr.net/npm/clipboard@2/dist/clipboard.min.js"></script>
+<script>
+  function wait(callback, seconds) {
+    var timelag = null;
+    timelag = window.setTimeout(callback, seconds);
+  }
+  !function (e, t, a) {
+    var initCopyCode = function(){
+      var copyHtml = '';
+      copyHtml += '<button class="btn-copy" data-clipboard-snippet="">';
+      copyHtml += '<i class="fas fa-copy"></i><span>COPY</span>';
+      copyHtml += '</button>';
+      $(".highlight .code pre").before(copyHtml);
+      $(".article pre code").before(copyHtml);
+      var clipboard = new ClipboardJS('.btn-copy', {
+        target: function(trigger) {
+          return trigger.nextElementSibling;
+        }
+      });
+      clipboard.on('success', function(e) {
+        let $btn = $(e.trigger);
+        $btn.addClass('copied');
+        let $icon = $($btn.find('i'));
+        $icon.removeClass('fa-copy');
+        $icon.addClass('fa-check-circle');
+        let $span = $($btn.find('span'));
+        $span[0].innerText = 'COPIED';
+        
+        wait(function () { // 等待两秒钟后恢复
+          $icon.removeClass('fa-check-circle');
+          $icon.addClass('fa-copy');
+          $span[0].innerText = 'COPY';
+        }, 2000);
+      });
+      clipboard.on('error', function(e) {
+        e.clearSelection();
+        let $btn = $(e.trigger);
+        $btn.addClass('copy-failed');
+        let $icon = $($btn.find('i'));
+        $icon.removeClass('fa-copy');
+        $icon.addClass('fa-times-circle');
+        let $span = $($btn.find('span'));
+        $span[0].innerText = 'COPY FAILED';
+        
+        wait(function () { // 等待两秒钟后恢复
+          $icon.removeClass('fa-times-circle');
+          $icon.addClass('fa-copy');
+          $span[0].innerText = 'COPY';
+        }, 2000);
+      });
+    }
+    initCopyCode();
+  }(window, document);
+</script>
+
+
+
+
+<!-- fancybox -->
+<script src="https://cdn.jsdelivr.net/gh/fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.js"></script>
+<script>
+  function pjax_fancybox() {
+    $(".article-entry").find("img").not('.inline').not('a img').each(function () { //渲染 fancybox
+      var element = document.createElement("a"); // a 标签
+      $(element).attr("pjax-fancybox", "");  // 过滤 pjax
+      $(element).attr("href", $(this).attr("src"));
+      if ($(this).attr("data-original")) {
+        $(element).attr("href", $(this).attr("data-original"));
+      }
+      $(element).attr("data-fancybox", "images");
+      var caption = "";   // 描述信息
+      if ($(this).attr('alt')) {  // 标准 markdown 描述信息
+        $(element).attr('data-caption', $(this).attr('alt'));
+        caption = $(this).attr('alt');
+      }
+      var div = document.createElement("div");
+      $(div).addClass("fancybox");
+      $(this).wrap(div); // 最外层套 div ，其实主要作用还是 class 样式
+      var span = document.createElement("span");
+      $(span).addClass("image-caption");
+      $(span).text(caption); // 加描述
+      $(this).after(span);  // 再套一层描述
+      $(this).wrap(element);  // 最后套 a 标签
+    })
+    $(".article-entry").find("img").fancybox({
+      selector: '[data-fancybox="images"]',
+      hash: false,
+      loop: false,
+      closeClick: true,
+      helpers: {
+        overlay: {closeClick: true}
+      },
+      buttons: [
+        "zoom",
+        "close"
+      ]
+    });
+  };
+  $(function () {
+    pjax_fancybox();
+  });
+</script>
+
+
+
+
+
+  <script>setLoadingBarProgress(100);</script>
+</body>
+</html>

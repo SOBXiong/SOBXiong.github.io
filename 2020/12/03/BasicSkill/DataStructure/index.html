@@ -16,14 +16,16 @@
 
   <!-- 页面元数据 -->
   
-    <title>DataStructure - SOBXiong的博客</title>
+    <title>Data Structure - SOBXiong的博客</title>
   
     <meta name="keywords" content="BasicSkill">
   
   
     <meta name="description" content="内容
+并查集
 Trie字典树
 树状数组
+平衡二叉查找树
 ">
   
 
@@ -323,7 +325,7 @@ Trie字典树
           
   <h1 class="title">
     <a href="/2020/12/03/BasicSkill/DataStructure/">
-      DataStructure
+      Data Structure
     </a>
   </h1>
 
@@ -385,11 +387,40 @@ Trie字典树
         <div class="article-entry" itemprop="articleBody">
           
           <h2 id="内容"><a href="#内容" class="headerlink" title="内容"></a>内容</h2><ul>
+<li><a href="并查集">并查集</a></li>
 <li><a href="#Trie字典树">Trie字典树</a></li>
 <li><a href="#树状数组">树状数组</a></li>
+<li><a href="#平衡二叉查找树">平衡二叉查找树</a></li>
 </ul>
 <a id="more"></a>
 
+<h2 id="并查集"><a href="#并查集" class="headerlink" title="并查集"></a>并查集</h2><ul>
+<li><p>介绍：并查集是一种树型的数据结构，用于处理一些不相交集合(Disjoint Sets)的合并及查询问题。常常在使用中以森林来表示</p>
+</li>
+<li><p>核心思想：<strong>用集合的一个元素代表集合</strong></p>
+</li>
+<li><p>主要操作：</p>
+<ul>
+<li>合并(Union)：把两个不相交的集合合并为一个集合</li>
+<li>查询(Find)：查询两个元素是否在同一个集合</li>
+</ul>
+</li>
+<li><p>过程图示：</p>
+<ol>
+<li>假设有六个元素，首先初始化(各自为战)<br> <img src="%E5%B9%B6%E6%9F%A5%E9%9B%86%E5%9B%BE%E7%A4%BA1.jpg" alt="并查集图示1"></li>
+<li>元素3与元素1合并<br> <img src="%E5%B9%B6%E6%9F%A5%E9%9B%86%E5%9B%BE%E7%A4%BA2.jpg" alt="并查集图示2"></li>
+<li>元素2与元素1合并<br> <img src="%E5%B9%B6%E6%9F%A5%E9%9B%86%E5%9B%BE%E7%A4%BA3.jpg" alt="并查集图示3"></li>
+<li>同理元素5、6和元素4合并<br> <img src="%E5%B9%B6%E6%9F%A5%E9%9B%86%E5%9B%BE%E7%A4%BA4.jpg" alt="并查集图示4"></li>
+<li>元素1与元素4合并<br> <img src="%E5%B9%B6%E6%9F%A5%E9%9B%86%E5%9B%BE%E7%A4%BA5.png" alt="并查集图示5"></li>
+</ol>
+</li>
+<li><p>路径压缩：最原始的并查集效率是很低的，如果以最坏的情况合并，则会变成链表，查找最底部的元素的父元素需要花费O(n)时间<br><img src="%E5%B9%B6%E6%9F%A5%E9%9B%86%E5%9B%BE%E7%A4%BA6.png" alt="并查集图示6"><br>既然只考虑一个元素对应的<strong>根节点</strong>而不是所有的祖先节点(每个元素到根节点的路径尽可能短)，那么最好的情况就是形成仅为两层的树<br><img src="%E5%B9%B6%E6%9F%A5%E9%9B%86%E5%9B%BE%E7%A4%BA7.png" alt="并查集图示7"></p>
+</li>
+<li><p>代码实现：</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">define</span> N 20</span></span><br><span class="line"><span class="keyword">int</span> unionSet[N];</span><br><span class="line"></span><br><span class="line"><span class="comment">// 初始化,将元素的根元素设置为自身</span></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">init</span><span class="params">()</span> </span>&#123;</span><br><span class="line">  <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; N; ++i) &#123;</span><br><span class="line">    unionSet[i] = i;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 查询元素n的根元素</span></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">find_root</span><span class="params">(<span class="keyword">int</span> n)</span> </span>&#123;</span><br><span class="line">  <span class="comment">// 下面逻辑的简化写法</span></span><br><span class="line">  <span class="keyword">return</span> n == unionSet[n] ? n : (unionSet[n] = find_root(unionSet[n]));</span><br><span class="line">  <span class="comment">/**</span></span><br><span class="line"><span class="comment">  // 如果当前元素就是根元素,返回自身</span></span><br><span class="line"><span class="comment">  if (unionSet[n] == n) return n;</span></span><br><span class="line"><span class="comment">  // 得到当前元素的根元素</span></span><br><span class="line"><span class="comment">  int root = find_root(n);</span></span><br><span class="line"><span class="comment">  // 压缩路径(延迟压缩,只有在合并后的首次查询才进行),将当前查询链上的元素的根元素设置为root</span></span><br><span class="line"><span class="comment">  unionSet[n] = root;</span></span><br><span class="line"><span class="comment">  return root;</span></span><br><span class="line"><span class="comment">  **/</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 合并元素n1、n2</span></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">union_elements</span><span class="params">(<span class="keyword">int</span> n1, <span class="keyword">int</span> n2)</span> </span>&#123;</span><br><span class="line">  <span class="comment">// 将n1元素的root值设置为n2元素的root值</span></span><br><span class="line">  unionSet[find_root(n1)] = find_root(n2);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+</li>
+</ul>
 <h2 id="Trie字典树"><a href="#Trie字典树" class="headerlink" title="Trie字典树"></a>Trie字典树</h2><ul>
 <li><p>介绍：又称单词查找树、Trie树，是一种树形结构，是一种哈希树的变种。典型应用是用于统计、排序和保存大量的字符串(但不仅限于字符串)，所以经常被搜索引擎系统用于文本词频统计。优点是：利用字符串的公共前缀来减少查询时间，最大限度地减少无谓的字符串比较，查询效率比哈希树高</p>
 </li>
@@ -447,6 +478,47 @@ Trie字典树
 </blockquote>
 </li>
 </ul>
+</li>
+</ul>
+<h2 id="平衡二叉查找树"><a href="#平衡二叉查找树" class="headerlink" title="平衡二叉查找树"></a>平衡二叉查找树</h2><ul>
+<li><p>介绍：AVL树是最先发明的自平衡二叉查找树。在AVL树中任何节点的两个子树的高度最大差别为1，所以它也被称为高度平衡树。增加和删除可能需要通过一次或多次树旋转来重新平衡这个树</p>
+</li>
+<li><p>背景问题：二叉树最差查找节点的效率近似于单链表</p>
+</li>
+<li><p>核心操作：</p>
+<ol>
+<li><p>插入</p>
+</li>
+<li><p>删除</p>
+<blockquote>
+<p><img src="AVL%E5%9B%BE%E7%A4%BA1.png" alt="AVL初始情况"><br>删除共有4种情况</p>
+<ol>
+<li>既有左孩子又有右孩子</li>
+<li>只有左孩子</li>
+<li>只有右孩子</li>
+<li>叶子节点</li>
+</ol>
+</blockquote>
+</li>
+<li><p>自平衡</p>
+</li>
+</ol>
+</li>
+<li><p>实现代码：</p>
+<ol>
+<li><p>数据结构：</p>
+ <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">private</span> <span class="class"><span class="keyword">class</span> <span class="title">Node</span> </span>&#123;</span><br><span class="line">  <span class="keyword">private</span> <span class="keyword">final</span> K key;</span><br><span class="line">  <span class="keyword">private</span> V value;</span><br><span class="line">  <span class="keyword">private</span> Node left, right, parent;</span><br><span class="line">  <span class="keyword">private</span> <span class="keyword">int</span> nodeNum;</span><br><span class="line">  <span class="keyword">private</span> <span class="keyword">int</span> depth;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>插入操作：</p>
+ <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">put</span><span class="params">(K key, V value)</span> </span>&#123;</span><br><span class="line">  <span class="comment">// 记录原始节点数</span></span><br><span class="line">  <span class="keyword">int</span> nodeNum = root == <span class="keyword">null</span> ? <span class="number">0</span> : root.nodeNum;</span><br><span class="line">  <span class="comment">// 具体插入,统一有无根节点情况</span></span><br><span class="line">  root = put(root, key, value, root);</span><br><span class="line">  <span class="comment">// 如果是修改操作,无需进行自平衡</span></span><br><span class="line">  <span class="keyword">if</span> (nodeNum == root.nodeNum) <span class="keyword">return</span>;</span><br><span class="line">  <span class="comment">// 找到插入节点</span></span><br><span class="line">  Node putNode = findNode(root, key);</span><br><span class="line">  <span class="comment">// 平衡整棵树</span></span><br><span class="line">  balance(putNode);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 递归插入</span></span><br><span class="line"><span class="function"><span class="keyword">private</span> Node <span class="title">put</span><span class="params">(Node node, K key, V value, Node parent)</span> </span>&#123;</span><br><span class="line">  <span class="comment">// 返回具体插入的节点</span></span><br><span class="line">  <span class="keyword">if</span> (node == <span class="keyword">null</span>) <span class="keyword">return</span> <span class="keyword">new</span> Node(key, value, parent);</span><br><span class="line">  <span class="comment">// 判断查找方向</span></span><br><span class="line">  <span class="keyword">int</span> cmp = key.compareTo(node.key);</span><br><span class="line">  <span class="comment">// 更新节点值</span></span><br><span class="line">  <span class="keyword">if</span> (cmp == <span class="number">0</span>) &#123;</span><br><span class="line">    node.value = value;</span><br><span class="line">    <span class="keyword">return</span> node;</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="comment">// 向右插入</span></span><br><span class="line">  <span class="keyword">if</span> (cmp &gt; <span class="number">0</span>) node.right = put(node.right, key, value, node);</span><br><span class="line">  <span class="comment">// 向左插入</span></span><br><span class="line">  <span class="keyword">else</span> node.left = put(node.left, key, value, node);</span><br><span class="line">  <span class="comment">// 更新当前节点挂载的节点数</span></span><br><span class="line">  node.nodeNum = <span class="number">1</span> + size(node.left) + size(node.right);</span><br><span class="line">  <span class="comment">// 返回当前节点</span></span><br><span class="line">  <span class="keyword">return</span> node;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>删除操作：</p>
+ <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">delete</span><span class="params">(K key)</span> </span>&#123;</span><br><span class="line">  <span class="function"><span class="keyword">assert</span> <span class="title">size</span><span class="params">()</span> &gt; 0</span>;</span><br><span class="line">  <span class="comment">// 查找具体删除节点</span></span><br><span class="line">  Node delNode = findNode(root, key);</span><br><span class="line">  <span class="keyword">if</span> (delNode == <span class="keyword">null</span>) <span class="keyword">return</span>;</span><br><span class="line">  <span class="comment">// 删除节点并自平衡</span></span><br><span class="line">  balance(delete(delNode));</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment">* 删除指定节点</span></span><br><span class="line"><span class="comment">*</span></span><br><span class="line"><span class="comment">* <span class="doctag">@param</span> node 待删除节点</span></span><br><span class="line"><span class="comment">* <span class="doctag">@return</span> 替代节点</span></span><br><span class="line"><span class="comment">*/</span></span><br><span class="line"><span class="function"><span class="keyword">private</span> Node <span class="title">delete</span><span class="params">(Node node)</span> </span>&#123;</span><br><span class="line">  Node parent = node.parent, temp;</span><br><span class="line">  <span class="comment">// 只有左孩子</span></span><br><span class="line">  <span class="keyword">if</span> (node.left != <span class="keyword">null</span> &amp;&amp; node.right == <span class="keyword">null</span>) &#123;</span><br><span class="line">    temp = node;</span><br><span class="line">    <span class="comment">// 指向左孩子</span></span><br><span class="line">    node = node.left;</span><br><span class="line">    node.parent = temp.parent;</span><br><span class="line">    <span class="comment">// 更新当前节点高度信息</span></span><br><span class="line">    updateDepth(node);</span><br><span class="line">  &#125; <span class="keyword">else</span> <span class="keyword">if</span> (node.left == <span class="keyword">null</span> &amp;&amp; node.right != <span class="keyword">null</span>) &#123; <span class="comment">// 只有右孩子</span></span><br><span class="line">    temp = node;</span><br><span class="line">    <span class="comment">// 指向右孩子</span></span><br><span class="line">    node = node.right;</span><br><span class="line">    node.parent = temp.parent;</span><br><span class="line">    <span class="comment">// 更新当前节点高度信息</span></span><br><span class="line">    updateDepth(node);</span><br><span class="line">  &#125; <span class="keyword">else</span> <span class="keyword">if</span> (node.left == <span class="keyword">null</span>) &#123; <span class="comment">// 叶子结点</span></span><br><span class="line">    <span class="comment">// 如果父节点存在</span></span><br><span class="line">    <span class="keyword">if</span> (parent != <span class="keyword">null</span>) &#123;</span><br><span class="line">      <span class="comment">// 更新父节点高度信息</span></span><br><span class="line">      updateDepth(parent);</span><br><span class="line">    &#125; <span class="keyword">else</span> &#123; <span class="comment">// 删除根节点</span></span><br><span class="line">      root = <span class="keyword">null</span>;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125; <span class="keyword">else</span> &#123; <span class="comment">// 左右孩子均存在</span></span><br><span class="line">    <span class="comment">// 找到替代元素</span></span><br><span class="line">    temp = min(node.right);</span><br><span class="line">    <span class="comment">// 更新值</span></span><br><span class="line">    node.value = temp.value;</span><br><span class="line">    parent = temp.parent;</span><br><span class="line">    updateDepth(parent);</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">return</span> parent;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>自平衡操作：</p>
+ <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment">* LR旋转：先左旋转再右旋转</span></span><br><span class="line"><span class="comment">*</span></span><br><span class="line"><span class="comment">* <span class="doctag">@param</span> node 离操作节点最近的失衡节点</span></span><br><span class="line"><span class="comment">* <span class="doctag">@return</span> 新父节点</span></span><br><span class="line"><span class="comment">*/</span></span><br><span class="line"><span class="function"><span class="keyword">private</span> Node <span class="title">LRRotate</span><span class="params">(Node node)</span> </span>&#123;</span><br><span class="line">  RRRotate(node.left);</span><br><span class="line">  <span class="keyword">return</span> LLRotate(node);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment">* LL旋转</span></span><br><span class="line"><span class="comment">*</span></span><br><span class="line"><span class="comment">* <span class="doctag">@param</span> node 离操作节点最近的失衡节点</span></span><br><span class="line"><span class="comment">* <span class="doctag">@return</span> 新父节点</span></span><br><span class="line"><span class="comment">*/</span></span><br><span class="line"><span class="function"><span class="keyword">private</span> Node <span class="title">LLRotate</span><span class="params">(Node node)</span> </span>&#123;</span><br><span class="line">  <span class="comment">// 获取失衡节点的父节点和左孩子</span></span><br><span class="line">  Node parent = node.parent, child = node.left;</span><br><span class="line">  <span class="comment">// 设置child右孩子的父指针</span></span><br><span class="line">  <span class="keyword">if</span> (child.right != <span class="keyword">null</span>) &#123;</span><br><span class="line">    child.right.parent = node;</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="comment">// 失衡节点的做孩子变更为child的右孩子</span></span><br><span class="line">  node.left = child.right;</span><br><span class="line">  <span class="comment">// 更新失衡节点的高度信息</span></span><br><span class="line">  updateDepth(node);</span><br><span class="line">  <span class="comment">// 失衡节点变成child的右孩子</span></span><br><span class="line">  child.right = node;</span><br><span class="line">  <span class="comment">// 设置child的父节点为原失衡节点的父节点</span></span><br><span class="line">  child.parent = parent;</span><br><span class="line">  <span class="comment">// 如果失衡节点不是根,更新父节点</span></span><br><span class="line">  <span class="keyword">if</span> (parent != <span class="keyword">null</span>) &#123;</span><br><span class="line">    <span class="comment">// 指向更新后的新孩子child</span></span><br><span class="line">    <span class="keyword">if</span> (parent.left == node) parent.left = child;</span><br><span class="line">    <span class="keyword">else</span> parent.right = child;</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="comment">// 设置失衡节点的父亲</span></span><br><span class="line">  node.parent = child;</span><br><span class="line">  <span class="comment">// 更新child节点的高度信息</span></span><br><span class="line">  updateDepth(child);</span><br><span class="line">  <span class="keyword">return</span> child;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment">* RL旋转：先右旋转再左旋转</span></span><br><span class="line"><span class="comment">*</span></span><br><span class="line"><span class="comment">* <span class="doctag">@param</span> node 离操作节点最近的失衡节点</span></span><br><span class="line"><span class="comment">* <span class="doctag">@return</span> 新父节点</span></span><br><span class="line"><span class="comment">*/</span></span><br><span class="line"><span class="function"><span class="keyword">private</span> Node <span class="title">RLRotate</span><span class="params">(Node node)</span> </span>&#123;</span><br><span class="line">  LLRotate(node.right);</span><br><span class="line">  <span class="keyword">return</span> RRRotate(node);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment">* RR旋转</span></span><br><span class="line"><span class="comment">*</span></span><br><span class="line"><span class="comment">* <span class="doctag">@param</span> node 离操作结点最近的失衡的结点</span></span><br><span class="line"><span class="comment">* <span class="doctag">@return</span> 新父节点</span></span><br><span class="line"><span class="comment">*/</span></span><br><span class="line"><span class="function"><span class="keyword">private</span> Node <span class="title">RRRotate</span><span class="params">(Node node)</span> </span>&#123;</span><br><span class="line">  <span class="comment">// 获取失衡节点的父节点和右孩子</span></span><br><span class="line">  Node parent = node.parent, child = node.right;</span><br><span class="line"></span><br><span class="line">  <span class="comment">// 设置child节点左孩子的父指针</span></span><br><span class="line">  <span class="keyword">if</span> (child.left != <span class="keyword">null</span>) child.left.parent = node;</span><br><span class="line"></span><br><span class="line">  <span class="comment">// 失衡节点的右孩子变更为child的左孩子</span></span><br><span class="line">  node.right = child.left;</span><br><span class="line"></span><br><span class="line">  <span class="comment">// 更新失衡节点的高度信息</span></span><br><span class="line">  updateDepth(node);</span><br><span class="line"></span><br><span class="line">  <span class="comment">// 失衡节点变成child的左孩子</span></span><br><span class="line">  child.left = node;</span><br><span class="line"></span><br><span class="line">  <span class="comment">// 设置child的父结点为原失衡节点的父结点</span></span><br><span class="line">  child.parent = parent;</span><br><span class="line"></span><br><span class="line">  <span class="comment">// 如果失衡节点不是根结点,更新父节点</span></span><br><span class="line">  <span class="keyword">if</span> (parent != <span class="keyword">null</span>) &#123;</span><br><span class="line">    <span class="comment">// 指向更新后的新孩子child</span></span><br><span class="line">    <span class="keyword">if</span> (parent.left == node) parent.left = child;</span><br><span class="line">    <span class="keyword">else</span> parent.right = child;</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="comment">// 设置失衡节点的父节点</span></span><br><span class="line">  node.parent = child;</span><br><span class="line">  <span class="comment">// 更新child结点的高度信息</span></span><br><span class="line">  updateDepth(child);</span><br><span class="line">  <span class="keyword">return</span> child;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment">* AVL树调整</span></span><br><span class="line"><span class="comment">*</span></span><br><span class="line"><span class="comment">* <span class="doctag">@param</span> node 插入的节点</span></span><br><span class="line"><span class="comment">*/</span></span><br><span class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">balance</span><span class="params">(Node node)</span> </span>&#123;</span><br><span class="line">  <span class="comment">// 平衡因子</span></span><br><span class="line">  <span class="keyword">int</span> balance;</span><br><span class="line">  <span class="keyword">while</span> (node != <span class="keyword">null</span>) &#123;</span><br><span class="line">    <span class="comment">// 更新当前节点的高度信息</span></span><br><span class="line">    updateDepth(node);</span><br><span class="line">    <span class="comment">// 获取当前节点的平衡因子信息</span></span><br><span class="line">    balance = getBalance(node);</span><br><span class="line">    <span class="comment">// 不平衡</span></span><br><span class="line">    <span class="keyword">if</span> (balance &gt; <span class="number">1</span> || balance &lt; -<span class="number">1</span>) &#123;</span><br><span class="line">      <span class="comment">// 左子树高</span></span><br><span class="line">      <span class="keyword">if</span> (balance &gt; <span class="number">1</span>) &#123;</span><br><span class="line">        <span class="comment">// LL型</span></span><br><span class="line">        <span class="keyword">if</span> (getBalance(node.left) &gt; <span class="number">0</span>) node = LLRotate(node);</span><br><span class="line">        <span class="keyword">else</span> node = LRRotate(node); <span class="comment">// LR型</span></span><br><span class="line">      &#125; <span class="keyword">else</span> &#123; <span class="comment">// 右子树高</span></span><br><span class="line">        <span class="comment">// RR型</span></span><br><span class="line">        <span class="keyword">if</span> (getBalance(node.right) &lt; <span class="number">0</span>) node = RRRotate(node);</span><br><span class="line">        <span class="keyword">else</span> node = RLRotate(node); <span class="comment">// RL型</span></span><br><span class="line">      &#125;</span><br><span class="line">      <span class="comment">// 判断是否到达根节点</span></span><br><span class="line">      <span class="keyword">if</span> (node.parent == <span class="keyword">null</span>) &#123;</span><br><span class="line">        <span class="comment">// 设置新的根节点</span></span><br><span class="line">        root = node;</span><br><span class="line">        <span class="keyword">break</span>;</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">// 依次设置父节点</span></span><br><span class="line">    node = node.parent;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+</ol>
 </li>
 </ul>
 
@@ -536,10 +608,10 @@ Trie字典树
     <div class='new-meta-box'>
       
         
-          <div class="new-meta-item date" itemprop="dateUpdated" datetime="2020-12-07T23:06:47+08:00">
+          <div class="new-meta-item date" itemprop="dateUpdated" datetime="2021-02-07T22:28:32+08:00">
   <a class='notlink'>
     <i class="fas fa-edit fa-fw" aria-hidden="true"></i>
-    <p>更新于：2020年12月7日</p>
+    <p>更新于：2021年2月7日</p>
   </a>
 </div>
 
@@ -566,9 +638,11 @@ Trie字典树
       
         <a class="-mob-share-qq" title="" rel="external nofollow noopener noreferrer"
           
-          href="http://connect.qq.com/widget/shareqq/index.html?url=https://sobxiong.github.io/2020/12/03/BasicSkill/DataStructure/&title=DataStructure - SOBXiong的博客&summary=内容
+          href="http://connect.qq.com/widget/shareqq/index.html?url=https://sobxiong.github.io/2020/12/03/BasicSkill/DataStructure/&title=Data Structure - SOBXiong的博客&summary=内容
+并查集
 Trie字典树
 树状数组
+平衡二叉查找树
 "
           
           >
@@ -581,9 +655,11 @@ Trie字典树
       
         <a class="-mob-share-qzone" title="" rel="external nofollow noopener noreferrer"
           
-          href="https://sns.qzone.qq.com/cgi-bin/qzshare/cgi_qzshare_onekey?url=https://sobxiong.github.io/2020/12/03/BasicSkill/DataStructure/&title=DataStructure - SOBXiong的博客&summary=内容
+          href="https://sns.qzone.qq.com/cgi-bin/qzshare/cgi_qzshare_onekey?url=https://sobxiong.github.io/2020/12/03/BasicSkill/DataStructure/&title=Data Structure - SOBXiong的博客&summary=内容
+并查集
 Trie字典树
 树状数组
+平衡二叉查找树
 "
           
           >
@@ -596,9 +672,11 @@ Trie字典树
       
         <a class="-mob-share-weibo" title="" rel="external nofollow noopener noreferrer"
           
-          href="http://service.weibo.com/share/share.php?url=https://sobxiong.github.io/2020/12/03/BasicSkill/DataStructure/&title=DataStructure - SOBXiong的博客&summary=内容
+          href="http://service.weibo.com/share/share.php?url=https://sobxiong.github.io/2020/12/03/BasicSkill/DataStructure/&title=Data Structure - SOBXiong的博客&summary=内容
+并查集
 Trie字典树
 树状数组
+平衡二叉查找树
 "
           
           >
@@ -698,7 +776,7 @@ Spring是什么：Spring是于2003年兴起的一个轻量级的Java开发框...
 
   <script>
     window.subData = {
-      title: 'DataStructure',
+      title: 'Data Structure',
       tools: true
     }
   </script>
@@ -725,7 +803,7 @@ Spring是什么：Spring是于2003年兴起的一个轻量级的Java开发框...
 
 
     <div class='content'>
-        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#内容"><span class="toc-text">内容</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Trie字典树"><span class="toc-text">Trie字典树</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#树状数组"><span class="toc-text">树状数组</span></a></li></ol>
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#内容"><span class="toc-text">内容</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#并查集"><span class="toc-text">并查集</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Trie字典树"><span class="toc-text">Trie字典树</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#树状数组"><span class="toc-text">树状数组</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#平衡二叉查找树"><span class="toc-text">平衡二叉查找树</span></a></li></ol>
     </div>
   </section>
 
